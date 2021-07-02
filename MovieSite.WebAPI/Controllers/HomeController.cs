@@ -30,13 +30,12 @@ namespace MovieSite.Controllers
         {
             var claims = new[]
             {
-                // sub is an id
                 new Claim(JwtRegisteredClaimNames.Sub, "id")
             };
 
             var secretBytes = Encoding.UTF8.GetBytes(Constants.Secret);
             var securityKey = new SymmetricSecurityKey(secretBytes);
-            var algorithm = SecurityAlgorithms.HmacSha256; 
+            var algorithm = SecurityAlgorithms.HmacSha256;
             
             var signingCredentials = new SigningCredentials(securityKey, algorithm);
             
