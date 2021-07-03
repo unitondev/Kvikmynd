@@ -1,10 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
         public IRepositoryAsync<User> UserRepository { get; }
 
