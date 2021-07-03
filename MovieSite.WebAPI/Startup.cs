@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MovieSite.Domain.Models;
 using MovieSite.Infrastructure;
+using MovieSite.Jwt;
 
 namespace MovieSite
 {
@@ -24,18 +26,23 @@ namespace MovieSite
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IJwtSigningEncodingKey, SigningSymetricKey>();
+            services.AddSingleton<IJwtSigningDecodingKey, SigningSymetricKey>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    var secretBytes = Encoding.UTF8.GetBytes(Constants.Secret);
-                    var securityKey = new SymmetricSecurityKey(secretBytes);
-                    
+                    IJwtSigningDecodingKey signingDecodingKey = new SigningSymetricKey();
                     // check the token is valid
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidIssuer = Constants.Issuer,
-                        ValidAudience = Constants.Audience,
-                        IssuerSigningKey = securityKey
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Secret:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Secret:Audience"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = signingDecodingKey.GetKey(),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

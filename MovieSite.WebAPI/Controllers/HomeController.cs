@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MovieSite.Domain.Models;
+using MovieSite.Infrastructure;
+using MovieSite.Jwt;
 
 namespace MovieSite.Controllers
 {
@@ -16,6 +20,12 @@ namespace MovieSite.Controllers
         public IActionResult Index()
         {
             return Ok("hello");
+        }
+
+        [HttpGet]
+        public IEnumerable<User> Users([FromServices] MovieSiteDbContext dbContext)
+        {
+            return dbContext.Users.ToList();
         }
 
         [HttpGet]
@@ -32,20 +42,17 @@ namespace MovieSite.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, "id")
             };
-
-            var secretBytes = Encoding.UTF8.GetBytes(Constants.Secret);
-            var securityKey = new SymmetricSecurityKey(secretBytes);
-            var algorithm = SecurityAlgorithms.HmacSha256;
             
-            var signingCredentials = new SigningCredentials(securityKey, algorithm);
-            
+            IJwtSigningEncodingKey signingEncodingKey = new SigningSymetricKey();
             var token = new JwtSecurityToken(
                 Constants.Issuer,
                 Constants.Audience, 
                 claims,
                 notBefore: DateTime.Now, 
                 expires: DateTime.Now.AddDays(1),
-                signingCredentials);
+                new SigningCredentials(
+                    signingEncodingKey.GetKey(),
+                    signingEncodingKey.SigningAlgorithm));
 
             var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
 
