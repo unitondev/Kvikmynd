@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using MovieSite.Domain.Models;
 
-namespace MovieSite.Infrastructure.ViewModels
+namespace MovieSite.Application.DTO
 {
     public class AuthResponseUser
     {

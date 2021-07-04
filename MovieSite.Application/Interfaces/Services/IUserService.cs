@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MovieSite.Application.DTO;
 using MovieSite.Domain.Models;
-using MovieSite.Infrastructure.ViewModels;
 
 namespace MovieSite.Application.Interfaces.Services
 {

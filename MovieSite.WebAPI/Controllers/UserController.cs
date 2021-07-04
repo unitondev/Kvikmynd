@@ -4,19 +4,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieSite.Application.DTO;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
-using MovieSite.Infrastructure.ViewModels;
 
 namespace MovieSite.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]/[action]")]
-    public class HomeController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public HomeController(IUserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -27,8 +28,7 @@ namespace MovieSite.Controllers
         {
             return await _userService.GetAllAsync();
         }
-
-        [Authorize]
+        
         [HttpGet]
         public IActionResult Secret()
         {

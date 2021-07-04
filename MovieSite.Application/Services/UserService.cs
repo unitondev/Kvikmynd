@@ -6,10 +6,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using MovieSite.Application.DTO;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
-using MovieSite.Infrastructure.ViewModels;
 using MovieSite.Jwt;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
