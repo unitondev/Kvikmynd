@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MovieSite.Domain.Models
 {
@@ -12,8 +14,12 @@ namespace MovieSite.Domain.Models
         [Required]
         [MaxLength(30)]
         public string Email { get; set; }
+        // TODO make passwordHash
         [Required]
         [MaxLength(50)]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
+
+        [JsonIgnore]
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
     }
 }

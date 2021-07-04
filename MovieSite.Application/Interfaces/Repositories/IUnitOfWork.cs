@@ -7,7 +7,7 @@ namespace MovieSite.Application.Interfaces.Repositories
 {
     public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
-        public IRepositoryAsync<User> UserRepository { get; }
+        public IUserRepository UserRepository { get; }
 
         public Task<int> CommitAsync();
         public Task<int> CommitAsync(CancellationToken cancellation);

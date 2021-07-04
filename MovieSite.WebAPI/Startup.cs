@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,8 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MovieSite.Domain.Models;
+using MovieSite.Application.Interfaces.Repositories;
+using MovieSite.Application.Interfaces.Services;
+using MovieSite.Application.Services;
 using MovieSite.Infrastructure;
+using MovieSite.Infrastructure.Repositories;
 using MovieSite.Jwt;
 
 namespace MovieSite
@@ -31,8 +33,8 @@ namespace MovieSite
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
+                    options.SaveToken = true;
                     IJwtSigningDecodingKey signingDecodingKey = new SigningSymetricKey();
-                    // check the token is valid
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
@@ -54,6 +56,9 @@ namespace MovieSite
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MovieSite.WebAPI", Version = "v1"});
             });
+            services.AddTransient<DbContext, MovieSiteDbContext>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,6 +68,10 @@ namespace MovieSite
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieSite.WebAPI v1"));
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
-using MovieSite.Infrastructure;
-using MovieSite.Jwt;
+using MovieSite.Infrastructure.ViewModels;
 
 namespace MovieSite.Controllers
 {
@@ -16,47 +14,73 @@ namespace MovieSite.Controllers
     [Route("[controller]/[action]")]
     public class HomeController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IUserService _userService;
+
+        public HomeController(IUserService userService)
         {
-            return Ok("hello");
+            _userService = userService;
         }
 
         [HttpGet]
-        public IEnumerable<User> Users([FromServices] MovieSiteDbContext dbContext)
+        [AllowAnonymous]
+        public async Task<IEnumerable<User>> Users()
         {
-            return dbContext.Users.ToList();
+            return await _userService.GetAllAsync();
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public IActionResult Secret()
         {
             return Ok("secret");
         }
 
-        [HttpGet]
-        public IActionResult Authenticate()
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Authenticate([FromBody] AuthRequestUser user)
         {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, "id")
-            };
+            var response = await _userService.AuthenticateAsync(user);
+
+            if (response == null)
+                return BadRequest(new { message = "User not found"});
             
-            IJwtSigningEncodingKey signingEncodingKey = new SigningSymetricKey();
-            var token = new JwtSecurityToken(
-                Constants.Issuer,
-                Constants.Audience, 
-                claims,
-                notBefore: DateTime.Now, 
-                expires: DateTime.Now.AddDays(1),
-                new SigningCredentials(
-                    signingEncodingKey.GetKey(),
-                    signingEncodingKey.SigningAlgorithm));
+            SetRefreshTokenCookie(response.RefreshToken);
+            return Ok(response);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> RefreshTokenAsync()
+        {
+            var refreshToken = Request.Cookies["refresh_token"];
+            var response =  await _userService.RefreshTokenAsync(refreshToken);
 
-            var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
+            if (response == null)
+                return BadRequest(new {message = "Token not found"});
+            
+            SetRefreshTokenCookie(response.RefreshToken);
+            return Ok(response);
+        }
 
-            return Ok(new {accesToken = tokenJson});
+        [HttpGet]
+        public async Task<IActionResult> RevokeTokenAsync()
+        {
+            var revokedToken = Request.Cookies["refresh_token"];
+            var response = await _userService.RevokeTokenAsync(revokedToken);
+            
+            if (response == false)
+                return BadRequest(new { message = "User not found"});
+
+            return Ok(new {message = "Token revoked"});
+        }
+
+        void SetRefreshTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddDays(7),
+            };
+            Response.Cookies.Append("refresh_token", refreshToken, cookieOptions);
         }
     }
 }

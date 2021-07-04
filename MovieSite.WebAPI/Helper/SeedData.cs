@@ -16,11 +16,11 @@ namespace MovieSite
             dbContext.Users.AddRange(
                 new User
                 {
-                    Email = "12312@gmail.com", FullName = "11111111111", PasswordHash = "sad987ytfcv"
+                    Email = "12312@gmail.com", FullName = "11111111111", Password = "sad987ytfcv"
                 },
                 new User
                 {
-                    Email = "kjhgvb@gmail.com", FullName = "222222222", PasswordHash = "kiuytresxct6g78"
+                    Email = "kjhgvb@gmail.com", FullName = "222222222", Password = "kiuytresxct6g78"
                 });
             dbContext.SaveChanges();
         }

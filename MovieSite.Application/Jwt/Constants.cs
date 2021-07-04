@@ -1,6 +1,5 @@
 ﻿namespace MovieSite
 {
-    // put in secret or appsettings
     public static class Constants
     {
         public const string Audience = "https://localhost:5001/";

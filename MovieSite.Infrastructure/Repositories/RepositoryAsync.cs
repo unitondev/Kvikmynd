@@ -8,9 +8,9 @@ namespace MovieSite.Infrastructure.Repositories
 {
     public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class 
     {
-        private readonly MovieSiteDbContext _dbContext;
+        private readonly DbContext _dbContext;
 
-        public RepositoryAsync(MovieSiteDbContext dbContext)
+        public RepositoryAsync(DbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MovieSite.Domain.Models;
+using MovieSite.Infrastructure.ViewModels;
 
 namespace MovieSite.Application.Interfaces.Services
 {
@@ -11,5 +12,8 @@ namespace MovieSite.Application.Interfaces.Services
         Task<bool> CreateAsync(User item);
         Task<int> CreateRangeAsync(IEnumerable<User> items);
         Task<bool> DeleteByIdAsync(int id);
+        Task<AuthResponseUser> AuthenticateAsync(AuthRequestUser authRequestUser);
+        Task<AuthResponseUser> RefreshTokenAsync(string token);
+        Task<bool> RevokeTokenAsync(string token);
     }
 }
