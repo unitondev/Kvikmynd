@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieSite.Application.ViewModel
+namespace MovieSite.Application.DTO.Requests
 {
-    public class UserRegisterViewModel
+    public class UserRegisterRequest
     {
         [Required]
         public string Email { get; set; }

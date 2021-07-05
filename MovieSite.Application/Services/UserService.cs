@@ -9,9 +9,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MovieSite.Application.DTO;
+using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Application.ViewModel;
 using MovieSite.Domain.Models;
 using MovieSite.Jwt;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -38,57 +38,24 @@ namespace MovieSite.Application.Services
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await Task.Run(() => _userManager.Users.ToList());
+            return await _unitOfWork.UserRepository.GetAllAsync();
         }
 
-        public async Task<bool> CreateAsync(UserRegisterViewModel userRegister)
+        public async Task<bool> CreateAsync(UserRegisterRequest userRegister)
         {
-            if (userRegister == null)
-                throw new ArgumentNullException(nameof(userRegister), "Parameter item can't be null");
-
-            
             var existedUser = await _userManager.FindByEmailAsync(userRegister.Email) 
                               ?? await _userManager.FindByNameAsync(userRegister.Username);;
 
             if (existedUser == null)
             {
-                var user = _mapper.Map<UserRegisterViewModel, User>(userRegister);
+                var user = _mapper.Map<UserRegisterRequest, User>(userRegister);
                 user.Id = Guid.NewGuid();
                 await _userManager.CreateAsync(user, userRegister.Password);
                 return true;
             }
-
             return false;
         }
-
-        // TODO ask how to add range with userManager
-        // public async Task<int> CreateRangeAsync(IEnumerable<User> items)
-        // {
-        //     if (items == null)
-        //         throw new ArgumentNullException(nameof(items), "Parameter item can't be null");
-        //
-        //     List<User> usersToCreate = new List<User>();
-        //     
-        //     foreach (var user in items)
-        //     {
-        //         if(user == null)
-        //             break;
-        //         
-        //         var isUserExists = await _unitOfWork.UserRepository.GetByIdOrDefaultAsync(user.Id) != null;
-        //         if (!isUserExists)
-        //         {
-        //             usersToCreate.Add(user);
-        //         }
-        //     }
-        //
-        //     if (usersToCreate.Count != 0)
-        //     {
-        //         await _unitOfWork.UserRepository.AddRangeAsync(usersToCreate);
-        //         await _unitOfWork.CommitAsync();
-        //     }
-        //     return usersToCreate.Count;
-        // }
-
+        
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
             var deletedUser = await _userManager.FindByIdAsync(id.ToString());

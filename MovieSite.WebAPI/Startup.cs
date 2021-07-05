@@ -55,7 +55,7 @@ namespace MovieSite
             services.AddTransient<DbContext, MovieSiteDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
-            services.AddAutoMapper(typeof(ViewModelToEntity));
+            services.AddAutoMapper(typeof(DTOsToEntityProfile));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

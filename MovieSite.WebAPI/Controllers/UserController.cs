@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO;
+using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Application.ViewModel;
 
 namespace MovieSite.Controllers
 {
@@ -34,7 +34,7 @@ namespace MovieSite.Controllers
         
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> User(Guid id)
+        public async Task<IActionResult> UserId(Guid id)
         {
             var result = await _userService.GetByIdOrDefaultAsync(id);
             if (result == null)
@@ -44,14 +44,14 @@ namespace MovieSite.Controllers
         
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateUser([FromBody] UserRegisterViewModel registerViewModel)
+        public async Task<IActionResult> CreateUser([FromBody] UserRegisterRequest registerRequest)
         {
-            if (registerViewModel == null)
+            if (registerRequest == null)
                 return BadRequest(new {message = "Register user not found"});
 
             if (ModelState.IsValid)
             {
-                var result = await _userService.CreateAsync(registerViewModel);
+                var result = await _userService.CreateAsync(registerRequest);
                 if (result)
                     return Ok("User was registered");
                 else
