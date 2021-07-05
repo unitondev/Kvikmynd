@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Domain.Models;
+using MovieSite.Application.ViewModel;
 
 namespace MovieSite.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]/[action]")]
     public class UserController : ControllerBase
@@ -24,11 +24,53 @@ namespace MovieSite.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IEnumerable<User>> Users()
+        public async Task<IActionResult> Users()
         {
-            return await _userService.GetAllAsync();
+            var result = await _userService.GetAllAsync();
+            if (result == null)
+                return BadRequest("Users not found");
+            return Ok(result);
         }
         
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> User(Guid id)
+        {
+            var result = await _userService.GetByIdOrDefaultAsync(id);
+            if (result == null)
+                return BadRequest("User not found");
+            return Ok(result);
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateUser([FromBody] UserRegisterViewModel registerViewModel)
+        {
+            if (registerViewModel == null)
+                return BadRequest(new {message = "Register user not found"});
+
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.CreateAsync(registerViewModel);
+                if (result)
+                    return Ok("User was registered");
+                else
+                    return BadRequest("User is already registered");
+            }
+
+            return BadRequest("Wrong register model!");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _userService.DeleteByIdAsync(id);
+
+            if (!result)
+                return BadRequest("User not found");
+            return Ok("User was deleted");
+        }
+
         [HttpGet]
         public IActionResult Secret()
         {
