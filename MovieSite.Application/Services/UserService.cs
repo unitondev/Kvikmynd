@@ -9,9 +9,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MovieSite.Application.DTO;
+using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Application.ViewModel;
 using MovieSite.Domain.Models;
 using MovieSite.Jwt;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -41,23 +41,18 @@ namespace MovieSite.Application.Services
             return await Task.Run(() => _userManager.Users.ToList());
         }
 
-        public async Task<bool> CreateAsync(UserRegisterViewModel userRegister)
+        public async Task<bool> CreateAsync(UserRegisterRequest userRegister)
         {
-            if (userRegister == null)
-                throw new ArgumentNullException(nameof(userRegister), "Parameter item can't be null");
-
-            
             var existedUser = await _userManager.FindByEmailAsync(userRegister.Email) 
                               ?? await _userManager.FindByNameAsync(userRegister.Username);;
 
             if (existedUser == null)
             {
-                var user = _mapper.Map<UserRegisterViewModel, User>(userRegister);
+                var user = _mapper.Map<User>(userRegister);
                 user.Id = Guid.NewGuid();
                 await _userManager.CreateAsync(user, userRegister.Password);
                 return true;
             }
-
             return false;
         }
 

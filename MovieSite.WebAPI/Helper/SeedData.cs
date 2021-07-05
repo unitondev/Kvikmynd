@@ -16,8 +16,7 @@ namespace MovieSite.Helper
             {
                 Email = "12312@gmail.com", FullName = "11111111111", UserName = "first"
             };
-
-            // var result = userManager.CreateAsync(user, "123456").GetAwaiter().GetResult();
+            
             var result = await userManager.CreateAsync(user, "123456");
             
             if (!result.Succeeded)
