@@ -12,7 +12,6 @@ namespace MovieSite.Application.Interfaces.Services
         Task<User> GetByIdOrDefaultAsync(Guid id);
         Task<IEnumerable<User>> GetAllAsync();
         Task<bool> CreateAsync(UserRegisterRequest item);
-        // Task<int> CreateRangeAsync(IEnumerable<User> items);
         Task<bool> DeleteByIdAsync(Guid id);
         Task<AuthResponseUser> AuthenticateAsync(AuthRequestUser authRequestUser);
         Task<AuthResponseUser> RefreshTokenAsync(string token);

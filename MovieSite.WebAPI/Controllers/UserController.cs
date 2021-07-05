@@ -34,7 +34,7 @@ namespace MovieSite.Controllers
         
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> User(Guid id)
+        public async Task<IActionResult> UserId(Guid id)
         {
             var result = await _userService.GetByIdOrDefaultAsync(id);
             if (result == null)
