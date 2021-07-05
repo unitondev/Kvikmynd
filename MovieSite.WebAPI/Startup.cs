@@ -56,6 +56,7 @@ namespace MovieSite
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddAutoMapper(typeof(DTOsToEntityProfile));
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -73,13 +74,23 @@ namespace MovieSite
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSpaStaticFiles();
+            
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "clientapp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000/");
+                }
+            });
         }
 
         private void AddAuthentication(IServiceCollection services)
