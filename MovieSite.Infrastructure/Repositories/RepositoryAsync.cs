@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,12 @@ namespace MovieSite.Infrastructure.Repositories
             _dbContext = dbContext;
         }
         
-        public async Task<T> GetByIdOrDefaultAsync(int id)
+        public async Task<T> GetByIdOrDefaultAsync(Guid id)
         {
             return await GetByIdOrDefaultAsync(id, CancellationToken.None);
         }
         
-        public async Task<T> GetByIdOrDefaultAsync(int id, CancellationToken cancellationToken)
+        public async Task<T> GetByIdOrDefaultAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _dbContext.Set<T>().FindAsync(id, cancellationToken);
         }
@@ -55,12 +56,12 @@ namespace MovieSite.Infrastructure.Repositories
             await _dbContext.Set<T>().AddRangeAsync(item, cancellationToken);
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(Guid id)
         {
             await DeleteByIdAsync(id, CancellationToken.None);
         }
         
-        public async Task DeleteByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id, cancellationToken);
             _dbContext.Set<T>().Remove(entity);

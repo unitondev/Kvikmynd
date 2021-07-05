@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Infrastructure
 {
-    public class MovieSiteDbContext : DbContext
+    public class MovieSiteDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public MovieSiteDbContext()
         { }
@@ -11,15 +14,13 @@ namespace MovieSite.Infrastructure
         public MovieSiteDbContext(DbContextOptions<MovieSiteDbContext> options)
             : base(options)
         { }
-        
-        public DbSet<User> Users { get; set; }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

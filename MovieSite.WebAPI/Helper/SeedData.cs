@@ -1,28 +1,27 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MovieSite.Domain.Models;
-using MovieSite.Infrastructure;
 
-namespace MovieSite
+namespace MovieSite.Helper
 {
     public class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task Initialize(IServiceProvider serviceProvider)
         {
-            using var dbContext = new MovieSiteDbContext(serviceProvider
-                .GetRequiredService<DbContextOptions<MovieSiteDbContext>>());
+            var userManager = serviceProvider.GetService<UserManager<User>>();
+
+            var user = new User
+            {
+                Email = "12312@gmail.com", FullName = "11111111111", UserName = "first"
+            };
+
+            // var result = userManager.CreateAsync(user, "123456").GetAwaiter().GetResult();
+            var result = await userManager.CreateAsync(user, "123456");
             
-            dbContext.Users.AddRange(
-                new User
-                {
-                    Email = "12312@gmail.com", FullName = "11111111111", Password = "sad987ytfcv"
-                },
-                new User
-                {
-                    Email = "kjhgvb@gmail.com", FullName = "222222222", Password = "kiuytresxct6g78"
-                });
-            dbContext.SaveChanges();
+            if (!result.Succeeded)
+                throw new Exception("Can't seed user!");
         }
     }
 }
