@@ -1,10 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace MovieSite.Jwt
+namespace MovieSite.Application.Jwt
 {
     public interface IJwtSigningEncodingKey
     {
-        // private, generation jwt
         string SigningAlgorithm { get; }
         public SecurityKey GetKey();
 

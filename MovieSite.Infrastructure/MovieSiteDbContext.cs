@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Infrastructure
 {
-    public class MovieSiteDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class MovieSiteDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public MovieSiteDbContext()
         { }

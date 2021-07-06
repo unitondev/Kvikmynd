@@ -1,4 +1,4 @@
-﻿namespace MovieSite
+﻿namespace MovieSite.Application.Jwt
 {
     public static class Constants
     {

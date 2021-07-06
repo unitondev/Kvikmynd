@@ -10,6 +10,5 @@ namespace MovieSite.Application.Interfaces.Repositories
         public IUserRepository UserRepository { get; }
 
         public Task<int> CommitAsync();
-        public Task<int> CommitAsync(CancellationToken cancellation);
     }
 }

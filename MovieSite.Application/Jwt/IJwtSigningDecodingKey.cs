@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace MovieSite.Jwt
+namespace MovieSite.Application.Jwt
 {
     public interface IJwtSigningDecodingKey
     {
