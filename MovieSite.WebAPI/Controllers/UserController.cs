@@ -9,7 +9,6 @@ using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {

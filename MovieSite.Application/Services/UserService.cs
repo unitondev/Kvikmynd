@@ -74,7 +74,7 @@ namespace MovieSite.Application.Services
             var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, authRequestUser.Password);
 
             if (!isPasswordCorrect)
-                return Result<AuthResponseUser>.BadRequest("Password is not correct");
+                return Result<AuthResponseUser>.BadRequest(Error.PasswordIsNotCorrect);
 
             
             var jwtToken = GenerateJwtToken(user);
@@ -134,8 +134,8 @@ namespace MovieSite.Application.Services
                 return Result<AuthResponseUser>.NotFound();
 
             var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(token => token.Token == refreshToken);
-            if (refreshedToken != null && !refreshedToken.IsActive)
-                return Result<AuthResponseUser>.BadRequest("Refresh token not found or not active"); 
+            if (!refreshedToken.IsActive)
+                return Result<AuthResponseUser>.BadRequest(Error.TokenIsNotActive); 
 
             var newRefreshToken = GenerateRefreshToken();
             refreshedToken.Revoked = DateTime.Now;
