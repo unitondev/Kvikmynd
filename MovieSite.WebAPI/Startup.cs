@@ -32,6 +32,7 @@ namespace MovieSite
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddIdentity<User, IdentityRole<int>>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -78,6 +79,7 @@ namespace MovieSite
                 app.UseHsts();
             }
 
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseSpaStaticFiles();
             
