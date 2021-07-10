@@ -1,2 +1,0 @@
-export const FETCH_USERS = "USERS/FETCH_USERS";
-export const FETCH_USERS_SAGA = "USERS/FETCH_USERS_SAGA";

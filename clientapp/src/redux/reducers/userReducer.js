@@ -1,14 +1,13 @@
-import {FETCH_USERS} from "../types";
+import {handleAction, handleActions} from "redux-actions";
+import {fetchUsers} from '../actions/index'
 
 const initState = {
     fetchedUsers: [],
 };
 
-export const usersReducer = (state = initState, action) => {
-    switch (action.type) {
-        case FETCH_USERS:
-            return { ...state, fetchedUsers: action.payload };
-        default:
-            return state;
-    }
-};
+export const usersReducer = handleActions(
+    {
+        [fetchUsers]: (state, action) => ({
+            ...state, fetchedUsers: action.payload
+        })
+}, initState);

@@ -1,7 +1,3 @@
-import {FETCH_USERS_SAGA} from "../types";
-
-export function fetchUsers() {
-    return {
-        type: FETCH_USERS_SAGA
-    }
-}
+import {createAction} from "redux-actions";
+export const fetchUsers = createAction('FETCH_USERS');
+export const fetchUsersSaga = createAction('FETCH_USERS_SAGA');
