@@ -17,12 +17,12 @@ const Index = (
                 component="h2"
                 className={classes.viewTitleText}
             >
-                Login
+                Register
             </Typography>
         </div>
-        <div className={classes.loginFormBlock}>
+        <div className={classes.registerFormBlock}>
             <form
-                className={classes.loginForm}
+                className={classes.registerForm}
                 onSubmit={onSubmitForm}
             >
                 <TextField
@@ -33,6 +33,26 @@ const Index = (
                     className={classes.textField}
                     variant="outlined"
                     {...formik.getFieldProps('email')}
+                >
+                </TextField>
+                <TextField
+                    error={!!(formik.touched.userName && formik.errors.userName)}
+                    helperText={!!(formik.touched.userName && formik.errors.userName) === false ? null : formik.errors.userName}
+                    label="User Name"
+                    type='text'
+                    className={classes.textField}
+                    variant="outlined"
+                    {...formik.getFieldProps('userName')}
+                >
+                </TextField>
+                <TextField
+                    error={!!(formik.touched.fullName && formik.errors.fullName)}
+                    helperText={!!(formik.touched.fullName && formik.errors.fullName) === false ? null : formik.errors.fullName}
+                    label="Full Name"
+                    type='text'
+                    className={classes.textField}
+                    variant="outlined"
+                    {...formik.getFieldProps('fullName')}
                 >
                 </TextField>
                 <TextField
@@ -50,7 +70,7 @@ const Index = (
                     color="primary"
                     type='submit'
                 >
-                    Login
+                    Register
                 </Button>
             </form>
         </div>

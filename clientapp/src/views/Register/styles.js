@@ -1,11 +1,11 @@
 const styles = {
-    loginFormBlock: {
+    registerFormBlock: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         padding: '40px'
     },
-    loginForm: {
+    registerForm: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'

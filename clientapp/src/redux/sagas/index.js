@@ -1,18 +1,21 @@
 import { put, call, takeEvery } from "redux-saga/effects";
 import {axiosDefault} from "../../axios";
-import {fetchUsers, fetchUsersSaga} from "../actions";
+import {fetchUsers, fetchUsersSaga, loginRequest, registerRequest} from "../actions";
+import {sagaLoginRequest, sagaRegisterRequest} from "./loginAuthSagas";
 
 export function* sagaWatcher(){
-    yield takeEvery([fetchUsersSaga], sagaWorker);
+    yield takeEvery([fetchUsersSaga], sagaRequestUsers);
+    yield takeEvery([loginRequest], sagaLoginRequest);
+    yield takeEvery([registerRequest], sagaRegisterRequest);
 }
 
-function* sagaWorker(data){
+function* sagaRequestUsers(data){
     try {
         const response = yield call(
             axiosDefault,
             'https://localhost:5001/users',
             'get',
-            data
+            JSON.stringify(data)
         );
 
         yield put(fetchUsers(response.data) );
