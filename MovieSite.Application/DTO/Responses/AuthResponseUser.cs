@@ -10,6 +10,7 @@ namespace MovieSite.Application.DTO
         public string FullName { get; set; }
         public string Email { get; set; }
         public string JwtToken { get; set; }
+        public string UserName { get; set; }
 
         [JsonIgnore] // cause refresh token returns in http only cookie
         public string RefreshToken { get; set; }
@@ -19,6 +20,7 @@ namespace MovieSite.Application.DTO
             Id = user.Id;
             FullName = user.FullName;
             Email = user.Email;
+            UserName = user.FullName;
             JwtToken = jwtToken;
             RefreshToken = refreshToken;
         }

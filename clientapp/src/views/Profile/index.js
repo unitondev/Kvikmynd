@@ -35,8 +35,7 @@ const Index = (
                             userName:
                         </p>
                         <p className={classes.profileInfoStringValue}>
-                            //TODO add userName to authResponse
-                            TODO add userName to authResponse
+                            {user.userName}
                         </p>
                     </div>
                     <div className={classes.profileInfoString}>

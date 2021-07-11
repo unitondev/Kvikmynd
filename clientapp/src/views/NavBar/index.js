@@ -2,7 +2,6 @@ import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {NavLink} from "react-router-dom";
 import PropTypes from "prop-types";
-import {Button} from "@material-ui/core";
 
 function Index({classes, isLogined, fullName, onClickLogout}) {
     return(
