@@ -1,5 +1,5 @@
 import {handleActions} from "redux-actions";
-import {loginRequestFailed, loginRequestSuccess} from "../actions";
+import {loginRequestFailed, loginRequestSuccess, logoutRequestSuccess} from "../actions";
 
 const initState = {
     isLoginSucceeded: false,
@@ -7,7 +7,7 @@ const initState = {
     message: ''
 }
 
-export const loginReducer = handleActions(
+export const loginOutReducer = handleActions(
     {
         [loginRequestSuccess]: (state, action) => (
             {
@@ -19,5 +19,11 @@ export const loginReducer = handleActions(
                 ...state,
                 isLoginSucceeded: false,
                 message: action.payload
-            })
+            }),
+        [logoutRequestSuccess] : (state, action) => (
+            {
+                isLoginSucceeded: false,
+                user: null,
+                message: action.payload,
+            }),
     }, initState)

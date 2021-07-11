@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import {usersReducer} from "./userReducer";
-import {loginReducer} from "./loginReducer";
+import {FORDEVONLY_usersReducer} from "./FORDEVONLY_userReducer";
+import {loginOutReducer} from "./loginOutReducer";
 import {registerReducer} from "./registerReducer";
 
 export const rootReducer = combineReducers({
-    users: usersReducer,
-    login: loginReducer,
+    FORDEVONLY_users: FORDEVONLY_usersReducer,
+    login: loginOutReducer,
     register: registerReducer
 });

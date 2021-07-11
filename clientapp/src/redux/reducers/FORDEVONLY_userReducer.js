@@ -5,7 +5,7 @@ const initState = {
     fetchedUsers: [],
 };
 
-export const usersReducer = handleActions(
+export const FORDEVONLY_usersReducer = handleActions(
     {
         [fetchUsers]: (state, action) => ({
             ...state, fetchedUsers: action.payload

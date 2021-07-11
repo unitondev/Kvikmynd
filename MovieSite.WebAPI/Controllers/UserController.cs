@@ -135,6 +135,22 @@ namespace MovieSite.Controllers
             return Ok(new {message = "Token revoked"});
         }
 
+        [HttpGet("logout")]
+        public async Task<IActionResult> LogOut()
+        {
+            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            var response = await _userService.LogOut(jwtToken);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok();
+                case HttpStatusCode.NotFound:
+                    return BadRequest(Error.UserNotFound);
+                default:
+                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
+            }
+        }
+
         private bool SetRefreshTokenCookie(string refreshToken)
         {
             try

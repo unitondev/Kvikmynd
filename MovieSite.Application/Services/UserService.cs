@@ -89,6 +89,25 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(authResponseUser);
         }
 
+        public async Task<Result<bool>> LogOut(string jwtTokenPlainText)
+        {
+            var jwtClaimsDictionary = JwtDecoder.DecodeJwt(jwtTokenPlainText);
+            var userId = jwtClaimsDictionary["userId"];
+            
+            
+            var user = await _userManager.FindByIdAsync(Convert.ToString(userId));
+
+            if (user == null)
+                return Result<bool>.NotFound();
+
+            foreach (var refreshToken in user.RefreshTokens)
+            {
+                if (refreshToken.IsActive)
+                    await RevokeTokenAsync(user, refreshToken);
+            }
+            return Result<bool>.Success(true);
+        }
+
         private string GenerateJwtToken(User user)
         {
             var claims = new[]
@@ -149,6 +168,13 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(authResponseUser);
         }
 
+        public async Task RevokeTokenAsync(User user, RefreshToken revokedToken)
+        {
+            revokedToken.Revoked = DateTime.Now;
+            _unitOfWork.UserRepository.Update(user);     
+            await _unitOfWork.CommitAsync();
+        }
+        
         public async Task<bool> RevokeTokenAsync(string revokedTokenPlainText)
         {
             var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(user =>

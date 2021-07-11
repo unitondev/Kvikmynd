@@ -1,7 +1,7 @@
 import {withStyles} from "@material-ui/core/styles";
 import styles from './styles'
-import NavBar from '../NavBar/index'
 import {Button, TextField, Typography} from "@material-ui/core";
+import {NavBarContainer} from "../../containers/NavBarContainer";
 
 const Index = (
     {
@@ -10,7 +10,7 @@ const Index = (
         formik
     }) => {
     return(<div>
-        <NavBar />
+        <NavBarContainer />
         <div className={classes.viewTitleBlock}>
             <Typography
                 variant="h2"
