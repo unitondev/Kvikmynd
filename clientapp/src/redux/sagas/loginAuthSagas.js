@@ -2,8 +2,9 @@ import {call, put} from "redux-saga/effects";
 import {axiosDefault, axiosWithJwt} from "../../axios";
 import {
     loginRequestFailed,
-    loginRequestSuccess, logoutRequestFailed,
-    logoutRequestSuccess,
+    loginRequestSuccess,
+    logoutRequestFailed,
+    logoutRequestSuccess, refreshTokensRequestFailed, refreshTokensRequestSuccess,
     registerRequestFailed,
     registerRequestSuccess
 } from "../actions";
@@ -52,12 +53,28 @@ export function* sagaLogoutRequest(data){
             'get',
             data.payload
         )
-
-        if(response.status === 200)
-            yield put(logoutRequestSuccess());
-        else
-            yield put(logoutRequestFailed('Logout failed'));
+        yield put(logoutRequestSuccess());
     } catch (e) {
-        yield put(logoutRequestFailed(e.response.data));
+        yield put(logoutRequestSuccess(e.response.data));
     }
+}
+
+export function* sagaRefreshTokens(){
+    try {
+        const response = yield call(
+            axiosDefault,
+            'https://localhost:5001/refresh_token',
+            'get',
+            null
+        )
+
+        if(response.status === 200){
+            yield put(refreshTokensRequestSuccess(response.data));
+        }
+        else
+            yield put(refreshTokensRequestFailed('Refresh query went wrong'));
+    } catch (e) {
+        yield put(refreshTokensRequestFailed());
+    }
+    
 }

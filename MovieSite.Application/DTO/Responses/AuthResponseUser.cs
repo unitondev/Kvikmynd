@@ -15,12 +15,16 @@ namespace MovieSite.Application.DTO
         [JsonIgnore] // cause refresh token returns in http only cookie
         public string RefreshToken { get; set; }
 
+        public AuthResponseUser()
+        {
+            
+        }
         public AuthResponseUser(User user, string jwtToken, string refreshToken)
         {
             Id = user.Id;
             FullName = user.FullName;
             Email = user.Email;
-            UserName = user.FullName;
+            UserName = user.UserName;
             JwtToken = jwtToken;
             RefreshToken = refreshToken;
         }

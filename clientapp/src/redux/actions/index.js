@@ -8,8 +8,12 @@ export const registerRequestFailed = createAction('REGISTER_REQUEST_FAILED');
 export const logoutRequest = createAction('LOGOUT_REQUEST');
 export const logoutRequestSuccess = createAction('LOGOUT_REQUEST_SUCCESS');
 export const logoutRequestFailed = createAction('LOGOUT_REQUEST_FAILED');
-// FORDEVONLY
-export const fetchUsers = createAction('FETCH_USERS');
-export const fetchUsersSaga = createAction('FETCH_USERS_SAGA');
-export const testAuthorizeSaga = createAction('TEST_AUTHORIZE_SAGA');
-export const testAuthorize = createAction('TEST_AUTHORIZE');
+export const refreshTokensRequest = createAction('REFRESH_TOKENS_REQUEST');
+export const refreshTokensRequestSuccess = createAction('REFRESH_TOKENS_REQUEST_SUCCESS');
+export const refreshTokensRequestFailed = createAction('REFRESH_TOKENS_REQUEST_FAILED');
+export const updateUserRequest = createAction('UPDATE_USER_REQUEST');
+export const updateUserRequestSuccess = createAction('UPDATE_USER_REQUEST_SUCCESS');
+export const updateUserRequestFailed = createAction('UPDATE_USER_REQUEST_FAILED');
+export const deleteUserRequest = createAction('DELETE_USER_REQUEST');
+export const deleteUserRequestSuccess = createAction('DELETE_USER_REQUEST_SUCCESS');
+export const deleteUserRequestFailed = createAction('DELETE_USER_REQUEST_FAILED');

@@ -69,16 +69,6 @@ function Index({classes, isLogined, fullName, onClickLogout}) {
                         </button>
                     }
                 </li>
-                <li>
-                    <NavLink
-                        to="/users"
-                        className={classes.navBarLink}
-                        hover='true'
-                        activeClassName={classes.activeNavBarLink}
-                    >
-                        FORDEVONLY<
-                        /NavLink>
-                </li>
             </ul>
         </nav>
     );

@@ -3,9 +3,11 @@ import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {registerRequest} from "../redux/actions";
+import {useHistory} from "react-router-dom";
 
 export const RegisterContainer = (props) => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -27,6 +29,7 @@ export const RegisterContainer = (props) => {
         }),
         onSubmit: (values) => {
             dispatch(registerRequest(values));
+            history.push('/');
         }
     });
 

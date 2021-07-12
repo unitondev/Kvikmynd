@@ -23,8 +23,8 @@ namespace MovieSite.Controllers
             _userService = userService;
         }
 
-        [HttpGet("users")]
         [AllowAnonymous]
+        [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var result = await _userService.GetAllAsync();
@@ -33,8 +33,8 @@ namespace MovieSite.Controllers
             return Ok(result);
         }
         
-        [HttpGet("user{id}")]
         [AllowAnonymous]
+        [HttpGet("user{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var result = await _userService.GetByIdOrDefaultAsync(id);
@@ -43,8 +43,8 @@ namespace MovieSite.Controllers
             return Ok(result);
         }
         
-        [HttpPost("register")]
         [AllowAnonymous]
+        [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterRequest registerRequest)
         {
             if (registerRequest == null)
@@ -52,33 +52,26 @@ namespace MovieSite.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _userService.CreateAsync(registerRequest);
-                if (!result)
-                    return BadRequest(Error.UserAlreadyExists);
-                return Ok(new{message = "User was registered"});
+                var response = await _userService.CreateAsync(registerRequest);
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+                        var result = SetRefreshTokenCookie(response.Value.RefreshToken);
+            
+                        if(result)
+                            return Ok(response.Value);
+                        return BadRequest(Error.ErrorWhileSettingRefreshToken);
+                    case HttpStatusCode.BadRequest:
+                        return BadRequest(response.Message);
+                    default:
+                        return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
+                }
             }
-
             return BadRequest(Error.ModelIsInvalid);
         }
-
-        [HttpGet("delete{id}")]
-        public async Task<IActionResult> DeleteUserById(int id)
-        {
-            var result = await _userService.DeleteByIdAsync(id);
-
-            if (!result)
-                return BadRequest(Error.UserNotFound);
-            return Ok(new {message = "User was deleted"});
-        }
-
-        [HttpGet("test")]
-        public IActionResult Secret()
-        {
-            return Ok("secret");
-        }
-
-        [HttpPost("login")]
+        
         [AllowAnonymous]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthRequestUser user)
         {
             var response = await _userService.AuthenticateAsync(user);
@@ -100,6 +93,50 @@ namespace MovieSite.Controllers
             }
         }
         
+        [AllowAnonymous]
+        [HttpGet("logout")]
+        public async Task<IActionResult> LogOut()
+        {
+            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            if(jwtToken != "undefined")
+                await _userService.LogOut(jwtToken);
+            return Ok();
+        }
+
+        [HttpPost("update_user")]
+        public async Task<IActionResult> UpdateUser([FromBody] EditUserRequest user)
+        {
+            var response = await _userService.UpdateUser(user);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(response.Value);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+                default:
+                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
+            }
+        } 
+
+        [HttpGet("delete_user")]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+
+            var result = await _userService.DeleteWithJwt(jwtToken);
+
+            if (!result)
+                return BadRequest(Error.UserNotFound);
+            return Ok(new {message = "User was deleted"});
+        }
+
+        [HttpGet("test")]
+        public IActionResult Secret()
+        {
+            return Ok("secret");
+        }
+
+        [AllowAnonymous]
         [HttpGet("refresh_token")]
         public async Task<IActionResult> RefreshTokenAsync()
         {
@@ -134,22 +171,7 @@ namespace MovieSite.Controllers
 
             return Ok(new {message = "Token revoked"});
         }
-
-        [HttpGet("logout")]
-        public async Task<IActionResult> LogOut()
-        {
-            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            var response = await _userService.LogOut(jwtToken);
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    return Ok();
-                case HttpStatusCode.NotFound:
-                    return BadRequest(Error.UserNotFound);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-            }
-        }
+        
 
         private bool SetRefreshTokenCookie(string refreshToken)
         {

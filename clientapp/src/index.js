@@ -4,19 +4,25 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { rootReducer} from "./redux/reducers/rootReducer";
-import {applyMiddleware, compose, createStore} from "redux";
+import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import createSagaMiddleware from 'redux-saga'
 import {sagaWatcher} from "./redux/sagas";
+import {composeWithDevTools} from "redux-devtools-extension";
 
 const saga = createSagaMiddleware();
 
+const composeEnhancer = composeWithDevTools({
+    trace: true,
+    traceLimit: 25
+})
+
 const store = createStore(rootReducer,
-    compose(
+    composeEnhancer(
         applyMiddleware(
             thunk,
-            saga),
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+            saga
+        ),
     )
 );
 

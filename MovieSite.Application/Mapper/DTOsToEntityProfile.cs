@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Domain.Models;
 
@@ -8,7 +9,9 @@ namespace MovieSite.Application.Mapper
     {
         public DTOsToEntityProfile()
         {
-            CreateMap<UserRegisterRequest, User>();
+            CreateMap<UserRegisterRequest, User>()
+                .AfterMap((src, dest) => dest.RefreshTokens = new List<RefreshToken>());
+            CreateMap<EditUserRequest, User>();
         }
     }
 }

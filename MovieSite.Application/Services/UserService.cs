@@ -43,25 +43,35 @@ namespace MovieSite.Application.Services
             return await _unitOfWork.UserRepository.GetAllAsync();
         }
 
-        public async Task<bool> CreateAsync(UserRegisterRequest userRegister)
+        public async Task<Result<AuthResponseUser>> CreateAsync(UserRegisterRequest registerUserRequest)
         {
-            var registeredUser = await _userManager.FindByEmailAsync(userRegister.Email) 
-                                 ?? await _userManager.FindByNameAsync(userRegister.Username);;
-
-            if (registeredUser != null) return false;
-            var user = _mapper.Map<UserRegisterRequest, User>(userRegister);
-            await _userManager.CreateAsync(user, userRegister.Password);
-            return true;
+            var registeredUser = await _userManager.FindByEmailAsync(registerUserRequest.Email) 
+                                 ?? await _userManager.FindByNameAsync(registerUserRequest.Username);;
+            if (registeredUser != null) return Result<AuthResponseUser>.BadRequest(Error.UserAlreadyExists);
+            
+            var createdUser = _mapper.Map<UserRegisterRequest, User>(registerUserRequest);
+            var jwtToken = GenerateJwtToken(createdUser);
+            var refreshToken = GenerateRefreshToken();
+            createdUser.RefreshTokens.Add(refreshToken);
+            await _userManager.CreateAsync(createdUser, registerUserRequest.Password);
+            
+            var responseUser = new AuthResponseUser(createdUser, jwtToken, refreshToken.Token);
+            return Result<AuthResponseUser>.Success(responseUser);
         }
         
-        public async Task<bool> DeleteByIdAsync(int id)
+        public async Task<bool> DeleteWithJwt(string jwtTokenPlainText)
         {
-            var deletedUser = await _userManager.FindByIdAsync(id.ToString());
+            var userId = GetIdFromFromJwtText(jwtTokenPlainText);
+            return await DeleteByIdAsync(userId);
+        }
+        
+        public async Task<bool> DeleteByIdAsync(string id)
+        {
+            var deletedUser = await _userManager.FindByIdAsync(id);
 
             if (deletedUser == null) return false;
             await _userManager.DeleteAsync(deletedUser);
             return true;
-
         }
 
         public async Task<Result<AuthResponseUser>> AuthenticateAsync(AuthRequestUser authRequestUser)
@@ -89,23 +99,33 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(authResponseUser);
         }
 
-        public async Task<Result<bool>> LogOut(string jwtTokenPlainText)
+        public async Task LogOut(string jwtTokenPlainText)
         {
-            var jwtClaimsDictionary = JwtDecoder.DecodeJwt(jwtTokenPlainText);
-            var userId = jwtClaimsDictionary["userId"];
-            
-            
+            var userId = GetIdFromFromJwtText(jwtTokenPlainText);
             var user = await _userManager.FindByIdAsync(Convert.ToString(userId));
-
-            if (user == null)
-                return Result<bool>.NotFound();
-
+            
             foreach (var refreshToken in user.RefreshTokens)
             {
                 if (refreshToken.IsActive)
                     await RevokeTokenAsync(user, refreshToken);
             }
-            return Result<bool>.Success(true);
+        }
+
+        public async Task<Result<EditUserResponse>> UpdateUser(EditUserRequest requestedUser)
+        {
+            var userEmail = requestedUser.Email;
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+                return Result<EditUserResponse>.NotFound();
+
+            _mapper.Map<EditUserRequest, User>(requestedUser, user);
+            await _userManager.UpdateAsync(user);
+            await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
+
+            var responseUser = _mapper.Map<User, EditUserResponse>(user);
+            
+            return Result<EditUserResponse>.Success(responseUser);
         }
 
         private string GenerateJwtToken(User user)
@@ -120,7 +140,7 @@ namespace MovieSite.Application.Services
                 Constants.Issuer,
                 Constants.Audience, 
                 claims,
-                notBefore: DateTime.Now, 
+                notBefore: DateTime.Now,
                 expires: DateTime.Now.AddMinutes(10),
                 new SigningCredentials(
                     signingEncodingKey.GetKey(),
@@ -144,15 +164,15 @@ namespace MovieSite.Application.Services
             }
         }
 
-        public async Task<Result<AuthResponseUser>> RefreshTokenAsync(string refreshToken)
+        public async Task<Result<AuthResponseUser>> RefreshTokenAsync(string refreshedTokenPlainText)
         {
             var refreshedUser = await _unitOfWork.UserRepository.FirstOrDefaultAsync(user =>
-                user.RefreshTokens.Any(token => token.Token == refreshToken));
+                user.RefreshTokens.Any(token => token.Token == refreshedTokenPlainText));
 
             if (refreshedUser == null)
                 return Result<AuthResponseUser>.NotFound();
 
-            var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(token => token.Token == refreshToken);
+            var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(token => token.Token == refreshedTokenPlainText);
             if (!refreshedToken.IsActive)
                 return Result<AuthResponseUser>.BadRequest(Error.TokenIsNotActive); 
 
@@ -195,6 +215,11 @@ namespace MovieSite.Application.Services
             return true;
         }
 
+        private static string GetIdFromFromJwtText(string jwtPlainText)
+        {
+            var jwtClaimsDictionary = JwtDecoder.DecodeJwt(jwtPlainText);
+            return jwtClaimsDictionary["userId"];
+        }
 
         public void Dispose()
         {
