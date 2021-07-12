@@ -4,17 +4,18 @@ import {LoginContainer} from "./containers/LoginContainer";
 import {RegisterContainer} from "./containers/RegisterContainer";
 import PrivateRoute from "./PrivateRoute";
 import {ProfileContainer} from "./containers/ProfileContainer";
-import React from "react";
-// TODO ask about double call dispatch(refreshTokensRequest()); in string 18
-// import {useDispatch, useSelector} from "react-redux";
-// import {getUser} from "./redux/selectors";
-// import {refreshTokensRequest} from "./redux/actions";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getUser} from "./redux/selectors";
+import {refreshTokensRequest} from "./redux/actions";
 
 export const AppRouter = () => {
-    // const user = useSelector(getUser);
-    // const dispatch = useDispatch();
-    // if(user === null)
-    //     dispatch(refreshTokensRequest());
+    const user = useSelector(getUser);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if(user === null)
+            dispatch(refreshTokensRequest());
+    }, []);
 
     return(
         <Router>
