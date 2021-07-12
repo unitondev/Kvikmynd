@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MovieSite.Domain.Models
 {
-    public class User : IdentityUser<Guid>
+    public class User : IdentityUser<int>
     {
         [Required]
         [MaxLength(25)]

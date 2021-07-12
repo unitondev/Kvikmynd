@@ -22,12 +22,7 @@ namespace MovieSite.Infrastructure.Repositories
         
         public async Task<int> CommitAsync()
         {
-            return await CommitAsync(CancellationToken.None);
-        }
-
-        public async Task<int> CommitAsync(CancellationToken cancellation)
-        {
-            return await _dbContext.SaveChangesAsync(cancellation);
+            return await _dbContext.SaveChangesAsync();
         }
         
         public void Dispose()

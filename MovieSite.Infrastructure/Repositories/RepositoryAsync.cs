@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieSite.Application.Interfaces.Repositories;
@@ -15,55 +13,30 @@ namespace MovieSite.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        
-        public async Task<T> GetByIdOrDefaultAsync(Guid id)
+
+        public async Task<T> GetByIdOrDefaultAsync(int id)
         {
-            return await GetByIdOrDefaultAsync(id, CancellationToken.None);
-        }
-        
-        public async Task<T> GetByIdOrDefaultAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return await _dbContext.Set<T>().FindAsync(id, cancellationToken);
+            return await _dbContext.Set<T>().FindAsync(id);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await GetAllAsync(CancellationToken.None);
-        }
-        
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            return await _dbContext.Set<T>().ToListAsync(cancellationToken);
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public async Task AddAsync(T item)
         {
-            await AddAsync(item, CancellationToken.None);
-        }
-        
-        public async Task AddAsync(T item, CancellationToken cancellationToken)
-        {
-            await _dbContext.Set<T>().AddAsync(item, cancellationToken);
+            await _dbContext.Set<T>().AddAsync(item);
         }
 
         public async Task AddRangeAsync(IEnumerable<T> item)
         {
-            await AddRangeAsync(item, CancellationToken.None);
-        }
-        
-        public async Task AddRangeAsync(IEnumerable<T> item, CancellationToken cancellationToken)
-        {
-            await _dbContext.Set<T>().AddRangeAsync(item, cancellationToken);
+            await _dbContext.Set<T>().AddRangeAsync(item);
         }
 
-        public async Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(int id)
         {
-            await DeleteByIdAsync(id, CancellationToken.None);
-        }
-        
-        public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            var entity = await _dbContext.Set<T>().FindAsync(id, cancellationToken);
+            var entity = await _dbContext.Set<T>().FindAsync(id);
             _dbContext.Set<T>().Remove(entity);
         }
     }

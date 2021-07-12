@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MovieSite.Application.Jwt;
 
 namespace MovieSite.Jwt
 {

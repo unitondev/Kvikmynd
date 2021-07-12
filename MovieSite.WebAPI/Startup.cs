@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Application.Jwt;
 using MovieSite.Application.Mapper;
 using MovieSite.Application.Services;
 using MovieSite.Domain.Models;
@@ -31,7 +32,8 @@ namespace MovieSite
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            services.AddCors();
+            services.AddIdentity<User, IdentityRole<int>>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 6;
@@ -41,6 +43,11 @@ namespace MovieSite
                 })
                 .AddEntityFrameworkStores<MovieSiteDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/login";
+            });
             
             AddAuthentication(services);
 
@@ -63,7 +70,6 @@ namespace MovieSite
         {
             if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/error/error");
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieSite.WebAPI v1"));
@@ -73,6 +79,7 @@ namespace MovieSite
                 app.UseHsts();
             }
 
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseSpaStaticFiles();
             
