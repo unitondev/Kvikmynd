@@ -9,9 +9,9 @@ namespace MovieSite.Jwt
         private readonly SymmetricSecurityKey _secretKey;
         public string SigningAlgorithm { get; } = SecurityAlgorithms.HmacSha256;
         
-        public SigningSymetricKey()
+        public SigningSymetricKey(string secret)
         {
-            _secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.Secret));
+            _secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         }
         public SecurityKey GetKey()
         {

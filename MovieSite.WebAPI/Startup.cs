@@ -29,6 +29,7 @@ namespace MovieSite
         }
 
         public IConfiguration Configuration { get; }
+        private string _authSecret;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -53,6 +54,8 @@ namespace MovieSite
 
             services.AddDbContext<MovieSiteDbContext>(builder => 
                 builder.UseInMemoryDatabase("DatabaseName"));
+
+            _authSecret = Configuration["Secrets:SecretKey"];
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -102,8 +105,8 @@ namespace MovieSite
 
         private void AddAuthentication(IServiceCollection services)
         {
-            services.AddSingleton<IJwtSigningEncodingKey, SigningSymetricKey>();
-            services.AddSingleton<IJwtSigningDecodingKey, SigningSymetricKey>();
+            services.AddSingleton<IJwtSigningEncodingKey>(provider => new SigningSymetricKey(_authSecret));
+            services.AddSingleton<IJwtSigningDecodingKey>(provider => new SigningSymetricKey(_authSecret));
 
             services.AddAuthentication(options =>
                 {
@@ -113,13 +116,13 @@ namespace MovieSite
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.SaveToken = true;
-                    IJwtSigningDecodingKey signingDecodingKey = new SigningSymetricKey();
+                    IJwtSigningDecodingKey signingDecodingKey = new SigningSymetricKey(_authSecret);
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = Configuration["Secret:Issuer"],
+                        ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidateAudience = true,
-                        ValidAudience = Configuration["Secret:Audience"],
+                        ValidAudience = Configuration["Jwt:Audience"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = signingDecodingKey.GetKey(),
                         ValidateLifetime = true,

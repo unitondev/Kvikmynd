@@ -15,7 +15,6 @@ using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Jwt;
 using MovieSite.Domain.Models;
-using MovieSite.Jwt;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace MovieSite.Application.Services
@@ -25,12 +24,19 @@ namespace MovieSite.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IJwtSigningEncodingKey _jwtSigningEncodingKey;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
+        public UserService(
+            IUnitOfWork unitOfWork,
+            UserManager<User> userManager,
+            IMapper mapper,
+            IJwtSigningEncodingKey jwtSigningEncodingKey
+            )
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
+            _jwtSigningEncodingKey = jwtSigningEncodingKey;
         }
         
         public async Task<User> GetByIdOrDefaultAsync(int id)
@@ -46,7 +52,7 @@ namespace MovieSite.Application.Services
         public async Task<Result<AuthResponseUser>> CreateAsync(UserRegisterRequest registerUserRequest)
         {
             var registeredUser = await _userManager.FindByEmailAsync(registerUserRequest.Email) 
-                                 ?? await _userManager.FindByNameAsync(registerUserRequest.Username);;
+                                 ?? await _userManager.FindByNameAsync(registerUserRequest.Username);
             if (registeredUser != null) return Result<AuthResponseUser>.BadRequest(Error.UserAlreadyExists);
             
             var createdUser = _mapper.Map<UserRegisterRequest, User>(registerUserRequest);
@@ -135,7 +141,6 @@ namespace MovieSite.Application.Services
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
             };
             
-            IJwtSigningEncodingKey signingEncodingKey = new SigningSymetricKey();
             var token = new JwtSecurityToken(
                 Constants.Issuer,
                 Constants.Audience, 
@@ -143,8 +148,8 @@ namespace MovieSite.Application.Services
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddMinutes(10),
                 new SigningCredentials(
-                    signingEncodingKey.GetKey(),
-                    signingEncodingKey.SigningAlgorithm));
+                    _jwtSigningEncodingKey.GetKey(),
+                    _jwtSigningEncodingKey.SigningAlgorithm));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
