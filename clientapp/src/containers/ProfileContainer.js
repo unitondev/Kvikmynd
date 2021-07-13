@@ -1,18 +1,29 @@
 import {useDispatch, useSelector} from "react-redux";
-import {getJwt, getUser} from "../redux/selectors";
+import {getJwt, getUser, getUserAvatar} from "../redux/selectors";
 import {updateUserRequest} from "../redux/actions";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useHistory} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import ProfileRouter from "../views/Profile/ProfileRouter";
 
 export const ProfileContainer = () => {
     const user = useSelector(getUser);
     const jwtToken = useSelector(getJwt);
+    const currentAvatar = useSelector(getUserAvatar);
     const dispatch = useDispatch();
     const history = useHistory();
     const requiredMessage = 'This field is required';
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => (resolve(reader.result));
+        reader.onerror = error => reject(error);
+    })
+    const [avatar, setAvatar] = useState(null);
+    const handleSelectingFile = (result) => {
+        setAvatar(result);
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -40,7 +51,7 @@ export const ProfileContainer = () => {
             fullName: Yup.string().max(25, 'Must be less than 25 characters'),
         }),
         onSubmit: (values) => {
-            dispatch(updateUserRequest({...values, jwtToken}));
+            dispatch(updateUserRequest({...values, avatar, jwtToken}));
             history.push('/login');
         }
     });
@@ -49,6 +60,10 @@ export const ProfileContainer = () => {
         <ProfileRouter
             formik={formik}
             user={user}
+            toBase64={toBase64}
+            currentAvatar={currentAvatar}
+            avatar={avatar}
+            handleSelectingFile={handleSelectingFile}
         />
     )
 }

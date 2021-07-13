@@ -1,19 +1,40 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
-import {Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
+import {Avatar, Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
 
 const Index = (
     {
         classes,
         onSubmitForm,
-        formik
+        formik,
+        toBase64,
+        currentAvatar,
+        avatar,
+        handleSelectingFile
 }) =>
 {
+
+    const onFileChange = event => {
+        let file = event.target.files[0];
+        if( file.type.includes('image')){
+            toBase64(file)
+                .then(result => handleSelectingFile(result))
+                .catch(error => console.log(error))
+        }
+    };
+
     return(
         <div className={classes.profileBlock}>
             <div className={classes.profileInfoBlock}>
-                <form onSubmit={onSubmitForm}>
+                <form className={classes.formBlock} onSubmit={onSubmitForm}>
+                    <div className={classes.avatarProfile}>
+                        <Avatar src={currentAvatar} className={classes.avatarBig}/>
+                        <input type='file' onChange={onFileChange}/>
+                        {avatar !== null
+                            ? <p>Filename: {avatar.name}</p>
+                            : null}
+                    </div>
                     <div className={classes.profileInfoString}>
                         <Card className={classes.cardBlock}>
                             <CardContent className={classes.cardContent}>

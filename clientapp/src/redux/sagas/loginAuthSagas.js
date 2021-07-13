@@ -3,7 +3,6 @@ import {axiosDefault, axiosWithJwt} from "../../axios";
 import {
     loginRequestFailed,
     loginRequestSuccess,
-    logoutRequestFailed,
     logoutRequestSuccess, refreshTokensRequestFailed, refreshTokensRequestSuccess,
     registerRequestFailed,
     registerRequestSuccess

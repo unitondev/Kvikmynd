@@ -1,7 +1,7 @@
 import React from 'react'
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
-import {Card, CardContent, Typography} from "@material-ui/core";
+import {Avatar, Card, CardContent, Typography} from "@material-ui/core";
 
 const ProfileView = (
     {
@@ -12,6 +12,9 @@ const ProfileView = (
     return(
         <div className={classes.profileBlock}>
             <div className={classes.profileInfoBlock}>
+                <div className={classes.avatarProfile}>
+                    <Avatar src={user.avatar} className={classes.avatarBig}/>
+                </div>
                 <div className={classes.profileInfoString}>
                     <Card className={classes.cardBlock}>
                         <CardContent className={classes.cardContent}>

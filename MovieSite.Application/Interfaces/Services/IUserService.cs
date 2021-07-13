@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Domain.Models;
 

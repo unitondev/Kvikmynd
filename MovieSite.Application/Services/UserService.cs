@@ -10,12 +10,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Jwt;
 using MovieSite.Domain.Models;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
+// using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace MovieSite.Application.Services
 {

@@ -71,7 +71,7 @@ export const userReducer = handleActions(
         [deleteUserRequestFailed] : (state, action) => (
             {
                 ...state,
-                message: 'Deleting failed'
+                message: 'Deleting failed'  
             }),
         [registerRequestSuccess] : (state, action) => (
             {

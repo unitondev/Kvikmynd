@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using MovieSite.Application.DTO;
+﻿using System.Text;
+using AutoMapper;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Mapper
@@ -9,6 +10,8 @@ namespace MovieSite.Application.Mapper
         public EntityToDTOProfile()
         {
             CreateMap<User, EditUserResponse>();
+            // .ForMember(dest => dest.Avatar, opt => 
+            // opt.MapFrom(src => Encoding.UTF8.GetString(src.Avatar)));
         }
     }
 }

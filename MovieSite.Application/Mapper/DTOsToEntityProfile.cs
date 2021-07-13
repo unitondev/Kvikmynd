@@ -10,8 +10,15 @@ namespace MovieSite.Application.Mapper
         public DTOsToEntityProfile()
         {
             CreateMap<UserRegisterRequest, User>()
+                .ForMember(dest => dest.Avatar, opt => 
+                    opt.Condition(src => (src.Avatar != "")))
                 .AfterMap((src, dest) => dest.RefreshTokens = new List<RefreshToken>());
+
+
             CreateMap<EditUserRequest, User>();
+            // .ForMember(dest => dest.Avatar, opt => 
+            // opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Avatar)));
+
         }
     }
 }

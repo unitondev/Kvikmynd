@@ -65,7 +65,7 @@ namespace MovieSite
             services.AddTransient<DbContext, MovieSiteDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
-            services.AddAutoMapper(typeof(DTOsToEntityProfile));
+            services.AddAutoMapper(typeof(DTOsToEntityProfile));;
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }
 

@@ -13,7 +13,11 @@ const Index = (
     {
         classes,
         formik,
-        user
+        user,
+        toBase64,
+        currentAvatar,
+        avatar,
+        handleSelectingFile
     }) => {
 
     const {path, url} = useRouteMatch();
@@ -70,12 +74,14 @@ const Index = (
                         <ProfileUpdateUserView
                             onSubmitForm={formik.handleSubmit}
                             formik={formik}
+                            toBase64={toBase64}
+                            currentAvatar={currentAvatar}
+                            avatar={avatar}
+                            handleSelectingFile={handleSelectingFile}
                         />
                     </Route>
                     <Route path={`${path}/delete_user_react`}>
-                        <ProfileDeleteView
-
-                        />
+                        <ProfileDeleteView/>
                     </Route>
                 </Switch>
             </div>
