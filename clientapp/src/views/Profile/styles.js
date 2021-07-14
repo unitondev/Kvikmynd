@@ -13,6 +13,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: '20px'
     },
     profileSectionsBlock: {
         display: 'flex',
@@ -55,6 +56,9 @@ const styles = {
         justifyContent: 'space-around',
     },
     avatarProfile: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
     avatarBig: {
         minWidth: '200px',
@@ -64,6 +68,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+    },
+    inputFile: {
+        margin: '15px 0px'
     }
 }
 

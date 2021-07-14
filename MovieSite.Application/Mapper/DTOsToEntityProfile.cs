@@ -11,7 +11,7 @@ namespace MovieSite.Application.Mapper
         {
             CreateMap<UserRegisterRequest, User>()
                 .ForMember(dest => dest.Avatar, opt => 
-                    opt.Condition(src => (src.Avatar != "")))
+                    opt.Condition(src => (src.Avatar != null)))
                 .AfterMap((src, dest) => dest.RefreshTokens = new List<RefreshToken>());
 
 

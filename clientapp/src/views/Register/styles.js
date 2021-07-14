@@ -18,6 +18,13 @@ const styles = {
     },
     viewTitleText: {
         textAlign: 'center'
+    },
+    avatarBig: {
+        minWidth: '200px',
+        minHeight: '200px'
+    },
+    inputFile: {
+        margin: '15px 0px'
     }
 }
 

@@ -1,39 +1,35 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {Avatar, Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
+import {AvatarPreview} from "../../helpers";
 
 const Index = (
     {
         classes,
         onSubmitForm,
         formik,
-        toBase64,
         currentAvatar,
-        avatar,
         handleSelectingFile
 }) =>
 {
-
-    const onFileChange = event => {
-        let file = event.target.files[0];
-        if( file.type.includes('image')){
-            toBase64(file)
-                .then(result => handleSelectingFile(result))
-                .catch(error => console.log(error))
-        }
-    };
-
     return(
         <div className={classes.profileBlock}>
             <div className={classes.profileInfoBlock}>
                 <form className={classes.formBlock} onSubmit={onSubmitForm}>
                     <div className={classes.avatarProfile}>
-                        <Avatar src={currentAvatar} className={classes.avatarBig}/>
-                        <input type='file' onChange={onFileChange}/>
-                        {avatar !== null
-                            ? <p>Filename: {avatar.name}</p>
-                            : null}
+                        {
+                            !!formik.values.avatar
+                                ? <AvatarPreview file={formik.values.avatar} classes={classes.avatarBig}/>
+                                : <Avatar src={currentAvatar} className={classes.avatarBig}/>
+                        }
+                        <input
+                            type='file'
+                            name='avatar'
+                            accept='image/*'
+                            onChange={handleSelectingFile}
+                            className={classes.inputFile}
+                        />
                     </div>
                     <div className={classes.profileInfoString}>
                         <Card className={classes.cardBlock}>

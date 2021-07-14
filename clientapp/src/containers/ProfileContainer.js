@@ -4,8 +4,10 @@ import {updateUserRequest} from "../redux/actions";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useHistory} from "react-router-dom";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ProfileRouter from "../views/Profile/ProfileRouter";
+import {toBase64} from "../helpers";
+
 
 export const ProfileContainer = () => {
     const user = useSelector(getUser);
@@ -14,15 +16,9 @@ export const ProfileContainer = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const requiredMessage = 'This field is required';
-    const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => (resolve(reader.result));
-        reader.onerror = error => reject(error);
-    })
-    const [avatar, setAvatar] = useState(null);
-    const handleSelectingFile = (result) => {
-        setAvatar(result);
+    const handleSelectingFile = event => {
+        formik.setFieldValue('avatar',
+            event.currentTarget.files[0]);
     }
 
     const formik = useFormik({
@@ -32,6 +28,7 @@ export const ProfileContainer = () => {
             fullName: `${user.fullName}`,
             oldPassword: '',
             newPassword: '',
+            avatar: null,
         },
         validationSchema: Yup.object({
             email: Yup.string().email('Invalid email')
@@ -51,8 +48,14 @@ export const ProfileContainer = () => {
             fullName: Yup.string().max(25, 'Must be less than 25 characters'),
         }),
         onSubmit: (values) => {
-            dispatch(updateUserRequest({...values, avatar, jwtToken}));
-            history.push('/login');
+            let promise = toBase64(values.avatar);
+            promise.then(result => {
+                    values.avatar = result;
+                    dispatch(updateUserRequest({...values, jwtToken}));
+                    history.push('/login');
+                },
+                error => console.log(error)
+            )
         }
     });
 
@@ -62,7 +65,6 @@ export const ProfileContainer = () => {
             user={user}
             toBase64={toBase64}
             currentAvatar={currentAvatar}
-            avatar={avatar}
             handleSelectingFile={handleSelectingFile}
         />
     )

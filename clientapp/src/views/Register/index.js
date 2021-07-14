@@ -1,13 +1,16 @@
 import {withStyles} from "@material-ui/core/styles";
 import styles from './styles'
-import {Button, TextField, Typography} from "@material-ui/core";
+import {Avatar, Button, TextField, Typography} from "@material-ui/core";
 import {NavBarContainer} from "../../containers/NavBarContainer";
+import React from "react";
+import {AvatarPreview} from "../../helpers";
 
 const Index = (
     {
         classes,
         onSubmitForm,
-        formik
+        formik,
+        handleSelectingFile,
     }) => {
     return(<div>
         <NavBarContainer />
@@ -25,6 +28,18 @@ const Index = (
                 className={classes.registerForm}
                 onSubmit={onSubmitForm}
             >
+                {
+                    !!formik.values.avatar
+                        ? <AvatarPreview file={formik.values.avatar} classes={classes.avatarBig}/>
+                        : <Avatar className={classes.avatarBig}/>
+                }
+                <input
+                    type='file'
+                    name='avatar'
+                    accept='image/*'
+                    onChange={handleSelectingFile}
+                    className={classes.inputFile}
+                />
                 <TextField
                     error={!!(formik.touched.email && formik.errors.email)}
                     helperText={!!(formik.touched.email && formik.errors.email) === false ? null : formik.errors.email}

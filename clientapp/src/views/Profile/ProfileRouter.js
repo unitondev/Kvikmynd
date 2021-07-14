@@ -16,7 +16,6 @@ const Index = (
         user,
         toBase64,
         currentAvatar,
-        avatar,
         handleSelectingFile
     }) => {
 
@@ -76,7 +75,6 @@ const Index = (
                             formik={formik}
                             toBase64={toBase64}
                             currentAvatar={currentAvatar}
-                            avatar={avatar}
                             handleSelectingFile={handleSelectingFile}
                         />
                     </Route>

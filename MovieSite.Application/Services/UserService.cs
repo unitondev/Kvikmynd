@@ -57,10 +57,10 @@ namespace MovieSite.Application.Services
             if (registeredUser != null) return Result<AuthResponseUser>.BadRequest(Error.UserAlreadyExists);
             
             var createdUser = _mapper.Map<UserRegisterRequest, User>(registerUserRequest);
-            var jwtToken = GenerateJwtToken(createdUser);
             var refreshToken = GenerateRefreshToken();
             createdUser.RefreshTokens.Add(refreshToken);
             await _userManager.CreateAsync(createdUser, registerUserRequest.Password);
+            var jwtToken = GenerateJwtToken(createdUser);
             
             var responseUser = new AuthResponseUser(createdUser, jwtToken, refreshToken.Token);
             return Result<AuthResponseUser>.Success(responseUser);
