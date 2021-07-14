@@ -4,7 +4,7 @@ import {updateUserRequest} from "../redux/actions";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useHistory} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import ProfileRouter from "../views/Profile/ProfileRouter";
 import {toBase64} from "../helpers";
 
@@ -36,26 +36,20 @@ export const ProfileContainer = () => {
                 .required(requiredMessage),
             oldPassword: Yup
                 .string()
-                .min(6, 'Must be more than 6 characters')
-                .max(50, 'Must be less than 50 characters')
-                .required(requiredMessage),
+                .max(50, 'Must be less than 50 characters'),
             newPassword: Yup
                 .string()
-                .min(6, 'Must be more than 6 characters')
-                .max(50, 'Must be less than 50 characters')
-                .required(requiredMessage),
+                .max(50, 'Must be less than 50 characters'),
             userName: Yup.string().max(25, 'Must be less than 25 characters'),
             fullName: Yup.string().max(25, 'Must be less than 25 characters'),
         }),
-        onSubmit: (values) => {
-            let promise = toBase64(values.avatar);
-            promise.then(result => {
-                    values.avatar = result;
-                    dispatch(updateUserRequest({...values, jwtToken}));
-                    history.push('/login');
-                },
-                error => console.log(error)
-            )
+        onSubmit: async values => {
+            if(values.avatar != null)
+                values.avatar =  await toBase64(values.avatar)
+            else
+                values.avatar = currentAvatar;
+            dispatch(updateUserRequest({...values, jwtToken}));
+            history.push('/login');
         }
     });
 

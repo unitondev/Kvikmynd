@@ -14,7 +14,7 @@ namespace MovieSite.Application.Interfaces.Services
         Task<IEnumerable<User>> GetAllAsync();
         Task<Result<AuthResponseUser>> CreateAsync(UserRegisterRequest item);
         Task<bool> DeleteByIdAsync(string id);
-        Task<bool> DeleteWithJwt(string jwtTokenPlainText);
+        Task<bool> DeleteByJwt(string jwtTokenPlainText);
         Task<Result<AuthResponseUser>> AuthenticateAsync(AuthRequestUser authRequestUser);
         Task<Result<AuthResponseUser>> RefreshTokenAsync(string token);
         Task RevokeTokenAsync(User user, RefreshToken token);

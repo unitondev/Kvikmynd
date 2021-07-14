@@ -33,17 +33,9 @@ export const RegisterContainer = (props) => {
             fullName: Yup.string().max(25, 'Must be less than 25 characters').required('Required'),
             userName: Yup.string().max(25, 'Must be less than 25 characters').required('Required')
         }),
-        onSubmit: (values) => {
-            if(!!values.avatar){
-                let promise = toBase64(values.avatar);
-                promise.then(result => {
-                        values.avatar = result;
-                        dispatch(registerRequest(values));
-                        history.push('/');
-                    },
-                    error => console.log(error)
-                )
-            }
+        onSubmit: async values => {
+            if(!!values.avatar)
+                values.avatar = await toBase64(values.avatar)
             dispatch(registerRequest(values));
             history.push('/');
         }

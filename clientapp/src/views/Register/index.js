@@ -11,8 +11,8 @@ const Index = (
         onSubmitForm,
         formik,
         handleSelectingFile,
-    }) => {
-    return(<div>
+    }) => (
+    <div>
         <NavBarContainer />
         <div className={classes.viewTitleBlock}>
             <Typography
@@ -89,7 +89,7 @@ const Index = (
                 </Button>
             </form>
         </div>
-    </div>);
-}
+    </div>
+)
 
 export default withStyles(styles)(Index);

@@ -12,7 +12,6 @@ namespace MovieSite.Application.DTO.Responses
         public string JwtToken { get; set; }
         public string UserName { get; set; }
         public string Avatar { get; set; }
-
         [JsonIgnore] // cause refresh token returns in http only cookie
         public string RefreshToken { get; set; }
 

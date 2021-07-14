@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
@@ -16,7 +15,6 @@ using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Jwt;
 using MovieSite.Domain.Models;
-// using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace MovieSite.Application.Services
 {
@@ -66,7 +64,7 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(responseUser);
         }
         
-        public async Task<bool> DeleteWithJwt(string jwtTokenPlainText)
+        public async Task<bool> DeleteByJwt(string jwtTokenPlainText)
         {
             var userId = GetIdFromFromJwtText(jwtTokenPlainText);
             return await DeleteByIdAsync(userId);
@@ -128,7 +126,8 @@ namespace MovieSite.Application.Services
 
             _mapper.Map<EditUserRequest, User>(requestedUser, user);
             await _userManager.UpdateAsync(user);
-            await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
+            if(!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
+                await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
 
             var responseUser = _mapper.Map<User, EditUserResponse>(user);
             
@@ -143,8 +142,8 @@ namespace MovieSite.Application.Services
             };
             
             var token = new JwtSecurityToken(
-                Constants.Issuer,
-                Constants.Audience, 
+                "https://localhost:5001/", 
+                "https://localhost:5001/",
                 claims,
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddMinutes(10),
