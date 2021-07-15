@@ -53,7 +53,7 @@ namespace MovieSite
             AddAuthentication(services);
 
             services.AddDbContext<MovieSiteDbContext>(builder => 
-                builder.UseInMemoryDatabase("DatabaseName"));
+                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
             _authSecret = Configuration["Secrets:SecretKey"];
             
