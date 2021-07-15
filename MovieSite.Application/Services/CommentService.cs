@@ -19,7 +19,7 @@ namespace MovieSite.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<Comment>> GetCommentsAsync(int movieId)
+        public async Task<IEnumerable<Comment>> GetCommentsAsync()
         {
             return await _unitOfWork.CommentRepository.GetAllAsync();
         }

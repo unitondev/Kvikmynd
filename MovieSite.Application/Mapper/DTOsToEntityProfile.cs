@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using AutoMapper;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Domain.Models;
@@ -10,15 +11,30 @@ namespace MovieSite.Application.Mapper
         public DTOsToEntityProfile()
         {
             CreateMap<UserRegisterRequest, User>()
+                .ForMember(dest => dest.Avatar, opt =>
+                {
+                    opt.PreCondition(src => src.Avatar != null);
+                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Avatar));
+                })
+                .AfterMap((src, dest) => 
+                    dest.RefreshTokens = new List<RefreshToken>());
+
+
+            CreateMap<EditUserRequest, User>()
                 .ForMember(dest => dest.Avatar, opt => 
-                    opt.Condition(src => (src.Avatar != null)))
-                .AfterMap((src, dest) => dest.RefreshTokens = new List<RefreshToken>());
+                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Avatar)));
 
-
-            CreateMap<EditUserRequest, User>();
-            // .ForMember(dest => dest.Avatar, opt => 
-            // opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Avatar)));
-
+            CreateMap<MovieRequest, Movie>()
+                .ForMember(dest => dest.Cover, opt => 
+                {
+                    opt.PreCondition(src => src.Cover != null);
+                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Cover));
+                })
+                .AfterMap((src, dest) =>
+                {
+                    dest.MovieRatings ??= new List<MovieRating>();
+                    dest.Comments ??= new List<Comment>();
+                });
         }
     }
 }

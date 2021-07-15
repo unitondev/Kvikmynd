@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,7 +11,8 @@ namespace MovieSite.Domain.Models
         [Required]
         [MaxLength(25)]
         public string FullName { get; set; }
-        public string Avatar { get; set; } = BaseAvatar;
+
+        public byte[] Avatar { get; set; } = Encoding.UTF8.GetBytes(BaseAvatar);
         [JsonIgnore]
         public ICollection<RefreshToken> RefreshTokens { get; set; }
         public IList<UserRating> UserRatings { get; set; }

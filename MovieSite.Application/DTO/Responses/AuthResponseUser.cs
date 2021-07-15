@@ -22,7 +22,7 @@ namespace MovieSite.Application.DTO.Responses
             FullName = user.FullName;
             Email = user.Email;
             UserName = user.UserName;
-            Avatar = user.Avatar;
+            Avatar = Encoding.UTF8.GetString(user.Avatar);
             JwtToken = jwtToken;
             RefreshToken = refreshToken;
         }

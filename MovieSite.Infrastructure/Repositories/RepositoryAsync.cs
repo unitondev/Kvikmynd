@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieSite.Application.Interfaces.Repositories;
@@ -42,7 +43,7 @@ namespace MovieSite.Infrastructure.Repositories
         public async Task DeleteByIdAsync(int id)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id);
-            _dbContext.Set<T>().Remove(entity);
+            await Task.Run(() => _dbContext.Set<T>().Remove(entity));
         }
     }
 }

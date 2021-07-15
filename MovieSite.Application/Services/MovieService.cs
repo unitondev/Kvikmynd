@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
@@ -28,26 +30,35 @@ namespace MovieSite.Application.Services
         {
             return await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(movieId);
         }
-
-        public async Task<Movie> CreateMovieAsync(Movie movie)
+        
+        public async Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest)
         {
-            await _unitOfWork.MovieRepository.AddAsync(movie);
+            var createdMovie = await _unitOfWork.MovieRepository.FindByTitleAsync(movieRequest.Title);
+            if (createdMovie != null)
+                return Result<Movie>.BadRequest(Error.MovieAlreadyExists);
+            
+            createdMovie = _mapper.Map<MovieRequest, Movie>(movieRequest);
+            await _unitOfWork.MovieRepository.AddAsync(createdMovie);
             await _unitOfWork.CommitAsync();
-            return movie;
+            return Result<Movie>.Success(createdMovie);
+        }
+        
+        public async Task<Result<Movie>> UpdateMovieAsync(MovieRequest movieRequest)
+        {
+            var updatedMovie = await _unitOfWork.MovieRepository.FindByTitleAsync(movieRequest.Title);
+            if(updatedMovie == null)
+                return Result<Movie>.NotFound();
+
+            updatedMovie = _mapper.Map<MovieRequest, Movie>(movieRequest);
+            await _unitOfWork.MovieRepository.UpdateAsync(updatedMovie);
+            await _unitOfWork.CommitAsync();
+            return Result<Movie>.Success(updatedMovie);
         }
 
-        public async Task<Movie> UpdateMovieAsync(Movie movie)
-        {
-            await _unitOfWork.MovieRepository.UpdateAsync(movie);
-            await _unitOfWork.CommitAsync();
-            return movie;
-        }
-
-        public async Task<bool> DeleteMovieByIdAsync(int movieId)
+        public async Task DeleteMovieByIdAsync(int movieId)
         {
             await _unitOfWork.MovieRepository.DeleteByIdAsync(movieId);
             await _unitOfWork.CommitAsync();
-            return true;
         }
 
         public void Dispose()

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Helper;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Services
@@ -8,8 +10,8 @@ namespace MovieSite.Application.Interfaces.Services
     {
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
         Task<Movie> GetMovieByIdAsync(int movieId);
-        Task<Movie> CreateMovieAsync(Movie movie);
-        Task<Movie> UpdateMovieAsync(Movie movie);
-        Task<bool> DeleteMovieByIdAsync(int movieId);
+        Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest);
+        Task<Result<Movie>> UpdateMovieAsync(MovieRequest movieRequest);
+        Task DeleteMovieByIdAsync(int movieId);
     }
 }

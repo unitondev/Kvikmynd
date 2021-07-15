@@ -9,9 +9,9 @@ namespace MovieSite.Application.Mapper
     {
         public EntityToDTOProfile()
         {
-            CreateMap<User, EditUserResponse>();
-            // .ForMember(dest => dest.Avatar, opt => 
-            // opt.MapFrom(src => Encoding.UTF8.GetString(src.Avatar)));
+            CreateMap<User, EditUserResponse>()
+                .ForMember(dest => dest.Avatar, opt => 
+                    opt.MapFrom(src => Encoding.UTF8.GetString(src.Avatar)));
         }
     }
 }

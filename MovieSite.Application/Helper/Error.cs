@@ -9,5 +9,7 @@
         public static readonly string TokenIsNotActive= "Token is not active";
         public static readonly string ErrorWhileSettingRefreshToken = "Error while setting refresh token";
         public static readonly string PasswordIsNotCorrect = "Password is not correct";
+        public static readonly string MovieNotFound = "Movie not found";
+        public static readonly string MovieAlreadyExists = "Movie already exists";
     }
 }

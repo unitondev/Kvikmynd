@@ -9,6 +9,7 @@ using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
@@ -80,19 +81,15 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> UpdateUser([FromBody] EditUserRequest user)
         {
             var response = await _userService.UpdateUserAsync(user);
-            return HandleResponseCode(response);
+            return ResponseHandler.HandleResponseCode(response);
         } 
 
         [HttpGet("delete_user")]
         public async Task<IActionResult> DeleteUser()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-
-            var result = await _userService.DeleteByJwtAsync(jwtToken);
-
-            if (!result)
-                return BadRequest(Error.UserNotFound);
-            return Ok(new {message = "User was deleted"});
+            await _userService.DeleteByIdFromJwtAsync(jwtToken);
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -113,7 +110,7 @@ namespace MovieSite.Controllers
             if (response == false)
                 return BadRequest(Error.UserNotFound);
 
-            return Ok(new {message = "Token revoked"});
+            return Ok();
         }
         
 
@@ -136,25 +133,6 @@ namespace MovieSite.Controllers
             }
         }
 
-        private IActionResult HandleResponseCode<T>(Result<T> response)
-        {
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    return Ok(response.Value);
-                case HttpStatusCode.BadRequest:
-                    return BadRequest(response.Message);
-                case HttpStatusCode.NotFound:
-                    return NotFound();
-                case HttpStatusCode.InternalServerError:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-                case HttpStatusCode.Unauthorized:
-                    return Unauthorized(response.Message);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-            }
-        }
-        
         private IActionResult HandleResponseCodeAndSetToken(Result<AuthResponseUser> response)
         {
             switch (response.StatusCode)

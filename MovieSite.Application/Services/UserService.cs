@@ -38,9 +38,9 @@ namespace MovieSite.Application.Services
             _jwtSigningEncodingKey = jwtSigningEncodingKey;
         }
         
-        public async Task<User> GetByIdOrDefaultAsync(int id)
+        public async Task<User> GetByIdOrDefaultAsync(int userId)
         {
-            return await _userManager.FindByIdAsync(id.ToString());
+            return await _userManager.FindByIdAsync(userId.ToString());
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -64,19 +64,16 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(responseUser);
         }
         
-        public async Task<bool> DeleteByJwtAsync(string jwtTokenPlainText)
+        public async Task DeleteByIdFromJwtAsync(string jwtTokenPlainText)
         {
             var userId = GetIdFromFromJwtText(jwtTokenPlainText);
-            return await DeleteByIdAsync(userId);
+            await DeleteByIdAsync(userId);
         }
         
-        public async Task<bool> DeleteByIdAsync(string id)
+        public async Task DeleteByIdAsync(string userId)
         {
-            var deletedUser = await _userManager.FindByIdAsync(id);
-
-            if (deletedUser == null) return false;
+            var deletedUser = await _userManager.FindByIdAsync(userId);
             await _userManager.DeleteAsync(deletedUser);
-            return true;
         }
 
         public async Task<Result<AuthResponseUser>> AuthenticateAsync(AuthRequestUser authRequestUser)
