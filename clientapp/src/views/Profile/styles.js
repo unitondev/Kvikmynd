@@ -1,6 +1,7 @@
 const styles = {
     mainBlock: {
         display: 'flex',
+        marginTop: '60px',
     },
     profileBlock: {
         display: 'flex',
@@ -11,6 +12,8 @@ const styles = {
     profileInfoBlock: {
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: '20px'
     },
     profileSectionsBlock: {
         display: 'flex',
@@ -40,7 +43,6 @@ const styles = {
         marginTop: '50px',
     },
     updateButton: {
-        maxWidth: '40%',
         textTransform: 'none',
     },
     profileInfoStringKey: {
@@ -52,6 +54,23 @@ const styles = {
     cardContent: {
         display: 'flex',
         justifyContent: 'space-around',
+    },
+    avatarProfile: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    avatarBig: {
+        minWidth: '200px',
+        minHeight: '200px'
+    },
+    formBlock: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    inputFile: {
+        margin: '15px 0px'
     }
 }
 

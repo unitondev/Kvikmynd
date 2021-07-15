@@ -3,17 +3,23 @@ import React from "react";
 import {withStyles} from "@material-ui/core/styles";
 import styles from './styles'
 import { NavBarContainer } from "../../containers/NavBarContainer";
-import { Link } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import { Route, Switch, useRouteMatch} from "react-router-dom";
 import ProfileView from "./ProfileView";
 import ProfileUpdateUserView from "./ProfileUpdateUserView";
 import ProfileDeleteView from "./ProfileDeleteView";
+import {useDispatch, useSelector} from "react-redux";
+import {getJwt} from "../../redux/selectors";
+import {deleteUserRequest} from "../../redux/actions";
 
 const Index = (
     {
         classes,
         formik,
-        user
+        user,
+        toBase64,
+        currentAvatar,
+        handleSelectingFile
     }) => {
 
     const {path, url} = useRouteMatch();
@@ -21,6 +27,14 @@ const Index = (
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
+    const dispatch = useDispatch();
+    const jwtToken = useSelector(getJwt);
+    const history = useHistory();
+
+    const deleteAccount = () => {
+        dispatch(deleteUserRequest(jwtToken));
+        history.push('/');
+    }
 
     return(
         <div>
@@ -70,11 +84,14 @@ const Index = (
                         <ProfileUpdateUserView
                             onSubmitForm={formik.handleSubmit}
                             formik={formik}
+                            toBase64={toBase64}
+                            currentAvatar={currentAvatar}
+                            handleSelectingFile={handleSelectingFile}
                         />
                     </Route>
                     <Route path={`${path}/delete_user_react`}>
                         <ProfileDeleteView
-
+                            deleteAccount={deleteAccount}
                         />
                     </Route>
                 </Switch>

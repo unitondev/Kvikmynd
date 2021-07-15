@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
@@ -45,7 +46,7 @@ namespace MovieSite.Controllers
         
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] UserRegisterRequest registerRequest)
+        public async Task<IActionResult> Register([FromBody] UserRegisterRequest registerRequest)
         {
             if (registerRequest == null)
                 return NotFound(Error.UserNotFound);
@@ -53,19 +54,7 @@ namespace MovieSite.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _userService.CreateAsync(registerRequest);
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-                        var result = SetRefreshTokenCookie(response.Value.RefreshToken);
-            
-                        if(result)
-                            return Ok(response.Value);
-                        return BadRequest(Error.ErrorWhileSettingRefreshToken);
-                    case HttpStatusCode.BadRequest:
-                        return BadRequest(response.Message);
-                    default:
-                        return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-                }
+                return HandleResponseCodeAndSetToken(response);
             }
             return BadRequest(Error.ModelIsInvalid);
         }
@@ -75,22 +64,7 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> Login([FromBody] AuthRequestUser user)
         {
             var response = await _userService.AuthenticateAsync(user);
-
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    var result = SetRefreshTokenCookie(response.Value.RefreshToken);
-            
-                    if(result)
-                        return Ok(response.Value);
-                    return BadRequest(Error.ErrorWhileSettingRefreshToken);
-                case HttpStatusCode.NotFound:
-                    return NotFound();
-                case HttpStatusCode.BadRequest:
-                    return BadRequest(response.Message);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-            }
+            return HandleResponseCodeAndSetToken(response);
         }
         
         [AllowAnonymous]
@@ -106,34 +80,16 @@ namespace MovieSite.Controllers
         [HttpPost("update_user")]
         public async Task<IActionResult> UpdateUser([FromBody] EditUserRequest user)
         {
-            var response = await _userService.UpdateUser(user);
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    return Ok(response.Value);
-                case HttpStatusCode.NotFound:
-                    return NotFound();
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-            }
+            var response = await _userService.UpdateUserAsync(user);
+            return ResponseHandler.HandleResponseCode(response);
         } 
 
         [HttpGet("delete_user")]
         public async Task<IActionResult> DeleteUser()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-
-            var result = await _userService.DeleteWithJwt(jwtToken);
-
-            if (!result)
-                return BadRequest(Error.UserNotFound);
-            return Ok(new {message = "User was deleted"});
-        }
-
-        [HttpGet("test")]
-        public IActionResult Secret()
-        {
-            return Ok("secret");
+            await _userService.DeleteByIdFromJwtAsync(jwtToken);
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -142,22 +98,7 @@ namespace MovieSite.Controllers
         {
             var refreshToken = Request.Cookies["refresh_token"];
             var response =  await _userService.RefreshTokenAsync(refreshToken);
-
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    var result = SetRefreshTokenCookie(response.Value.RefreshToken);
-            
-                    if(result)
-                        return Ok(response.Value);
-                    return BadRequest(Error.ErrorWhileSettingRefreshToken);
-                case HttpStatusCode.NotFound:
-                    return NotFound();
-                case HttpStatusCode.BadRequest:
-                    return BadRequest(response.Message);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-            }
+            return HandleResponseCodeAndSetToken(response);
         }
 
         [HttpGet("revoke_token")]
@@ -165,11 +106,11 @@ namespace MovieSite.Controllers
         {
             var revokedToken = Request.Cookies["refresh_token"];
             var response = await _userService.RevokeTokenAsync(revokedToken);
-            
+
             if (response == false)
                 return BadRequest(Error.UserNotFound);
 
-            return Ok(new {message = "Token revoked"});
+            return Ok();
         }
         
 
@@ -189,6 +130,29 @@ namespace MovieSite.Controllers
             {
                 Console.WriteLine(e);
                 return false;
+            }
+        }
+
+        private IActionResult HandleResponseCodeAndSetToken(Result<AuthResponseUser> response)
+        {
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    var result = SetRefreshTokenCookie(response.Value.RefreshToken);
+            
+                    if(result)
+                        return Ok(response.Value);
+                    return BadRequest(Error.ErrorWhileSettingRefreshToken);
+                case HttpStatusCode.BadRequest:
+                    return BadRequest(response.Message);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+                case HttpStatusCode.InternalServerError:
+                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
+                case HttpStatusCode.Unauthorized:
+                    return Unauthorized(response.Message);
+                default:
+                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
             }
         }
     }

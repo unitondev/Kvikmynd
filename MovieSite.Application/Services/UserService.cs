@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MovieSite.Application.DTO;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Jwt;
 using MovieSite.Domain.Models;
-using MovieSite.Jwt;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace MovieSite.Application.Services
 {
@@ -25,17 +23,24 @@ namespace MovieSite.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IJwtSigningEncodingKey _jwtSigningEncodingKey;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
+        public UserService(
+            IUnitOfWork unitOfWork,
+            UserManager<User> userManager,
+            IMapper mapper,
+            IJwtSigningEncodingKey jwtSigningEncodingKey
+            )
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
+            _jwtSigningEncodingKey = jwtSigningEncodingKey;
         }
         
-        public async Task<User> GetByIdOrDefaultAsync(int id)
+        public async Task<User> GetByIdOrDefaultAsync(int userId)
         {
-            return await _userManager.FindByIdAsync(id.ToString());
+            return await _userManager.FindByIdAsync(userId.ToString());
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -46,32 +51,29 @@ namespace MovieSite.Application.Services
         public async Task<Result<AuthResponseUser>> CreateAsync(UserRegisterRequest registerUserRequest)
         {
             var registeredUser = await _userManager.FindByEmailAsync(registerUserRequest.Email) 
-                                 ?? await _userManager.FindByNameAsync(registerUserRequest.Username);;
+                                 ?? await _userManager.FindByNameAsync(registerUserRequest.Username);
             if (registeredUser != null) return Result<AuthResponseUser>.BadRequest(Error.UserAlreadyExists);
             
             var createdUser = _mapper.Map<UserRegisterRequest, User>(registerUserRequest);
-            var jwtToken = GenerateJwtToken(createdUser);
             var refreshToken = GenerateRefreshToken();
             createdUser.RefreshTokens.Add(refreshToken);
             await _userManager.CreateAsync(createdUser, registerUserRequest.Password);
+            var jwtToken = GenerateJwtToken(createdUser);
             
             var responseUser = new AuthResponseUser(createdUser, jwtToken, refreshToken.Token);
             return Result<AuthResponseUser>.Success(responseUser);
         }
         
-        public async Task<bool> DeleteWithJwt(string jwtTokenPlainText)
+        public async Task DeleteByIdFromJwtAsync(string jwtTokenPlainText)
         {
             var userId = GetIdFromFromJwtText(jwtTokenPlainText);
-            return await DeleteByIdAsync(userId);
+            await DeleteByIdAsync(userId);
         }
         
-        public async Task<bool> DeleteByIdAsync(string id)
+        public async Task DeleteByIdAsync(string userId)
         {
-            var deletedUser = await _userManager.FindByIdAsync(id);
-
-            if (deletedUser == null) return false;
+            var deletedUser = await _userManager.FindByIdAsync(userId);
             await _userManager.DeleteAsync(deletedUser);
-            return true;
         }
 
         public async Task<Result<AuthResponseUser>> AuthenticateAsync(AuthRequestUser authRequestUser)
@@ -91,7 +93,7 @@ namespace MovieSite.Application.Services
             var refreshToken = GenerateRefreshToken();
             
             user.RefreshTokens.Add(refreshToken);
-            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CommitAsync();
 
             var authResponseUser = new AuthResponseUser(user, jwtToken, refreshToken.Token);
@@ -111,7 +113,7 @@ namespace MovieSite.Application.Services
             }
         }
 
-        public async Task<Result<EditUserResponse>> UpdateUser(EditUserRequest requestedUser)
+        public async Task<Result<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser)
         {
             var userEmail = requestedUser.Email;
             var user = await _userManager.FindByEmailAsync(userEmail);
@@ -121,7 +123,8 @@ namespace MovieSite.Application.Services
 
             _mapper.Map<EditUserRequest, User>(requestedUser, user);
             await _userManager.UpdateAsync(user);
-            await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
+            if(!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
+                await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
 
             var responseUser = _mapper.Map<User, EditUserResponse>(user);
             
@@ -135,16 +138,15 @@ namespace MovieSite.Application.Services
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
             };
             
-            IJwtSigningEncodingKey signingEncodingKey = new SigningSymetricKey();
             var token = new JwtSecurityToken(
-                Constants.Issuer,
-                Constants.Audience, 
+                "https://localhost:5001/", 
+                "https://localhost:5001/",
                 claims,
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddMinutes(10),
                 new SigningCredentials(
-                    signingEncodingKey.GetKey(),
-                    signingEncodingKey.SigningAlgorithm));
+                    _jwtSigningEncodingKey.GetKey(),
+                    _jwtSigningEncodingKey.SigningAlgorithm));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -180,7 +182,7 @@ namespace MovieSite.Application.Services
             refreshedToken.Revoked = DateTime.Now;
             refreshedToken.ReplacedByToken = newRefreshToken.Token;
             refreshedUser.RefreshTokens.Add(newRefreshToken);
-            _unitOfWork.UserRepository.Update(refreshedUser);
+            await _unitOfWork.UserRepository.UpdateAsync(refreshedUser);
             await _unitOfWork.CommitAsync();
 
             var newJwtToken = GenerateJwtToken(refreshedUser);
@@ -191,7 +193,7 @@ namespace MovieSite.Application.Services
         public async Task RevokeTokenAsync(User user, RefreshToken revokedToken)
         {
             revokedToken.Revoked = DateTime.Now;
-            _unitOfWork.UserRepository.Update(user);     
+            await _unitOfWork.UserRepository.UpdateAsync(user);     
             await _unitOfWork.CommitAsync();
         }
         
@@ -209,7 +211,7 @@ namespace MovieSite.Application.Services
                 return false;
 
             revokedToken.Revoked = DateTime.Now;
-            _unitOfWork.UserRepository.Update(user);     
+            await _unitOfWork.UserRepository.UpdateAsync(user);     
             await _unitOfWork.CommitAsync();
 
             return true;

@@ -3,8 +3,9 @@ import {axiosDefault, axiosWithJwt} from "../../axios";
 import {
     loginRequestFailed,
     loginRequestSuccess,
-    logoutRequestFailed,
-    logoutRequestSuccess, refreshTokensRequestFailed, refreshTokensRequestSuccess,
+    logoutRequestSuccess,
+    refreshTokensRequestFailed,
+    refreshTokensRequestSuccess,
     registerRequestFailed,
     registerRequestSuccess
 } from "../actions";
@@ -47,7 +48,7 @@ export function* sagaRegisterRequest(data){
 
 export function* sagaLogoutRequest(data){
     try{
-        const response = yield call(
+        yield call(
             axiosWithJwt,
             'https://localhost:5001/logout',
             'get',

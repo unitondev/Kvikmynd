@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieSite.Application.DTO
+namespace MovieSite.Application.DTO.Requests
 {
     public class AuthRequestUser
     {

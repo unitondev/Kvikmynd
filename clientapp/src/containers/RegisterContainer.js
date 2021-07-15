@@ -4,16 +4,22 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {registerRequest} from "../redux/actions";
 import {useHistory} from "react-router-dom";
+import {toBase64} from "../helpers";
 
 export const RegisterContainer = (props) => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const handleSelectingFile = event => {
+        formik.setFieldValue('avatar',
+            event.currentTarget.files[0]);
+    }
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
             fullName: '',
-            userName: ''
+            userName: '',
+            avatar: null
         },
         validationSchema: Yup.object({
             email: Yup.string().email('Invalid email')
@@ -27,7 +33,9 @@ export const RegisterContainer = (props) => {
             fullName: Yup.string().max(25, 'Must be less than 25 characters').required('Required'),
             userName: Yup.string().max(25, 'Must be less than 25 characters').required('Required')
         }),
-        onSubmit: (values) => {
+        onSubmit: async values => {
+            if(!!values.avatar)
+                values.avatar = await toBase64(values.avatar)
             dispatch(registerRequest(values));
             history.push('/');
         }
@@ -36,5 +44,6 @@ export const RegisterContainer = (props) => {
     return <RegisterView
         onSubmitForm={formik.handleSubmit}
         formik={formik}
+        handleSelectingFile={handleSelectingFile}
     />
 };

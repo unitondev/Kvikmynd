@@ -1,8 +1,8 @@
-﻿using System;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 using MovieSite.Domain.Models;
 
-namespace MovieSite.Application.DTO
+namespace MovieSite.Application.DTO.Responses
 {
     public class AuthResponseUser
     {
@@ -11,20 +11,18 @@ namespace MovieSite.Application.DTO
         public string Email { get; set; }
         public string JwtToken { get; set; }
         public string UserName { get; set; }
-
+        public string Avatar { get; set; }
         [JsonIgnore] // cause refresh token returns in http only cookie
         public string RefreshToken { get; set; }
 
-        public AuthResponseUser()
-        {
-            
-        }
+        public AuthResponseUser() {}
         public AuthResponseUser(User user, string jwtToken, string refreshToken)
         {
             Id = user.Id;
             FullName = user.FullName;
             Email = user.Email;
             UserName = user.UserName;
+            Avatar = Encoding.UTF8.GetString(user.Avatar);
             JwtToken = jwtToken;
             RefreshToken = refreshToken;
         }

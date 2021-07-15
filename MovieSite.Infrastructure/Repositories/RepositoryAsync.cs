@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieSite.Application.Interfaces.Repositories;
@@ -34,10 +35,15 @@ namespace MovieSite.Infrastructure.Repositories
             await _dbContext.Set<T>().AddRangeAsync(item);
         }
 
+        public async Task UpdateAsync(T item)
+        {
+            await Task.Run(() => _dbContext.Set<T>().Update(item));
+        }
+
         public async Task DeleteByIdAsync(int id)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id);
-            _dbContext.Set<T>().Remove(entity);
+            await Task.Run(() => _dbContext.Set<T>().Remove(entity));
         }
     }
 }

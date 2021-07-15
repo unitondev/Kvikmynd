@@ -11,6 +11,7 @@ namespace MovieSite.Application.Interfaces.Repositories
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T item);
         Task AddRangeAsync(IEnumerable<T> items);
+        Task UpdateAsync(T item);
         Task DeleteByIdAsync(int id);
     }
 }
