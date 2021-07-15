@@ -20,10 +20,5 @@ namespace MovieSite.Infrastructure.Repositories
         {
             return await _dbContext.Users.FirstOrDefaultAsync(predicate);
         }
-
-        public void Update(User user)
-        {
-            _dbContext.Users.Update(user);
-        }
     }
 }

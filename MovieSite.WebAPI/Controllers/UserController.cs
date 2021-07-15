@@ -79,7 +79,7 @@ namespace MovieSite.Controllers
         [HttpPost("update_user")]
         public async Task<IActionResult> UpdateUser([FromBody] EditUserRequest user)
         {
-            var response = await _userService.UpdateUser(user);
+            var response = await _userService.UpdateUserAsync(user);
             return HandleResponseCode(response);
         } 
 
@@ -88,7 +88,7 @@ namespace MovieSite.Controllers
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
 
-            var result = await _userService.DeleteByJwt(jwtToken);
+            var result = await _userService.DeleteByJwtAsync(jwtToken);
 
             if (!result)
                 return BadRequest(Error.UserNotFound);

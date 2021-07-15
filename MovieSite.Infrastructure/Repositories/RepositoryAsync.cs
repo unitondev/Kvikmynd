@@ -34,6 +34,11 @@ namespace MovieSite.Infrastructure.Repositories
             await _dbContext.Set<T>().AddRangeAsync(item);
         }
 
+        public async Task UpdateAsync(T item)
+        {
+            await Task.Run(() => _dbContext.Set<T>().Update(item));
+        }
+
         public async Task DeleteByIdAsync(int id)
         {
             var entity = await _dbContext.Set<T>().FindAsync(id);

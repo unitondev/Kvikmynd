@@ -8,6 +8,5 @@ namespace MovieSite.Application.Interfaces.Repositories
     public interface IUserRepository : IRepositoryAsync<User>
     {
         Task<User> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate);
-        void Update(User user);
     }
 }

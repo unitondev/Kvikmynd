@@ -64,7 +64,7 @@ namespace MovieSite.Application.Services
             return Result<AuthResponseUser>.Success(responseUser);
         }
         
-        public async Task<bool> DeleteByJwt(string jwtTokenPlainText)
+        public async Task<bool> DeleteByJwtAsync(string jwtTokenPlainText)
         {
             var userId = GetIdFromFromJwtText(jwtTokenPlainText);
             return await DeleteByIdAsync(userId);
@@ -96,7 +96,7 @@ namespace MovieSite.Application.Services
             var refreshToken = GenerateRefreshToken();
             
             user.RefreshTokens.Add(refreshToken);
-            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CommitAsync();
 
             var authResponseUser = new AuthResponseUser(user, jwtToken, refreshToken.Token);
@@ -116,7 +116,7 @@ namespace MovieSite.Application.Services
             }
         }
 
-        public async Task<Result<EditUserResponse>> UpdateUser(EditUserRequest requestedUser)
+        public async Task<Result<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser)
         {
             var userEmail = requestedUser.Email;
             var user = await _userManager.FindByEmailAsync(userEmail);
@@ -185,7 +185,7 @@ namespace MovieSite.Application.Services
             refreshedToken.Revoked = DateTime.Now;
             refreshedToken.ReplacedByToken = newRefreshToken.Token;
             refreshedUser.RefreshTokens.Add(newRefreshToken);
-            _unitOfWork.UserRepository.Update(refreshedUser);
+            await _unitOfWork.UserRepository.UpdateAsync(refreshedUser);
             await _unitOfWork.CommitAsync();
 
             var newJwtToken = GenerateJwtToken(refreshedUser);
@@ -196,7 +196,7 @@ namespace MovieSite.Application.Services
         public async Task RevokeTokenAsync(User user, RefreshToken revokedToken)
         {
             revokedToken.Revoked = DateTime.Now;
-            _unitOfWork.UserRepository.Update(user);     
+            await _unitOfWork.UserRepository.UpdateAsync(user);     
             await _unitOfWork.CommitAsync();
         }
         
@@ -214,7 +214,7 @@ namespace MovieSite.Application.Services
                 return false;
 
             revokedToken.Revoked = DateTime.Now;
-            _unitOfWork.UserRepository.Update(user);     
+            await _unitOfWork.UserRepository.UpdateAsync(user);     
             await _unitOfWork.CommitAsync();
 
             return true;

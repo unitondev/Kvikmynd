@@ -8,7 +8,12 @@ namespace MovieSite.Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _dbContext;
-        private IUserRepository _userRepository { get; set; }
+        private IUserRepository _userRepository;
+        private IGenreRepository _genreRepository;
+        private IMovieRepository _movieRepository;
+        private IRatingRepository _ratingRepository;
+        private ICommentRepository _commentRepository;
+        
 
         public UnitOfWork(DbContext dbContext)
         {
@@ -17,7 +22,27 @@ namespace MovieSite.Infrastructure.Repositories
         
         public IUserRepository UserRepository
         {
-            get { return _userRepository ?? (_userRepository = new UserRepository(_dbContext)); }
+            get { return _userRepository ??= new UserRepository(_dbContext); }
+        }
+
+        public IGenreRepository GenreRepository
+        {
+            get { return _genreRepository ??= new GenreRepository(_dbContext); }
+        }
+        
+        public IMovieRepository MovieRepository
+        {
+            get { return _movieRepository ??= new MovieRepository(_dbContext); }
+        }
+        
+        public IRatingRepository RatingRepository
+        {
+            get { return _ratingRepository ??= new RatingRepository(_dbContext); }
+        }
+        
+        public ICommentRepository CommentRepository
+        {
+            get { return _commentRepository ??= new CommentRepository(_dbContext); }
         }
         
         public async Task<int> CommitAsync()
