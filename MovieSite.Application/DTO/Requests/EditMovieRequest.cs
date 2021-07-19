@@ -2,7 +2,7 @@
 
 namespace MovieSite.Application.DTO.Requests
 {
-    public class MovieRequest
+    public class EditMovieRequest
     {
         public string Title { get; set; }
         public string Description { get; set; }

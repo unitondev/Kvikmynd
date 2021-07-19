@@ -11,7 +11,10 @@ namespace MovieSite.Application.Interfaces.Services
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
         Task<Movie> GetMovieByIdAsync(int movieId);
         Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest);
-        Task<Result<Movie>> UpdateMovieAsync(MovieRequest movieRequest);
+        Task<Result<Movie>> UpdateMovieAsync(EditMovieRequest uEditMovieRequest);
+        Task<Result<IList<MovieRating>>> GetMovieRatings(int movieId);
+        Task<Result<double>> RecalculateMovieRatingAsync(int movieId);
+        Task<Result<IEnumerable<Comment>>> GetMovieComments(int movieId);
         Task DeleteMovieByIdAsync(int movieId);
     }
 }

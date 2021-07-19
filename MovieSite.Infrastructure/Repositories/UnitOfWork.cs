@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieSite.Application.Interfaces.Repositories;
@@ -49,7 +50,6 @@ namespace MovieSite.Infrastructure.Repositories
         {
             return await _dbContext.SaveChangesAsync();
         }
-        
         public void Dispose()
         {
             _dbContext.Dispose();

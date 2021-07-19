@@ -115,9 +115,7 @@ namespace MovieSite.Application.Services
 
         public async Task<Result<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser)
         {
-            var userEmail = requestedUser.Email;
-            var user = await _userManager.FindByEmailAsync(userEmail);
-
+            var user = await _userManager.FindByEmailAsync(requestedUser.Email);
             if (user == null)
                 return Result<EditUserResponse>.NotFound();
 
