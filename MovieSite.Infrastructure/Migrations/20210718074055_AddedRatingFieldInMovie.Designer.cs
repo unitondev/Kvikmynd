@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieSite.Infrastructure;
 
 namespace MovieSite.Infrastructure.Migrations
 {
     [DbContext(typeof(MovieSiteDbContext))]
-    partial class MovieSiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210718074055_AddedRatingFieldInMovie")]
+    partial class AddedRatingFieldInMovie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,17 +238,29 @@ namespace MovieSite.Infrastructure.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("RatingId")
                         .HasColumnType("int");
+
+                    b.HasKey("MovieId", "RatingId");
+
+                    b.HasIndex("RatingId");
+
+                    b.ToTable("MovieRating");
+                });
+
+            modelBuilder.Entity("MovieSite.Domain.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("MovieId", "UserId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MovieRating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("MovieSite.Domain.Models.User", b =>
@@ -322,6 +336,21 @@ namespace MovieSite.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("MovieSite.Domain.Models.UserRating", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RatingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RatingId");
+
+                    b.HasIndex("RatingId");
+
+                    b.ToTable("UserRating");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -421,15 +450,15 @@ namespace MovieSite.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieSite.Domain.Models.User", "User")
+                    b.HasOne("MovieSite.Domain.Models.Rating", "Rating")
                         .WithMany("MovieRatings")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Movie");
 
-                    b.Navigation("User");
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("MovieSite.Domain.Models.User", b =>
@@ -472,6 +501,25 @@ namespace MovieSite.Infrastructure.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
+            modelBuilder.Entity("MovieSite.Domain.Models.UserRating", b =>
+                {
+                    b.HasOne("MovieSite.Domain.Models.Rating", "Rating")
+                        .WithMany("UserRatings")
+                        .HasForeignKey("RatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieSite.Domain.Models.User", "User")
+                        .WithMany("UserRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rating");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MovieSite.Domain.Models.Genre", b =>
                 {
                     b.Navigation("GenreMovies");
@@ -486,11 +534,18 @@ namespace MovieSite.Infrastructure.Migrations
                     b.Navigation("MovieRatings");
                 });
 
+            modelBuilder.Entity("MovieSite.Domain.Models.Rating", b =>
+                {
+                    b.Navigation("MovieRatings");
+
+                    b.Navigation("UserRatings");
+                });
+
             modelBuilder.Entity("MovieSite.Domain.Models.User", b =>
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("MovieRatings");
+                    b.Navigation("UserRatings");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
@@ -19,35 +21,31 @@ namespace MovieSite.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<Rating>> GetRatingsAsync()
+        public async Task<IEnumerable<MovieRating>> GetRatingsAsync()
         {
             return await _unitOfWork.RatingRepository.GetAllAsync();
         }
 
-        public async Task<Rating> GetRatingByIdAsync(int ratingId)
+        public async Task<Result<int>> GetRatingByUserAndMovieIdAsync(RatingRequest ratingRequest)
         {
-            return await _unitOfWork.RatingRepository.GetByIdOrDefaultAsync(ratingId);
+            var rating = await _unitOfWork.RatingRepository.GetRatingByUserAndMovieIdAsync(ratingRequest.UserId, ratingRequest.MovieId);
+            if (rating == null)
+                return Result<int>.NotFound();
+            
+            return Result<int>.Success(rating.Value);
         }
-
-        public async Task<Rating> CreateRatingAsync(Rating rating)
+        
+        public async Task CreateRatingAsync(CreateRatingRequest ratingRequest)
         {
-            await _unitOfWork.RatingRepository.AddAsync(rating);
+            var movieRating = _mapper.Map<CreateRatingRequest, MovieRating>(ratingRequest);
+            await _unitOfWork.RatingRepository.AddAsync(movieRating);
             await _unitOfWork.CommitAsync();
-            return rating;
         }
-
-        public async Task<Rating> UpdateRatingAsync(Rating rating)
+        
+        public async Task DeleteRatingByUserAndMovieIdAsync(RatingRequest ratingRequest)
         {
-            await _unitOfWork.RatingRepository.UpdateAsync(rating);
+            await _unitOfWork.RatingRepository.DeleteRatingByUserAndMovieIdAsync(ratingRequest.UserId, ratingRequest.MovieId);
             await _unitOfWork.CommitAsync();
-            return rating;
-        }
-
-        public async Task<bool> DeleteRatingByIdAsync(int ratingId)
-        {
-            await _unitOfWork.RatingRepository.DeleteByIdAsync(ratingId);
-            await _unitOfWork.CommitAsync();
-            return true;
         }
 
         public void Dispose()

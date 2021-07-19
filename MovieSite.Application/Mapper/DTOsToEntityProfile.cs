@@ -32,9 +32,23 @@ namespace MovieSite.Application.Mapper
                 })
                 .AfterMap((src, dest) =>
                 {
+                    dest.GenreMovies ??= new List<GenreMovie>();
                     dest.MovieRatings ??= new List<MovieRating>();
                     dest.Comments ??= new List<Comment>();
                 });
+
+            CreateMap<EditMovieRequest, Movie>()
+                .ForMember(dest => dest.Cover, opt =>
+                {
+                    opt.PreCondition(src => src.Cover != null);
+                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Cover));
+                })
+                .AfterMap((src, dest) =>
+                    dest.GenreMovies = new List<GenreMovie>());
+
+            CreateMap<CommentRequest, Comment>();
+
+            CreateMap<CreateRatingRequest, MovieRating>();
         }
     }
 }

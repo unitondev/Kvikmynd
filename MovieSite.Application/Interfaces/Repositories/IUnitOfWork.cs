@@ -11,9 +11,8 @@ namespace MovieSite.Application.Interfaces.Repositories
         public IGenreRepository GenreRepository { get; }
         public IMovieRepository MovieRepository { get; }
         public IRatingRepository RatingRepository { get; }
-        public ICommentRepository CommentRepository { get; }
+        public ICommentRepository CommentRepository { get; } 
         
-
         public Task<int> CommitAsync();
     }
 }

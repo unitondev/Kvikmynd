@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Helper
 {
