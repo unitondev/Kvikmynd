@@ -3,6 +3,7 @@ import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {Avatar, Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
 import {AvatarPreview} from "../../helpers";
+import NotificationContainer from "../../containers/NotificationsContainer";
 
 const Index = (
     {
@@ -13,6 +14,7 @@ const Index = (
         handleSelectingFile
 }) => (
     <div className={classes.profileBlock}>
+        <NotificationContainer/>
         <div className={classes.profileInfoBlock}>
             <form className={classes.formBlock} onSubmit={onSubmitForm}>
                 <div className={classes.avatarProfile}>

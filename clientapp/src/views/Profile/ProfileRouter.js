@@ -11,6 +11,7 @@ import ProfileDeleteView from "./ProfileDeleteView";
 import {useDispatch, useSelector} from "react-redux";
 import {getJwt} from "../../redux/selectors";
 import {deleteUserRequest} from "../../redux/actions";
+import NotificationContainer from "../../containers/NotificationsContainer";
 
 const Index = (
     {
@@ -38,6 +39,7 @@ const Index = (
 
     return(
         <div>
+            <NotificationContainer/>
             <NavBarContainer />
             <div className={classes.mainBlock}>
                 <List

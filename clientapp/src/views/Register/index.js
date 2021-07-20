@@ -4,6 +4,7 @@ import {Avatar, Button, TextField, Typography} from "@material-ui/core";
 import {NavBarContainer} from "../../containers/NavBarContainer";
 import React from "react";
 import {AvatarPreview} from "../../helpers";
+import NotificationContainer from "../../containers/NotificationsContainer";
 
 const Index = (
     {
@@ -13,6 +14,7 @@ const Index = (
         handleSelectingFile,
     }) => (
     <div>
+        <NotificationContainer/>
         <NavBarContainer />
         <div className={classes.viewTitleBlock}>
             <Typography

@@ -1,12 +1,10 @@
 import {call, put} from "redux-saga/effects";
 import {axiosDefault, axiosWithJwt} from "../../axios";
 import {
-    loginRequestFailed,
+    enqueueSnackbarError, enqueueSnackbarSuccess,
     loginRequestSuccess,
     logoutRequestSuccess,
-    refreshTokensRequestFailed,
     refreshTokensRequestSuccess,
-    registerRequestFailed,
     registerRequestSuccess
 } from "../actions";
 
@@ -19,12 +17,29 @@ export function* sagaLoginRequest(data){
             JSON.stringify(data.payload)
         );
 
-        if(response.data.jwtToken)
+        if(response.data.jwtToken){
             yield put(loginRequestSuccess(response.data));
+            yield put(enqueueSnackbarSuccess(
+                {
+                    message: 'Login successful',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
+        }
         else
-            yield put(loginRequestFailed('Login failed. There is not jwt token'));
+            yield put(enqueueSnackbarError(
+                {
+                    message: 'Login failed. There is not jwt token',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
     } catch (e) {
-        yield put(loginRequestFailed(e.response.data));
+        yield put(enqueueSnackbarError(
+            {
+                message: e.response.data,
+                key: new Date().getTime() + Math.random(),
+            })
+        );
     }
 }
 
@@ -37,12 +52,29 @@ export function* sagaRegisterRequest(data){
             JSON.stringify(data.payload)
         );
 
-        if(response.status === 200)
+        if(response.status === 200){
             yield put(registerRequestSuccess(response.data));
+            yield put(enqueueSnackbarSuccess(
+                {
+                    message: 'Register successful',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
+        }
         else
-            yield put(registerRequestFailed('Register failed'));
+            yield put(enqueueSnackbarError(
+                {
+                    message: 'Register failed',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
     } catch (e) {
-        yield put(registerRequestFailed(e.response.data));
+        yield put(enqueueSnackbarError(
+            {
+                message: e.response.data,
+                key: new Date().getTime() + Math.random(),
+            })
+        );
     }
 }
 
@@ -54,9 +86,15 @@ export function* sagaLogoutRequest(data){
             'get',
             data.payload
         )
+
         yield put(logoutRequestSuccess());
     } catch (e) {
-        yield put(logoutRequestSuccess(e.response.data));
+        yield put(enqueueSnackbarError(
+            {
+                message: e.response.data,
+                key: new Date().getTime() + Math.random(),
+            })
+        );
     }
 }
 
@@ -69,13 +107,7 @@ export function* sagaRefreshTokens(){
             null
         )
 
-        if(response.status === 200){
+        if(response.status === 200)
             yield put(refreshTokensRequestSuccess(response.data));
-        }
-        else
-            yield put(refreshTokensRequestFailed('Refresh query went wrong'));
-    } catch (e) {
-        yield put(refreshTokensRequestFailed());
-    }
-    
+    } catch (e) {}
 }

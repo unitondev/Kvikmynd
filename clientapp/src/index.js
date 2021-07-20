@@ -9,6 +9,7 @@ import thunk from "redux-thunk";
 import createSagaMiddleware from 'redux-saga'
 import {sagaWatcher} from "./redux/sagas";
 import {composeWithDevTools} from "redux-devtools-extension";
+import { SnackbarProvider } from 'notistack';
 
 const saga = createSagaMiddleware();
 
@@ -31,7 +32,16 @@ saga.run(sagaWatcher);
 ReactDOM.render(
     <Provider store={store}>
         <React.StrictMode>
-            <App />
+            <SnackbarProvider
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                autoHideDuration={3000}
+                maxSnack={3}
+            >
+                <App />
+            </SnackbarProvider>
         </React.StrictMode>
     </Provider>,
     document.getElementById("root")

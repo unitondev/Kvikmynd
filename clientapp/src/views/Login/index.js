@@ -2,6 +2,8 @@ import {withStyles} from "@material-ui/core/styles";
 import styles from './styles'
 import {Button, TextField, Typography} from "@material-ui/core";
 import {NavBarContainer} from "../../containers/NavBarContainer";
+import NotificationContainer from "../../containers/NotificationsContainer";
+import React from "react";
 
 const Index = (
     {
@@ -10,6 +12,7 @@ const Index = (
         formik
     }) => (
     <>
+        <NotificationContainer/>
         <NavBarContainer />
         <div className={classes.viewTitleBlock}>
             <Typography
