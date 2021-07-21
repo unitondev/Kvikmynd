@@ -17,7 +17,7 @@ namespace MovieSite.Controllers
             _movieService = movieService;
         }
 
-        [HttpGet("movies")]
+        [HttpGet("api/movies")]
         public async Task<IActionResult> GetAllMovies()
         {
             var result = await _movieService.GetAllMoviesAsync();
@@ -26,7 +26,7 @@ namespace MovieSite.Controllers
             return Ok(result);
         }
 
-        [HttpGet("movie{movieId}")]
+        [HttpGet("api/movie{movieId}")]
         public async Task<IActionResult> GetMovieById(int movieId)
         {
             var result = await _movieService.GetMovieByIdAsync(movieId);
@@ -55,21 +55,21 @@ namespace MovieSite.Controllers
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpGet("movie{movieId}/comments")]
+        [HttpGet("api/movie{movieId}/comments")]
         public async Task<IActionResult> GetMovieComments(int movieId)
         {
             var response = await _movieService.GetMovieComments(movieId);
             return ResponseHandler.HandleResponseCode(response);
         }
         
-        [HttpGet("movie{movieId}/ratings")]
+        [HttpGet("api/movie{movieId}/ratings")]
         public async Task<IActionResult> GetMovieRatings(int movieId)
         {
             var response = await _movieService.GetMovieRatings(movieId);
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpGet("recalculate_movie{movieId}_rating")]
+        [HttpGet("api/recalculate_movie{movieId}_rating")]
         public async Task<IActionResult> RecalculateMovieRating(int movieId)
         {
             var response = await _movieService.RecalculateMovieRatingAsync(movieId);

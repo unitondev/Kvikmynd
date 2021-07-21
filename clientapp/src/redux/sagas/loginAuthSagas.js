@@ -25,8 +25,7 @@ export function* sagaLoginRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
-        }
-        else
+        } else
             yield put(enqueueSnackbarError(
                 {
                     message: 'Login failed. There is not jwt token',
@@ -36,7 +35,7 @@ export function* sagaLoginRequest(data){
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
-                message: e.response.data,
+                message: e.response.data.title || e.response.data,
                 key: new Date().getTime() + Math.random(),
             })
         );
@@ -60,8 +59,7 @@ export function* sagaRegisterRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
-        }
-        else
+        } else
             yield put(enqueueSnackbarError(
                 {
                     message: 'Register failed',
@@ -71,7 +69,7 @@ export function* sagaRegisterRequest(data){
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
-                message: e.response.data,
+                message: e.response.data.title || e.response.data,
                 key: new Date().getTime() + Math.random(),
             })
         );
@@ -91,7 +89,7 @@ export function* sagaLogoutRequest(data){
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
-                message: e.response.data,
+                message: e.response.data.title || e.response.data,
                 key: new Date().getTime() + Math.random(),
             })
         );

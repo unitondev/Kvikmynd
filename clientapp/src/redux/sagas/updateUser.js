@@ -21,8 +21,7 @@ export function* sagaUpdateUserRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
-        }
-        else
+        } else
             yield put(enqueueSnackbarError(
                 {
                     message: 'Updating failed',
@@ -32,7 +31,7 @@ export function* sagaUpdateUserRequest(data){
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
-                message: e.response.data,
+                message: e.response.data.title || e.response.data,
                 key: new Date().getTime() + Math.random(),
             })
         );

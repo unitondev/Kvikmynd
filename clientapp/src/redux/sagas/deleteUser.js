@@ -22,8 +22,7 @@ export function* sagaDeleteUserRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
-        }
-        else
+        } else
             yield put(enqueueSnackbarError(
                 {
                     message: 'Deleting failed',
@@ -33,7 +32,7 @@ export function* sagaDeleteUserRequest(data){
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
-                message: e.response.data,
+                message: e.response.data.title || e.response.data,
                 key: new Date().getTime() + Math.random(),
             })
         );

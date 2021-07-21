@@ -81,7 +81,7 @@ namespace MovieSite.Application.Services
             var user = await _userManager.FindByEmailAsync(authRequestUser.Email);
 
             if (user == null)
-                return Result<AuthResponseUser>.NotFound();
+                return Result<AuthResponseUser>.NotFound(Error.UserNotFound);
 
             var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, authRequestUser.Password);
 
@@ -117,7 +117,7 @@ namespace MovieSite.Application.Services
         {
             var user = await _userManager.FindByEmailAsync(requestedUser.Email);
             if (user == null)
-                return Result<EditUserResponse>.NotFound();
+                return Result<EditUserResponse>.NotFound(Error.UserNotFound);
 
             _mapper.Map<EditUserRequest, User>(requestedUser, user);
             await _userManager.UpdateAsync(user);
@@ -170,7 +170,7 @@ namespace MovieSite.Application.Services
                 user.RefreshTokens.Any(token => token.Token == refreshedTokenPlainText));
 
             if (refreshedUser == null)
-                return Result<AuthResponseUser>.NotFound();
+                return Result<AuthResponseUser>.NotFound(Error.TokenNotFound);
 
             var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(token => token.Token == refreshedTokenPlainText);
             if (!refreshedToken.IsActive)

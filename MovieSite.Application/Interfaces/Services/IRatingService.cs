@@ -7,7 +7,7 @@ namespace MovieSite.Application.Interfaces.Services
     public interface IRatingService
     {
         Task<Result<int>> GetRatingByUserAndMovieIdAsync(RatingRequest ratingRequest);
-        Task CreateRatingAsync(CreateRatingRequest ratingRequest);
+        Task<Result<int>> CreateRatingAsync(CreateRatingRequest ratingRequest);
         Task DeleteRatingByUserAndMovieIdAsync(RatingRequest ratingRequest);
     }
 }

@@ -5,7 +5,16 @@ import PropTypes from "prop-types";
 import {Avatar, List, ListItem, ListItemText} from "@material-ui/core";
 import React from "react";
 
-const Index = ({classes, isLogined, onClickLogout, fullName,  avatar}) => (
+
+const Index = (
+    {
+        classes,
+        isLogined,
+        onClickLogout,
+        fullName,
+        avatar,
+    }
+) => (
     <nav className={classes.navbarBlock}>
         <List
             component='nav'

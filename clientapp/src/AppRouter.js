@@ -1,5 +1,4 @@
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {NavBarContainer} from "./containers/NavBarContainer";
 import {LoginContainer} from "./containers/LoginContainer";
 import {RegisterContainer} from "./containers/RegisterContainer";
 import PrivateRoute from "./PrivateRoute";
@@ -8,6 +7,8 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./redux/selectors";
 import {refreshTokensRequest} from "./redux/actions";
+import {HomePageContainer} from "./containers/HomePageContainer";
+import {SelectedMovieContainer} from "./containers/SelectedMovieContainer";
 
 export const AppRouter = () => {
     const user = useSelector(getUser);
@@ -21,7 +22,7 @@ export const AppRouter = () => {
         <Router>
             <Switch>
                 <Route exact path="/">
-                    <NavBarContainer/>
+                    <HomePageContainer/>
                 </Route>
                 <Route path="/login">
                     <LoginContainer/>
@@ -32,6 +33,10 @@ export const AppRouter = () => {
                 <PrivateRoute
                     path="/profile"
                     component={() => (<ProfileContainer/>)}
+                />
+                <PrivateRoute
+                    path='/movie:id'
+                    component={() => (<SelectedMovieContainer/>)}
                 />
             </Switch>
         </Router>

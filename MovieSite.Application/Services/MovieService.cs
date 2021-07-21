@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
@@ -22,14 +24,22 @@ namespace MovieSite.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+        public async Task<IEnumerable<MovieResponse>> GetAllMoviesAsync()
         {
-            return await _unitOfWork.MovieRepository.GetAllAsync();
+            var movies = await _unitOfWork.MovieRepository.GetAllAsync();
+            IList<MovieResponse> movieResponses = new List<MovieResponse>();
+            foreach (var movie in movies)
+            {
+                movieResponses.Add(_mapper.Map<Movie, MovieResponse>(movie));
+            }
+
+            return movieResponses;
         }
 
-        public async Task<Movie> GetMovieByIdAsync(int movieId)
+        public async Task<MovieResponse> GetMovieByIdAsync(int movieId)
         {
-            return await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(movieId);
+            var movie = await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(movieId);
+            return _mapper.Map<Movie, MovieResponse>(movie);
         }
         
         public async Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest)
@@ -44,7 +54,7 @@ namespace MovieSite.Application.Services
             {
                 var genre = await _unitOfWork.GenreRepository.FindByNameAsync(requestedGenre);
                 if (genre == null)
-                    return Result<Movie>.NotFound();
+                    return Result<Movie>.NotFound(Error.GenreNotFound);
                 genres.Add(genre);
             }
             
@@ -68,7 +78,7 @@ namespace MovieSite.Application.Services
         {
             var updatedMovie = await _unitOfWork.MovieRepository.FindByTitleForUpdateAsync(editMovieRequest.Title);
             if(updatedMovie == null)
-                return Result<Movie>.NotFound();
+                return Result<Movie>.NotFound(Error.MovieNotFound);
 
             List<Genre> genres = new List<Genre>();
             
@@ -76,7 +86,7 @@ namespace MovieSite.Application.Services
             {
                 var genre = await _unitOfWork.GenreRepository.FindByNameAsync(requestedGenre);
                 if (genre == null)
-                    return Result<Movie>.NotFound();
+                    return Result<Movie>.NotFound(Error.GenreNotFound);
                 genres.Add(genre);
             }
 
@@ -100,7 +110,7 @@ namespace MovieSite.Application.Services
         {
             var movie = await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(movieId);
             if (movie == null)
-                return Result<IList<MovieRating>>.NotFound();
+                return Result<IList<MovieRating>>.NotFound(Error.MovieNotFound);
 
             var movieRatings = await _unitOfWork.MovieRepository.GetMovieWithRatings(movieId);
 
@@ -111,10 +121,10 @@ namespace MovieSite.Application.Services
         {
             var movie = await _unitOfWork.MovieRepository.GetMovieWithRatings(movieId);
             if (movie == null)
-                return Result<double>.NotFound();
+                return Result<double>.NotFound(Error.MovieNotFound);
 
             if (movie.MovieRatings.Count == 0)
-                return Result<double>.NotFound();
+                return Result<double>.NotFound(Error.MovieRatingNotFound);
 
             var ratingsSum = movie.MovieRatings.Sum(movieRating => movieRating.Value);
             
@@ -124,13 +134,18 @@ namespace MovieSite.Application.Services
             return Result<double>.Success(movie.Rating);
         }
         
-        public async Task<Result<IEnumerable<Comment>>> GetMovieComments(int movieId)
+        public async Task<Result<IEnumerable<CommentResponse>>> GetMovieComments(int movieId)
         {
             var movie = await _unitOfWork.MovieRepository.GetMovieWithComments(movieId);
             if (movie == null)
-                return Result<IEnumerable<Comment>>.NotFound();
-            
-            return Result<IEnumerable<Comment>>.Success(movie.Comments);
+                return Result<IEnumerable<CommentResponse>>.NotFound(Error.MovieNotFound);
+
+            IList<CommentResponse> commentResponses = new List<CommentResponse>();
+            foreach (var comment in movie.Comments)
+            {
+                commentResponses.Add(_mapper.Map<Comment, CommentResponse>(comment));
+            }
+            return Result<IEnumerable<CommentResponse>>.Success(commentResponses);
         }
 
         public async Task DeleteMovieByIdAsync(int movieId)

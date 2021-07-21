@@ -11,5 +11,8 @@
         public static readonly string PasswordIsNotCorrect = "Password is not correct";
         public static readonly string MovieNotFound = "Movie not found";
         public static readonly string MovieAlreadyExists = "Movie already exists";
+        public static readonly string UserOrMovieNotFound = "User or movie not found";
+        public static readonly string GenreNotFound = "Genre not found";
+        public static readonly string MovieRatingNotFound = "Movie rating not found";
     }
 }
