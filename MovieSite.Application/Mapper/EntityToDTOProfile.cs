@@ -12,6 +12,14 @@ namespace MovieSite.Application.Mapper
             CreateMap<User, EditUserResponse>()
                 .ForMember(dest => dest.Avatar, opt => 
                     opt.MapFrom(src => Encoding.UTF8.GetString(src.Avatar)));
+
+            CreateMap<Movie, MovieResponse>()
+                .ForMember(dest => dest.Cover, opt =>
+                    opt.MapFrom(src => Encoding.UTF8.GetString(src.Cover)));
+
+            CreateMap<Comment, CommentResponse>()
+                .ForMember(dest => dest.User, opt =>
+                    opt.MapFrom(src => src.User));
         }
     }
 }

@@ -42,9 +42,12 @@ namespace MovieSite.Application.Helper
             };
         }
         
-        public static Result<T> NotFound()
+        public static Result<T> NotFound(string message)
         {
-            return new Result<T>(HttpStatusCode.NotFound);
+            return new Result<T>(HttpStatusCode.NotFound)
+            {
+                Message = message
+            };
         }
         
         public static Result<T> ServerError(string message)

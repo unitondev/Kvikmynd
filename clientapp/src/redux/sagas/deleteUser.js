@@ -1,8 +1,8 @@
 import {call, put} from "redux-saga/effects";
 import {axiosWithJwt} from "../../axios";
 import {
-    deleteUserRequestFailed,
     deleteUserRequestSuccess,
+    enqueueSnackbarError, enqueueSnackbarSuccess,
 } from "../actions";
 
 export function* sagaDeleteUserRequest(data){
@@ -16,10 +16,25 @@ export function* sagaDeleteUserRequest(data){
 
         if(response.status === 200){
             yield put(deleteUserRequestSuccess(response.data));
-        }
-        else
-            yield put(deleteUserRequestFailed('Deleting failed'));
+            yield put(enqueueSnackbarSuccess(
+                {
+                    message: 'Deleting successful',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
+        } else
+            yield put(enqueueSnackbarError(
+                {
+                    message: 'Deleting failed',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
     } catch (e) {
-        yield put(deleteUserRequestFailed(e.response.data));
+        yield put(enqueueSnackbarError(
+            {
+                message: e.response.data.title || e.response.data,
+                key: new Date().getTime() + Math.random(),
+            })
+        );
     }
 }

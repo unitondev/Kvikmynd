@@ -146,7 +146,7 @@ namespace MovieSite.Controllers
                 case HttpStatusCode.BadRequest:
                     return BadRequest(response.Message);
                 case HttpStatusCode.NotFound:
-                    return NotFound();
+                    return NotFound(response.Message);
                 case HttpStatusCode.InternalServerError:
                     return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
                 case HttpStatusCode.Unauthorized:

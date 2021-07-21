@@ -2,6 +2,7 @@ import React from 'react'
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {Avatar, Card, CardContent, Typography} from "@material-ui/core";
+import NotificationContainer from "../../containers/NotificationsContainer";
 
 const ProfileView = (
     {
@@ -9,6 +10,7 @@ const ProfileView = (
         user
     }) => (
     <div className={classes.profileBlock}>
+        <NotificationContainer/>
         <div className={classes.profileInfoBlock}>
             <div className={classes.avatarProfile}>
                 <Avatar src={user.avatar} className={classes.avatarBig}/>

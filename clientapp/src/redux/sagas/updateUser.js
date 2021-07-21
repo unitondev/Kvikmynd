@@ -1,6 +1,6 @@
 import {call, put} from "redux-saga/effects";
 import {axiosWithJwtAndData} from "../../axios";
-import {updateUserRequestFailed, updateUserRequestSuccess} from "../actions";
+import {enqueueSnackbarError, enqueueSnackbarSuccess, updateUserRequestSuccess} from "../actions";
 
 
 export function* sagaUpdateUserRequest(data){
@@ -15,10 +15,25 @@ export function* sagaUpdateUserRequest(data){
 
         if(response.status === 200){
             yield put(updateUserRequestSuccess(response.data));
-        }
-        else
-            yield put(updateUserRequestFailed('Updating failed'));
+            yield put(enqueueSnackbarSuccess(
+                {
+                    message: 'Updating successful',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
+        } else
+            yield put(enqueueSnackbarError(
+                {
+                    message: 'Updating failed',
+                    key: new Date().getTime() + Math.random(),
+                })
+            );
     } catch (e) {
-        yield put(updateUserRequestFailed(e.response.data));
+        yield put(enqueueSnackbarError(
+            {
+                message: e.response.data.title || e.response.data,
+                key: new Date().getTime() + Math.random(),
+            })
+        );
     }
 }

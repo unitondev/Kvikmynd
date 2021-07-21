@@ -54,7 +54,7 @@ const styles = {
     },
     profileNavBlock:{
         display: 'flex',
-    }
+    },
 };
 
 export default styles;

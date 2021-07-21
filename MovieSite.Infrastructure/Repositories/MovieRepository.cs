@@ -39,6 +39,8 @@ namespace MovieSite.Infrastructure.Repositories
         {
             return await _dbContext.Set<Movie>()
                 .Include(movie => movie.Comments)
+                    .ThenInclude(comment => comment.User)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(movie => movie.Id == movieId);
         }
     }

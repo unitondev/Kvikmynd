@@ -30,16 +30,18 @@ namespace MovieSite.Application.Services
         {
             var rating = await _unitOfWork.RatingRepository.GetRatingByUserAndMovieIdAsync(ratingRequest.UserId, ratingRequest.MovieId);
             if (rating == null)
-                return Result<int>.NotFound();
+                return Result<int>.Success(0);
             
             return Result<int>.Success(rating.Value);
         }
         
-        public async Task CreateRatingAsync(CreateRatingRequest ratingRequest)
+        public async Task<Result<int>> CreateRatingAsync(CreateRatingRequest ratingRequest)
         {
             var movieRating = _mapper.Map<CreateRatingRequest, MovieRating>(ratingRequest);
             await _unitOfWork.RatingRepository.AddAsync(movieRating);
             await _unitOfWork.CommitAsync();
+            
+            return Result<int>.Success(movieRating.Value);
         }
         
         public async Task DeleteRatingByUserAndMovieIdAsync(RatingRequest ratingRequest)

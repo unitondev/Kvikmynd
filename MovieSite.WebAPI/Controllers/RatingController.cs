@@ -21,9 +21,9 @@ namespace MovieSite.Controllers
         [HttpPost("create_rating")]
         public async Task<IActionResult> CreateRatings([FromBody] CreateRatingRequest ratingRequest)
         {
-            await _ratingService.CreateRatingAsync(ratingRequest);
+            var response = await _ratingService.CreateRatingAsync(ratingRequest);
             await _movieService.RecalculateMovieRatingAsync(ratingRequest.MovieId);
-            return Ok();
+            return ResponseHandler.HandleResponseCode(response);
         }
 
         [HttpPost("get_rating")]
