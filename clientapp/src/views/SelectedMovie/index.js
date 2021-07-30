@@ -62,7 +62,7 @@ const Index = (
                                 {movie.title}
                             </Typography>
                             <Typography className={classes.selectedMovieRating}>
-                                Rating: {movie.rating === 0 ? 'No one has rated yet' : `${movie.rating} / 10 (${ratings.length})`}
+                                Rating: {movie.rating === 0 ? 'No one has rated yet' : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`}
                             </Typography>
                             <Button size="small" color="primary" onClick={handleRatingsUpdateClick}>
                                 Update rating
@@ -82,7 +82,7 @@ const Index = (
             </div>
             <div className={classes.ratingBlock}>
                 <Typography className={classes.selectedMovieCardTitle}>
-                    Movie Rating: {movie.rating === 0 ? 'No one has rated yet' : movie.rating}
+                    Movie Rating: {movie.rating === 0 ? 'No one has rated yet' : (+movie.rating).toFixed(2)}
                 </Typography>
                 <div className={classes.descriptionRatingBlock}>
                     <Typography className={classes.secondPriorityText}>My rating:</Typography> {
@@ -152,16 +152,16 @@ const Index = (
                                 <div className={classes.CommentBlock}>
                                     {(comments.map(comment => {
                                         return (
-                                            <Card className={classes.writingCommentCard} key={comment.id}>
+                                            <Card className={classes.writingCommentCard} key={comment.commentId}>
                                                 <div className={classes.commentHeader}>
                                                     <div className={classes.writingCommentUserData}>
-                                                        <Avatar src={comment.user.avatar} className={classes.avatarBlock} />
-                                                        <Typography>{comment.user.username}</Typography>
+                                                        <Avatar src={comment.userAvatar} className={classes.avatarBlock} />
+                                                        <Typography>{comment.userName}</Typography>
                                                     </div>
-                                                    <Typography>#{comment.id}</Typography>
-                                                    {comment.user.username === currentUserUserName
+                                                    <Typography>#{comment.commentId}</Typography>
+                                                    {comment.userName === currentUserUserName
                                                         ? (<div>
-                                                            <IconButton aria-label="delete" onClick={() => handleDeleteCommentClick(comment.id)}>
+                                                            <IconButton aria-label="delete" onClick={() => handleDeleteCommentClick(comment.commentId)}>
                                                                 <DeleteIcon />
                                                             </IconButton>
                                                         </div>)
@@ -175,7 +175,7 @@ const Index = (
                                                         rows={2}
                                                         placeholder='Write your comment here'
                                                         variant="outlined"
-                                                        value={comment.text}
+                                                        value={comment.commentText}
                                                         onChange={onCommentChange}
                                                         className={classes.writingCommentTextArea}
                                                         disabled

@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { rootReducer} from "./redux/reducers/rootReducer";
 import {applyMiddleware, createStore} from "redux";
-import thunk from "redux-thunk";
 import createSagaMiddleware from 'redux-saga'
 import {sagaWatcher} from "./redux/sagas";
 import {composeWithDevTools} from "redux-devtools-extension";
@@ -21,7 +20,6 @@ const composeEnhancer = composeWithDevTools({
 const store = createStore(rootReducer,
     composeEnhancer(
         applyMiddleware(
-            thunk,
             saga
         ),
     )
