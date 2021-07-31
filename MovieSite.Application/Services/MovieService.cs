@@ -41,6 +41,11 @@ namespace MovieSite.Application.Services
             return _mapper.Map<Movie, MovieResponse>(movie);
         }
         
+        public async Task<MovieWithGenresResponse> GetMovieWithGenresByIdAsync(int movieId)
+        {
+            return await _unitOfWork.MovieRepository.GetMovieWithGenresById(movieId);
+        }
+        
         public async Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest)
         {
             var createdMovie = await _unitOfWork.MovieRepository.FindByTitleAsync(movieRequest.Title);

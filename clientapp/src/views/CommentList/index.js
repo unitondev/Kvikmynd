@@ -1,7 +1,6 @@
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {Avatar, Button, Card, CardContent, IconButton, TextField, Typography} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";
 import PropTypes from "prop-types";
 import Comment from '../Comment'
@@ -51,12 +50,15 @@ const Index = (
         {
             comments.length > 0
                 ?
-                (<Comment
-                    comments={comments}
-                    currentUserUserName={currentUserUserName}
-                    handleDeleteCommentClick={handleDeleteCommentClick}
-                    onCommentChange={onCommentChange}
-                />)
+                comments.map(comment => (
+                    <Comment
+                        key={comment.commentId}
+                        comment={comment}
+                        currentUserUserName={currentUserUserName}
+                        handleDeleteCommentClick={handleDeleteCommentClick}
+                        onCommentChange={onCommentChange}
+                    />
+                ))
                 :
                 <div className={classes.emptyCommentsBlock}/>
         }

@@ -2,7 +2,7 @@ import SelectedMovieView from "../views/SelectedMovie"
 import {useDispatch, useSelector} from "react-redux";
 import {
     getComments,
-    getJwt, getMovie,
+    getJwt, getMovie, getMovieGenres,
     getRatings,
     getUser,
     getUserAvatar,
@@ -26,6 +26,7 @@ export const SelectedMovieContainer = () => {
     const movie = useSelector(getMovie);
     const comments = useSelector(getComments)
     const ratings = useSelector(getRatings)
+    const genres = useSelector(getMovieGenres);
     const userRating = useSelector(getUserRating);
     const user = useSelector(getUser);
     const jwtToken = useSelector(getJwt);
@@ -102,6 +103,7 @@ export const SelectedMovieContainer = () => {
         movie={movie}
         comments={comments}
         ratings={ratings}
+        genres={genres}
         avatar={avatar}
         youtubeOpts={youtubeOpts}
         userRating={userRating}

@@ -12,6 +12,7 @@ const initState = {
     movie: {},
     comments: [],
     ratings: [],
+    genres: [],
     userRating: 0,
 }
 
@@ -19,7 +20,8 @@ export const movieReducer = handleActions({
     [selectedMovieRequestSuccess]: (state, action) => (
         {
             ...state,
-            movie: action.payload,
+            movie: action.payload.movie,
+            genres: action.payload.genreNames
         }
     ),
     [movieCommentsRequestSuccess]: (state, action) => (

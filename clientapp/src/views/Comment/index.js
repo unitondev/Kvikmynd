@@ -8,52 +8,48 @@ import PropTypes from "prop-types";
 const Index = (
     {
         classes,
-        comments,
+        comment,
         currentUserUserName,
         handleDeleteCommentClick,
         onCommentChange
     }) => (
     <div className={classes.CommentBlock}>
-        {(comments.map(comment => {
-            return (
-                <Card className={classes.writingCommentCard} key={comment.commentId}>
-                    <div className={classes.commentHeader}>
-                        <div className={classes.writingCommentUserData}>
-                            <Avatar src={comment.userAvatar} className={classes.avatarBlock} />
-                            <Typography>{comment.userName}</Typography>
-                        </div>
-                        <Typography>#{comment.commentId}</Typography>
-                        {comment.userName === currentUserUserName
-                            ? (<div>
-                                <IconButton aria-label="delete" onClick={() => handleDeleteCommentClick(comment.commentId)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </div>)
-                            : null
-                        }
-                    </div>
-                    <CardContent className={classes.writingCommentContent}>
-                        <TextField
-                            id="outlined-multiline-static"
-                            multiline
-                            rows={2}
-                            placeholder='Write your comment here'
-                            variant="outlined"
-                            value={comment.commentText}
-                            onChange={onCommentChange}
-                            className={classes.writingCommentTextArea}
-                            disabled
-                        />
-                    </CardContent>
-                </Card>
-            )
-        }))}
+        <Card className={classes.writingCommentCard}>
+            <div className={classes.commentHeader}>
+                <div className={classes.writingCommentUserData}>
+                    <Avatar src={comment.userAvatar} className={classes.avatarBlock} />
+                    <Typography>{comment.userName}</Typography>
+                </div>
+                <Typography>#{comment.commentId}</Typography>
+                {comment.userName === currentUserUserName
+                    ? (<div>
+                        <IconButton aria-label="delete" onClick={() => handleDeleteCommentClick(comment.commentId)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>)
+                    : null
+                }
+            </div>
+            <CardContent className={classes.writingCommentContent}>
+                <TextField
+                    id="outlined-multiline-static"
+                    multiline
+                    rows={2}
+                    placeholder='Write your comment here'
+                    variant="outlined"
+                    value={comment.commentText}
+                    onChange={onCommentChange}
+                    className={classes.writingCommentTextArea}
+                    disabled
+                />
+            </CardContent>
+        </Card>
     </div>
 );
 
 Index.propTypes = {
     classes: PropTypes.object.isRequired,
-    comments: PropTypes.array.isRequired,
+    comment: PropTypes.object.isRequired,
     currentUserUserName: PropTypes.string.isRequired,
     handleDeleteCommentClick: PropTypes.func.isRequired,
     onCommentChange: PropTypes.func.isRequired,

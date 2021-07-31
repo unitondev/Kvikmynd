@@ -28,6 +28,39 @@ namespace MovieSite.Infrastructure.Repositories
             return await _dbContext.Set<Movie>().AsNoTracking().ToListAsync();
         }
         
+        public async Task<MovieWithGenresResponse> GetMovieWithGenresById(int movieId)
+        {
+            var genres = _dbContext.Set<Genre>().AsNoTracking();
+            var movie = await _dbContext.Set<Movie>()
+                .FirstOrDefaultAsync(_ => _.Id == movieId);
+            
+            var genreMovies = await _dbContext.Set<Movie>()
+                .Where(_ => _.Id == movieId)
+                .Include(_ => _.GenreMovies)
+                .Select(_ => _.GenreMovies)
+                .FirstOrDefaultAsync();
+
+            var movieWithGenresResponse = new MovieWithGenresResponse()
+            {
+                Movie = movie,
+                GenreNames = new List<string>()
+            };
+
+            var genreNames = genreMovies
+                .Join(genres, genreMovie => genreMovie.GenreId, genre => genre.Id,
+                    (genreMovie, genre) => new
+                    {
+                        GenreName = genre.Name
+                    });
+
+            foreach (var genreName in genreNames)
+            {
+                movieWithGenresResponse.GenreNames.Add(genreName.GenreName);
+            }
+
+            return movieWithGenresResponse;
+        }
+        
         public async Task<Movie> FindByTitleAsync(string title)
         {
             return await _dbContext.Set<Movie>().FirstOrDefaultAsync(movie => movie.Title == title);

@@ -7,7 +7,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
     return <Route
         {...rest}
         render={props => (
-            jwtToken !== null
+            !!jwtToken
                 ? <Component {...props} />
                 : <Redirect to='/login'/>
         )}

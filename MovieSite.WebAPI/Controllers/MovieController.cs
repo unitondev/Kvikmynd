@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Helper;
+using MovieSite.ViewModels;
 
 namespace MovieSite.Controllers
 {
@@ -12,10 +15,12 @@ namespace MovieSite.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
+        private readonly IMapper _mapper;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(IMovieService movieService, IMapper mapper)
         {
             _movieService = movieService;
+            _mapper = mapper;
         }
 
         [HttpGet("api/movies")]
@@ -34,6 +39,17 @@ namespace MovieSite.Controllers
             if (result == null)
                 return NotFound(Error.MovieNotFound);
             return Ok(result);
+        }
+        
+        [HttpGet("api/movie{movieId}/withGenres")]
+        public async Task<IActionResult> GetMovieWithGenresById(int movieId)
+        {
+            var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(movieId);
+            if (movieWithGenres == null)
+                return NotFound(Error.MovieNotFound);
+            
+            var movieWithGenresViewModel = _mapper.Map<MovieWithGenresResponse, MovieWithGenresViewModel>(movieWithGenres);
+            return Ok(movieWithGenresViewModel);
         }
 
         [HttpPost("add_movie")]
