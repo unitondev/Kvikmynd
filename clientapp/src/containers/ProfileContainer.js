@@ -55,6 +55,7 @@ export const ProfileContainer = () => {
 
     return(
         <ProfileRouter
+            onSubmitForm={formik.handleSubmit}
             formik={formik}
             user={user}
             toBase64={toBase64}

@@ -12,10 +12,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {getJwt} from "../../redux/selectors";
 import {deleteUserRequest} from "../../redux/actions";
 import NotificationContainer from "../../containers/NotificationsContainer";
+import PropTypes from "prop-types";
 
 const Index = (
     {
         classes,
+        onSubmitForm,
         formik,
         user,
         toBase64,
@@ -84,7 +86,7 @@ const Index = (
                     </Route>
                     <Route exact path={`${path}/update_user_react`}>
                         <ProfileUpdateUserView
-                            onSubmitForm={formik.handleSubmit}
+                            onSubmitForm={onSubmitForm}
                             formik={formik}
                             toBase64={toBase64}
                             currentAvatar={currentAvatar}
@@ -100,6 +102,16 @@ const Index = (
             </div>
         </div>
     )
+}
+
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
+    formik: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    toBase64: PropTypes.func.isRequired,
+    currentAvatar: PropTypes.string.isRequired,
+    handleSelectingFile: PropTypes.func.isRequired
 }
 
 export default withStyles(styles)(Index);

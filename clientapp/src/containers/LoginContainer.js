@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { loginRequest } from "../redux/actions";
 import { useHistory } from "react-router-dom";
 
-export const LoginContainer = (props) => {
+export const LoginContainer = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const formik = useFormik({
@@ -28,6 +28,20 @@ export const LoginContainer = (props) => {
             history.push("/");
         },
     });
+    const touchedEmail = formik.touched.email;
+    const emailErrors = formik.errors.email;
+    const touchedPassword = formik.touched.password;
+    const passwordError = formik.errors.password;
+    const emailFieldProps = formik.getFieldProps('email');
+    const passwordFieldProps = formik.getFieldProps('password');
 
-    return <LoginView onSubmitForm={formik.handleSubmit} formik={formik} />;
+    return <LoginView
+        onSubmitForm={formik.handleSubmit}
+        touchedEmail={touchedEmail}
+        emailErrors={emailErrors}
+        touchedPassword={touchedPassword}
+        passwordError={passwordError}
+        emailFieldProps={emailFieldProps}
+        passwordFieldProps={passwordFieldProps}
+    />;
 };
