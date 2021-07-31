@@ -14,5 +14,6 @@ namespace MovieSite.Application.Interfaces.Repositories
         void SetMovieRatingIsModified(Movie movie);
         Task<Movie> GetMovieWithRatings(int movieId);
         Task<IReadOnlyList<MovieCommentsResponse>> GetMovieWithComments(int movieId);
+        Task<MovieWithGenresResponse> GetMovieWithGenresById(int movieId);
     }
 }

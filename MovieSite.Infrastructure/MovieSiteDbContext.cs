@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MovieSite.Domain.Models;
 using MovieSite.Infrastructure.Covers;
 
@@ -43,7 +44,6 @@ namespace MovieSite.Infrastructure
                     }
                 );
             }
-            
             
             modelBuilder.Entity<Movie>().HasData(
                 new Movie()

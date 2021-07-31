@@ -22,6 +22,7 @@ const Index = (
         comments,
         avatar,
         ratings,
+        genres,
         youtubeOpts,
         userRating,
         settedRating,
@@ -65,6 +66,15 @@ const Index = (
                             <Button size="small" color="primary" onClick={handleRatingsUpdateClick}>
                                 Update rating
                             </Button>
+                            <Typography className={classes.secondPriorityText}>
+                                Genres:
+                                {
+                                    genres?.length > 0
+                                        ?
+                                        genres.map(genre => ` ${genre}, `)
+                                        : null
+                                }
+                            </Typography>
                             <Typography className={classes.selectedMovieCardDescriptionText}>
                                 {movie.description}
                             </Typography>
@@ -115,7 +125,6 @@ const Index = (
                 </Typography>
             </div>
             <CommentsList
-                classes={classes}
                 handleCommentsUpdateClick={handleCommentsUpdateClick}
                 avatar={avatar}
                 writtenComment={writtenComment}
@@ -135,6 +144,7 @@ Index.propTypes = {
     comments: PropTypes.array.isRequired,
     avatar: PropTypes.string.isRequired,
     ratings: PropTypes.array.isRequired,
+    genres: PropTypes.array,
     youtubeOpts: PropTypes.object.isRequired,
     userRating: PropTypes.number.isRequired,
     settedRating: PropTypes.number.isRequired,

@@ -193,7 +193,7 @@ export function* sagaSelectedMovieRequest(data){
     try {
         const response = yield call(
             axiosDefault,
-            `https://localhost:5001/api/movie${data.payload}`,
+            `https://localhost:5001/api/movie${data.payload}/withGenres`,
             'get',
         )
 
