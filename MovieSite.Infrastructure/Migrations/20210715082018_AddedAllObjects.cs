@@ -27,7 +27,7 @@ namespace MovieSite.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cover = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     YoutubeLink = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
