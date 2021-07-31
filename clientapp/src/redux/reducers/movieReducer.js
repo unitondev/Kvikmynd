@@ -9,10 +9,10 @@ import {
 } from "../actions";
 
 const initState = {
-    movie: [],
+    movie: {},
     comments: [],
     ratings: [],
-    userRating: '',
+    userRating: 0,
 }
 
 export const movieReducer = handleActions({
@@ -48,10 +48,10 @@ export const movieReducer = handleActions({
     ),
     [cleanMovieStore]: (state, action) => (
         {
-            movie: [],
+            movie: {},
             comments: [],
             ratings: [],
-            userRating: '',
+            userRating: 0,
         }
     ),
 }, initState);

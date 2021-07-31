@@ -3,19 +3,17 @@ import styles from './styles'
 import {NavBarContainer} from "../../containers/NavBarContainer";
 import React from "react";
 import {
-    Avatar,
     Button,
     Card,
     CardContent,
     CardMedia, CircularProgress,
-    IconButton,
     Slider,
-    TextField,
     Typography
 } from "@material-ui/core";
 import YouTube from "react-youtube";
-import DeleteIcon from '@material-ui/icons/Delete';
 import NotificationContainer from "../../containers/NotificationsContainer";
+import PropTypes from "prop-types";
+import CommentsList from '../CommentList'
 
 const Index = (
     {
@@ -29,7 +27,7 @@ const Index = (
         settedRating,
         onRatingChange,
         handleRatingSet,
-        comment,
+        writtenComment,
         onCommentChange,
         handleCommentSet,
         handleCommentsUpdateClick,
@@ -62,7 +60,7 @@ const Index = (
                                 {movie.title}
                             </Typography>
                             <Typography className={classes.selectedMovieRating}>
-                                Rating: {movie.rating === 0 ? 'No one has rated yet' : `${movie.rating} / 10 (${ratings.length})`}
+                                Rating: {movie.rating === 0 ? 'No one has rated yet' : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`}
                             </Typography>
                             <Button size="small" color="primary" onClick={handleRatingsUpdateClick}>
                                 Update rating
@@ -82,7 +80,7 @@ const Index = (
             </div>
             <div className={classes.ratingBlock}>
                 <Typography className={classes.selectedMovieCardTitle}>
-                    Movie Rating: {movie.rating === 0 ? 'No one has rated yet' : movie.rating}
+                    Movie Rating: {movie.rating === 0 ? 'No one has rated yet' : (+movie.rating).toFixed(2)}
                 </Typography>
                 <div className={classes.descriptionRatingBlock}>
                     <Typography className={classes.secondPriorityText}>My rating:</Typography> {
@@ -115,84 +113,40 @@ const Index = (
                 <Typography className={classes.secondPriorityText}>
                     Total ratings: {ratings.length}
                 </Typography>
-                <div className={classes.commentsBlock}>
-                    <Typography className={classes.selectedMovieCardTitle}>
-                        Comments
-                    </Typography>
-                    <Button size="small" color="primary" onClick={handleCommentsUpdateClick}>
-                        Update comments
-                    </Button>
-                    <div className={classes.CommentBlock}>
-                        <Card className={classes.writingCommentCard}>
-                            <div className={classes.commentHeader}>
-                                <Avatar src={avatar} className={classes.avatarBlock} />
-                                <Typography>Write your comment</Typography>
-                            </div>
-                            <CardContent className={classes.writingCommentContent}>
-                                <TextField
-                                    id="outlined-multiline-static"
-                                    multiline
-                                    rows={4}
-                                    placeholder='Write your comment here'
-                                    variant="outlined"
-                                    value={comment}
-                                    onChange={onCommentChange}
-                                    className={classes.writingCommentTextArea}
-                                />
-                            </CardContent>
-                            <Button size="small" color="primary" onClick={handleCommentSet}>
-                                Send
-                            </Button>
-                        </Card>
-                    </div>
-                    {
-                        comments.length > 0
-                            ?
-                            (
-                                <div className={classes.CommentBlock}>
-                                    {(comments.map(comment => {
-                                        return (
-                                            <Card className={classes.writingCommentCard} key={comment.id}>
-                                                <div className={classes.commentHeader}>
-                                                    <div className={classes.writingCommentUserData}>
-                                                        <Avatar src={comment.user.avatar} className={classes.avatarBlock} />
-                                                        <Typography>{comment.user.username}</Typography>
-                                                    </div>
-                                                    <Typography>#{comment.id}</Typography>
-                                                    {comment.user.username === currentUserUserName
-                                                        ? (<div>
-                                                            <IconButton aria-label="delete" onClick={() => handleDeleteCommentClick(comment.id)}>
-                                                                <DeleteIcon />
-                                                            </IconButton>
-                                                        </div>)
-                                                        : null
-                                                    }
-                                                </div>
-                                                <CardContent className={classes.writingCommentContent}>
-                                                    <TextField
-                                                        id="outlined-multiline-static"
-                                                        multiline
-                                                        rows={2}
-                                                        placeholder='Write your comment here'
-                                                        variant="outlined"
-                                                        value={comment.text}
-                                                        onChange={onCommentChange}
-                                                        className={classes.writingCommentTextArea}
-                                                        disabled
-                                                    />
-                                                </CardContent>
-                                            </Card>
-                                        )
-                                    }))}
-                                </div>
-                            )
-                            :
-                            <div className={classes.emptyCommentsBlock}/>
-                    }
-                </div>
             </div>
+            <CommentsList
+                classes={classes}
+                handleCommentsUpdateClick={handleCommentsUpdateClick}
+                avatar={avatar}
+                writtenComment={writtenComment}
+                onCommentChange={onCommentChange}
+                handleCommentSet={handleCommentSet}
+                comments={comments}
+                currentUserUserName={currentUserUserName}
+                handleDeleteCommentClick={handleDeleteCommentClick}
+            />
         </div>
     </>
 );
+
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    movie: PropTypes.object.isRequired,
+    comments: PropTypes.array.isRequired,
+    avatar: PropTypes.string.isRequired,
+    ratings: PropTypes.array.isRequired,
+    youtubeOpts: PropTypes.object.isRequired,
+    userRating: PropTypes.number.isRequired,
+    settedRating: PropTypes.number.isRequired,
+    onRatingChange: PropTypes.func.isRequired,
+    handleRatingSet: PropTypes.func.isRequired,
+    writtenComment: PropTypes.string.isRequired,
+    onCommentChange: PropTypes.func.isRequired,
+    handleCommentSet: PropTypes.func.isRequired,
+    handleCommentsUpdateClick: PropTypes.func.isRequired,
+    handleRatingsUpdateClick: PropTypes.func.isRequired,
+    currentUserUserName: PropTypes.string.isRequired,
+    handleDeleteCommentClick: PropTypes.func.isRequired
+}
 
 export default withStyles(styles)(Index);

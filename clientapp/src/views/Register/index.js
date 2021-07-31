@@ -5,6 +5,7 @@ import {NavBarContainer} from "../../containers/NavBarContainer";
 import React from "react";
 import {AvatarPreview} from "../../helpers";
 import NotificationContainer from "../../containers/NotificationsContainer";
+import PropTypes from "prop-types";
 
 const Index = (
     {
@@ -93,5 +94,12 @@ const Index = (
         </div>
     </div>
 )
+
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
+    formik: PropTypes.object.isRequired,
+    handleSelectingFile: PropTypes.func.isRequired,
+}
 
 export default withStyles(styles)(Index);

@@ -65,18 +65,18 @@ export const SelectedMovieContainer = () => {
             jwtToken
         }));
     }
-    const [comment, setComment] = useState('');
+    const [writtenComment, setWrittenComment] = useState('');
     const onCommentChange = (event) => {
-        setComment(event.target.value);
+        setWrittenComment(event.target.value);
     }
     const handleCommentSet = () => {
         dispatch(userCommentRequest({
-            text: comment,
+            text: writtenComment,
             userId: user.id,
             movieId: movie.id,
             jwtToken
         }));
-        setComment('');
+        setWrittenComment('');
     }
     const handleCommentsUpdateClick = () => {
         dispatch(movieCommentsRequest(movie.id));
@@ -108,7 +108,7 @@ export const SelectedMovieContainer = () => {
         settedRating={settedRating}
         onRatingChange={onRatingChange}
         handleRatingSet={handleRatingSet}
-        comment={comment}
+        writtenComment={writtenComment}
         onCommentChange={onCommentChange}
         handleCommentSet={handleCommentSet}
         handleCommentsUpdateClick={handleCommentsUpdateClick}

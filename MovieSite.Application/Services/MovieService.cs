@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using MovieSite.Application.DTO.Requests;
@@ -108,13 +107,13 @@ namespace MovieSite.Application.Services
 
         public async Task<Result<IList<MovieRating>>> GetMovieRatings(int movieId)
         {
-            var movie = await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(movieId);
-            if (movie == null)
-                return Result<IList<MovieRating>>.NotFound(Error.MovieNotFound);
+            if (!await _unitOfWork.MovieRepository.IsContains(movieId))
+            {
+                Result<IReadOnlyList<MovieCommentsResponse>>.NotFound(Error.MovieNotFound);
+            }
+            var movieRatings = await _unitOfWork.MovieRepository.GetMovieRating(movieId);
 
-            var movieRatings = await _unitOfWork.MovieRepository.GetMovieWithRatings(movieId);
-
-            return Result<IList<MovieRating>>.Success(movieRatings.MovieRatings);
+            return Result<IList<MovieRating>>.Success(movieRatings);
         }
 
         public async Task<Result<double>> RecalculateMovieRatingAsync(int movieId)
@@ -129,23 +128,19 @@ namespace MovieSite.Application.Services
             var ratingsSum = movie.MovieRatings.Sum(movieRating => movieRating.Value);
             
             movie.Rating = (double)ratingsSum / movie.MovieRatings.Count;
-            await _unitOfWork.MovieRepository.UpdateAsync(movie);
+            _unitOfWork.MovieRepository.SetMovieRatingIsModified(movie);
             await _unitOfWork.CommitAsync();
             return Result<double>.Success(movie.Rating);
         }
         
-        public async Task<Result<IEnumerable<CommentResponse>>> GetMovieComments(int movieId)
+        public async Task<Result<IReadOnlyList<MovieCommentsResponse>>> GetMovieComments(int movieId)
         {
-            var movie = await _unitOfWork.MovieRepository.GetMovieWithComments(movieId);
-            if (movie == null)
-                return Result<IEnumerable<CommentResponse>>.NotFound(Error.MovieNotFound);
-
-            IList<CommentResponse> commentResponses = new List<CommentResponse>();
-            foreach (var comment in movie.Comments)
+            if (!await _unitOfWork.MovieRepository.IsContains(movieId))
             {
-                commentResponses.Add(_mapper.Map<Comment, CommentResponse>(comment));
+                Result<IReadOnlyList<MovieCommentsResponse>>.NotFound(Error.MovieNotFound);
             }
-            return Result<IEnumerable<CommentResponse>>.Success(commentResponses);
+            var movieComments = await _unitOfWork.MovieRepository.GetMovieWithComments(movieId);
+            return Result<IReadOnlyList<MovieCommentsResponse>>.Success(movieComments);
         }
 
         public async Task DeleteMovieByIdAsync(int movieId)

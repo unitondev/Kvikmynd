@@ -6,7 +6,7 @@ import {registerRequest} from "../redux/actions";
 import {useHistory} from "react-router-dom";
 import {toBase64} from "../helpers";
 
-export const RegisterContainer = (props) => {
+export const RegisterContainer = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const handleSelectingFile = event => {

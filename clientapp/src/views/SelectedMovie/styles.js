@@ -10,9 +10,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
     },
-    selectedMovieCardTitle: {
-        fontSize: 40,
-    },
+
     selectedMovieBody: {
         display: 'flex',
     },
@@ -60,46 +58,12 @@ const styles = {
         display: 'flex',
         marginLeft: '20px',
     },
-    commentsBlock: {
-        margin: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-    },
-    CommentBlock: {
-        width: '60%',
-    },
-    writingCommentCard: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '20px 0'
-    },
-    commentHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent:'space-evenly',
-    },
-    avatarBlock: {
-        margin: '0px 10px',
-    },
-    writingCommentContent: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    writingCommentTextArea: {
-        minWidth: '90%',
-    },
     secondPriorityText: {
         fontSize: 18
     },
-    emptyCommentsBlock: {
-        margin: '30px 0',
+    selectedMovieCardTitle: {
+        fontSize: 40,
     },
-    writingCommentUserData: {
-        display: 'flex',
-        alignItems: 'center',
-    }
 }
 
 export default styles;

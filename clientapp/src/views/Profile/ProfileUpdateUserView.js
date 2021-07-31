@@ -4,6 +4,7 @@ import styles from "./styles";
 import {Avatar, Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
 import {AvatarPreview} from "../../helpers";
 import NotificationContainer from "../../containers/NotificationsContainer";
+import PropTypes from "prop-types";
 
 const Index = (
     {
@@ -149,6 +150,14 @@ const Index = (
         </div>
     </div>
 );
+
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
+    formik: PropTypes.object.isRequired,
+    currentAvatar: PropTypes.string.isRequired,
+    handleSelectingFile: PropTypes.func.isRequired
+}
 
 export default withStyles(styles)(Index);
 

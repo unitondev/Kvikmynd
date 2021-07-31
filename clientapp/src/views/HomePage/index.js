@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import {Link} from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
+import PropTypes from "prop-types";
 
 const Index = (
     {
@@ -96,5 +97,12 @@ const Index = (
         </div>
     </>
 )
+
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    movies: PropTypes.array.isRequired,
+    searchRequest: PropTypes.string.isRequired,
+    handleSearchBarChange: PropTypes.func.isRequired
+};
 
 export default withStyles(styles)(Index);

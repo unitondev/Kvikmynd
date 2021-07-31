@@ -3,8 +3,9 @@ import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
 import {Avatar, Card, CardContent, Typography} from "@material-ui/core";
 import NotificationContainer from "../../containers/NotificationsContainer";
+import PropTypes from "prop-types";
 
-const ProfileView = (
+const Index = (
     {
         classes,
         user
@@ -64,4 +65,9 @@ const ProfileView = (
     </div>
 );
 
-export default withStyles(styles)(ProfileView);
+Index.propTypes = {
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+}
+
+export default withStyles(styles)(Index);

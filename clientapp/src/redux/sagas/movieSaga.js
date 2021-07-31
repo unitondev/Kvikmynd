@@ -1,13 +1,11 @@
 import {axiosDefault, axiosWithJwt, axiosWithJwtAndData} from "../../axios";
 import {
-    deleteCommentRequestSuccess,
     enqueueSnackbarError, enqueueSnackbarSuccess,
     movieCommentsRequestSuccess,
     movieListRequestSuccess,
     movieRatingsRequestSuccess, selectedMovieRequestSuccess,
     setUserRatingRequestSuccess,
     userCommentRequestSuccess,
-    userRatingRequest,
     userRatingRequestSuccess
 } from "../actions";
 import {call, put} from "redux-saga/effects";
