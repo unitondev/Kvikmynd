@@ -31,7 +31,6 @@ const Index = (
         writtenComment,
         onCommentChange,
         handleCommentSet,
-        handleCommentsUpdateClick,
         handleRatingsUpdateClick,
         currentUserUserName,
         handleDeleteCommentClick
@@ -125,7 +124,6 @@ const Index = (
                 </Typography>
             </div>
             <CommentsList
-                handleCommentsUpdateClick={handleCommentsUpdateClick}
                 avatar={avatar}
                 writtenComment={writtenComment}
                 onCommentChange={onCommentChange}
@@ -153,7 +151,6 @@ Index.propTypes = {
     writtenComment: PropTypes.string.isRequired,
     onCommentChange: PropTypes.func.isRequired,
     handleCommentSet: PropTypes.func.isRequired,
-    handleCommentsUpdateClick: PropTypes.func.isRequired,
     handleRatingsUpdateClick: PropTypes.func.isRequired,
     currentUserUserName: PropTypes.string.isRequired,
     handleDeleteCommentClick: PropTypes.func.isRequired

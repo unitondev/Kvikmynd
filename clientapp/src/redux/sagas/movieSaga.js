@@ -4,8 +4,7 @@ import {
     movieCommentsRequestSuccess,
     movieListRequestSuccess,
     movieRatingsRequestSuccess, selectedMovieRequestSuccess,
-    setUserRatingRequestSuccess,
-    userCommentRequestSuccess,
+    setUserRatingRequestSuccess, startLoadingMovie, stopLoadingMovie,
     userRatingRequestSuccess
 } from "../actions";
 import {call, put} from "redux-saga/effects";
@@ -157,6 +156,7 @@ export function* sagaSetUserRatingRequest(data){
 
 export function* sagaUserCommentRequest(data){
     try {
+        yield put(startLoadingMovie());
         const response = yield call(
             axiosWithJwtAndData,
             `https://localhost:5001/add_comment`,
@@ -166,9 +166,8 @@ export function* sagaUserCommentRequest(data){
         )
 
         if(response.status === 200){
-            yield put(userCommentRequestSuccess(response.data));
             yield put(enqueueSnackbarSuccess({
-                message: 'Comment added. Click Update comments button',
+                message: 'Comment added',
                 key: new Date().getTime() + Math.random(),
             }));
         }
@@ -179,6 +178,7 @@ export function* sagaUserCommentRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
+        yield put(stopLoadingMovie());
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
@@ -186,6 +186,7 @@ export function* sagaUserCommentRequest(data){
                 key: new Date().getTime() + Math.random(),
             })
         );
+        yield put(stopLoadingMovie());
     }
 }
 
@@ -218,6 +219,7 @@ export function* sagaSelectedMovieRequest(data){
 
 export function* sagaDeleteCommentRequest(data){
     try {
+        yield put(startLoadingMovie());
         const response = yield call(
             axiosWithJwt,
             `https://localhost:5001/delete_comment${data.payload.id}`,
@@ -227,7 +229,7 @@ export function* sagaDeleteCommentRequest(data){
 
         if(response.status === 200){
             yield put(enqueueSnackbarSuccess({
-                message: 'Comment was deleted. Update the page',
+                message: 'Comment was deleted',
                 key: new Date().getTime() + Math.random(),
             }));
         }
@@ -238,6 +240,7 @@ export function* sagaDeleteCommentRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
+        yield put(stopLoadingMovie());
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
@@ -245,5 +248,6 @@ export function* sagaDeleteCommentRequest(data){
                 key: new Date().getTime() + Math.random(),
             })
         );
+        yield put(stopLoadingMovie());
     }
 }

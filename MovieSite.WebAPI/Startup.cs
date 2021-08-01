@@ -15,6 +15,7 @@ using MovieSite.Application.Jwt;
 using MovieSite.Application.Mapper;
 using MovieSite.Application.Services;
 using MovieSite.Domain.Models;
+using MovieSite.Hubs;
 using MovieSite.Infrastructure;
 using MovieSite.Infrastructure.Repositories;
 using MovieSite.Jwt;
@@ -34,6 +35,7 @@ namespace MovieSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddSignalR();
             services.AddIdentity<User, IdentityRole<int>>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -94,7 +96,11 @@ namespace MovieSite
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<SignalRHub>("/comments");
+                endpoints.MapControllers();
+            });
 
             app.UseSpa(spa =>
             {

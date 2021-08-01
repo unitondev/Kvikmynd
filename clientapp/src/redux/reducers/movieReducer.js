@@ -4,7 +4,7 @@ import {
     movieCommentsRequestSuccess,
     movieRatingsRequestSuccess,
     selectedMovieRequestSuccess,
-    setUserRatingRequestSuccess,
+    setUserRatingRequestSuccess, startLoadingMovie, stopLoadingMovie,
     userRatingRequestSuccess
 } from "../actions";
 
@@ -14,6 +14,7 @@ const initState = {
     ratings: [],
     genres: [],
     userRating: 0,
+    loading: false,
 }
 
 export const movieReducer = handleActions({
@@ -54,6 +55,19 @@ export const movieReducer = handleActions({
             comments: [],
             ratings: [],
             userRating: 0,
+            loading: false,
+        }
+    ),
+    [stopLoadingMovie]: (state) => (
+        {
+            ...state,
+            loading: false,
+        }
+    ),
+    [startLoadingMovie]: (state) => (
+        {
+            ...state,
+            loading: true
         }
     ),
 }, initState);
