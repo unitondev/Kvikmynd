@@ -2,14 +2,14 @@ import SelectedMovieView from "../views/SelectedMovie"
 import {useDispatch, useSelector} from "react-redux";
 import {
     getComments,
-    getJwt, getMovie, getMovieGenres,
+    getJwt, getMovie, getMovieGenres, getMovieLoading,
     getRatings,
     getUser,
     getUserAvatar,
     getUserRating,
 } from "../redux/selectors";
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     cleanMovieStore, deleteCommentRequest,
     movieCommentsRequest,
@@ -19,6 +19,7 @@ import {
     userCommentRequest,
     userRatingRequest
 } from "../redux/actions";
+import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
 
 export const SelectedMovieContainer = () => {
     const dispatch = useDispatch();
@@ -31,6 +32,8 @@ export const SelectedMovieContainer = () => {
     const user = useSelector(getUser);
     const jwtToken = useSelector(getJwt);
     const avatar = useSelector(getUserAvatar);
+    const loading = useSelector(getMovieLoading);
+    const isFirstRun = useRef(true);
 
     useEffect(() => {
         dispatch(selectedMovieRequest(id));
@@ -41,7 +44,9 @@ export const SelectedMovieContainer = () => {
             movieId: id,
             jwtToken
         }));
-        return function cleanup(){
+        joinMoviePage(user.userName, id);
+        return () => {
+            closeSignalRConnection();
             dispatch(cleanMovieStore());
         }
     },[]);
@@ -50,11 +55,23 @@ export const SelectedMovieContainer = () => {
         height: '576',
         width: '1024',
         playerVars: {
-            autoplay: 1,
+            autoplay: 0,
             controls: 2,
         }
     }
     const [settedRating, setSettedRating] = useState(0);
+    const [signalrConnection, setSignalrConnection] = useState();
+    const signalrConnectionRef = useRef(signalrConnection);
+
+    useEffect(() => {
+        signalrConnectionRef.current = signalrConnection;
+    })
+
+    useEffect(() => {
+        if(!isFirstRun.current && loading === false)
+            changeCommentSignalR(user.userName, id)
+    }, [loading]);
+
     const onRatingChange = (event, value) => {
         setSettedRating(value);
     }
@@ -79,9 +96,6 @@ export const SelectedMovieContainer = () => {
         }));
         setWrittenComment('');
     }
-    const handleCommentsUpdateClick = () => {
-        dispatch(movieCommentsRequest(movie.id));
-    };
     const handleRatingsUpdateClick = () => {
         dispatch(selectedMovieRequest(movie.id));
         dispatch(userRatingRequest({
@@ -99,6 +113,50 @@ export const SelectedMovieContainer = () => {
         }));
     }
 
+    const joinMoviePage = async(userName, movieId) => {
+        try {
+            const connection = new HubConnectionBuilder()
+                .withUrl("https://localhost:5001/comments")
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connection.on("CommentsHasChanged", () => {
+                dispatch(movieCommentsRequest(movieId));
+            });
+
+            connection.onclose(() => {
+                setSignalrConnection();
+            });
+
+            await connection.start();
+            setSignalrConnection(connection);
+            await connection.invoke("JoinMoviePage", {userName, movieId});
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const changeCommentSignalR = async (userName, movieId) => {
+        try {
+            await signalrConnection.invoke("UserHasChangedComment", {userName, movieId});
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const closeSignalRConnection = async () => {
+        try {
+            await signalrConnectionRef.current.stop();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        if(isFirstRun.current)
+            isFirstRun.current = false;
+    });
+
     return <SelectedMovieView
         movie={movie}
         comments={comments}
@@ -113,7 +171,6 @@ export const SelectedMovieContainer = () => {
         writtenComment={writtenComment}
         onCommentChange={onCommentChange}
         handleCommentSet={handleCommentSet}
-        handleCommentsUpdateClick={handleCommentsUpdateClick}
         handleRatingsUpdateClick={handleRatingsUpdateClick}
         currentUserUserName={user.userName}
         handleDeleteCommentClick={handleDeleteCommentClick}

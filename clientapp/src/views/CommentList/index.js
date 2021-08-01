@@ -8,7 +8,6 @@ import Comment from '../Comment'
 const Index = (
     {
         classes,
-        handleCommentsUpdateClick,
         avatar,
         writtenComment,
         onCommentChange,
@@ -21,9 +20,6 @@ const Index = (
         <Typography className={classes.selectedMovieCardTitle}>
             Comments
         </Typography>
-        <Button size="small" color="primary" onClick={handleCommentsUpdateClick}>
-            Update comments
-        </Button>
         <div className={classes.CommentBlock}>
             <Card className={classes.writingCommentCard}>
                 <div className={classes.commentHeader}>
@@ -67,7 +63,6 @@ const Index = (
 
 Index.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleCommentsUpdateClick: PropTypes.func.isRequired,
     avatar: PropTypes.string.isRequired,
     writtenComment: PropTypes.string.isRequired,
     onCommentChange: PropTypes.func.isRequired,
