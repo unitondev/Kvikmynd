@@ -13,7 +13,7 @@ namespace MovieSite.Application.Mapper
             CreateMap<Movie, MovieWithGenresViewModel>()
                 .ForMember(_ => _.Genres, 
                     expression => expression.MapFrom(
-                        source => source.GenreMovies.Select(_ => _.Genre.Name)));
+                        source => source.GenreMovies.Select(_ => _.Genre.Name).ToList().AsReadOnly()));
         }
     }
 }
