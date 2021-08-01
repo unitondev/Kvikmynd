@@ -1,6 +1,6 @@
 # MovieSite
 
-A SPA with movies, ratings and comments.
+A SPA with movies, ratings and comments
 
 ### Client
 - Client developed on React
@@ -11,6 +11,7 @@ A SPA with movies, ratings and comments.
 
 ### Web API
 - Web API developed on .NET 5, RESTful.
+- SignalR
 - SQL Server as database
 - EntityFramework Core as ORM
 - Microsoft Identity for user managment
