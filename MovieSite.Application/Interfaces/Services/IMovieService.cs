@@ -11,7 +11,7 @@ namespace MovieSite.Application.Interfaces.Services
     {
         Task<IEnumerable<MovieResponse>> GetAllMoviesAsync();
         Task<MovieResponse> GetMovieByIdAsync(int movieId);
-        Task<MovieWithGenresResponse> GetMovieWithGenresByIdAsync(int movieId);
+        Task<Movie> GetMovieWithGenresByIdAsync(int movieId);
         Task<Result<Movie>> CreateMovieAsync(MovieRequest movieRequest);
         Task<Result<Movie>> UpdateMovieAsync(EditMovieRequest uEditMovieRequest);
         Task<Result<IList<MovieRating>>> GetMovieRatings(int movieId);

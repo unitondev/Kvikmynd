@@ -5,7 +5,12 @@ namespace MovieSite.ViewModels
 {
     public class MovieWithGenresViewModel
     {
-        public MovieResponse Movie { get; set; }
-        public List<string> GenreNames { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public byte[] Cover { get; set; }
+        public string YoutubeLink { get; set; }
+        public double Rating { get; set; }
+        public IReadOnlyList<string> Genres { get; set; }
     }
 }

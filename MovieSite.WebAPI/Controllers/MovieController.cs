@@ -48,7 +48,7 @@ namespace MovieSite.Controllers
             if (movieWithGenres == null)
                 return NotFound(Error.MovieNotFound);
             
-            var movieWithGenresViewModel = _mapper.Map<MovieWithGenresResponse, MovieWithGenresViewModel>(movieWithGenres);
+            var movieWithGenresViewModel = _mapper.Map<MovieWithGenresViewModel>(movieWithGenres);
             return Ok(movieWithGenresViewModel);
         }
 
