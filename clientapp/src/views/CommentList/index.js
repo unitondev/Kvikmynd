@@ -1,6 +1,6 @@
 import {withStyles} from "@material-ui/core/styles";
 import styles from "./styles";
-import {Avatar, Button, Card, CardContent, IconButton, TextField, Typography} from "@material-ui/core";
+import {Avatar, Button, Card, CardContent, TextField, Typography} from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
 import Comment from '../Comment'

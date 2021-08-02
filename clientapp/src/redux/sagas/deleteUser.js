@@ -2,10 +2,11 @@ import {call, put} from "redux-saga/effects";
 import {axiosWithJwt} from "../../axios";
 import {
     deleteUserRequestSuccess,
-    enqueueSnackbarError, enqueueSnackbarSuccess,
+    enqueueSnackbarError, enqueueSnackbarSuccess, startLoadingUser, stopLoadingUser,
 } from "../actions";
 
 export function* sagaDeleteUserRequest(data){
+    yield put(startLoadingUser());
     try{
         const response = yield call(
             axiosWithJwt,
@@ -29,6 +30,7 @@ export function* sagaDeleteUserRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
+        yield put(stopLoadingUser());
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
@@ -36,5 +38,6 @@ export function* sagaDeleteUserRequest(data){
                 key: new Date().getTime() + Math.random(),
             })
         );
+        yield put(stopLoadingUser());
     }
 }

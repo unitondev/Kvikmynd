@@ -3,9 +3,9 @@ import {axiosDefault, axiosWithJwt} from "../../axios";
 import {
     enqueueSnackbarError, enqueueSnackbarSuccess,
     loginRequestSuccess,
-    logoutRequestSuccess,
+    logoutRequestSuccess, refreshTokensRequestFailed,
     refreshTokensRequestSuccess,
-    registerRequestSuccess
+    registerRequestSuccess, startLoadingUser, stopLoadingUser
 } from "../actions";
 
 export function* sagaLoginRequest(data){
@@ -19,12 +19,6 @@ export function* sagaLoginRequest(data){
 
         if(response.data.jwtToken){
             yield put(loginRequestSuccess(response.data));
-            yield put(enqueueSnackbarSuccess(
-                {
-                    message: 'Login successful',
-                    key: new Date().getTime() + Math.random(),
-                })
-            );
         } else
             yield put(enqueueSnackbarError(
                 {
@@ -43,6 +37,7 @@ export function* sagaLoginRequest(data){
 }
 
 export function* sagaRegisterRequest(data){
+    yield put(startLoadingUser());
     try {
         const response = yield call(
             axiosDefault,
@@ -55,7 +50,7 @@ export function* sagaRegisterRequest(data){
             yield put(registerRequestSuccess(response.data));
             yield put(enqueueSnackbarSuccess(
                 {
-                    message: 'Register successful',
+                    message: 'Register successful. Now you will be redirected to home page',
                     key: new Date().getTime() + Math.random(),
                 })
             );
@@ -66,6 +61,7 @@ export function* sagaRegisterRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
+        yield put(stopLoadingUser());
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
@@ -73,6 +69,7 @@ export function* sagaRegisterRequest(data){
                 key: new Date().getTime() + Math.random(),
             })
         );
+        yield put(stopLoadingUser());
     }
 }
 
@@ -97,6 +94,7 @@ export function* sagaLogoutRequest(data){
 }
 
 export function* sagaRefreshTokens(){
+    yield put(startLoadingUser());
     try {
         const response = yield call(
             axiosDefault,
@@ -107,5 +105,11 @@ export function* sagaRefreshTokens(){
 
         if(response.status === 200)
             yield put(refreshTokensRequestSuccess(response.data));
-    } catch (e) {}
+        else
+            yield put(refreshTokensRequestFailed());
+        yield put(stopLoadingUser());
+    } catch (e) {
+        yield put(stopLoadingUser());
+        yield put(refreshTokensRequestFailed());
+    }
 }

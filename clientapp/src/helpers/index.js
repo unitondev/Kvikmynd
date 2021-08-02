@@ -8,11 +8,15 @@ export const toBase64 = file => new Promise((resolve, reject) => {
     reader.onerror = error => reject(error);
 })
 
-export const AvatarPreview = ({file, classes}   ) => {
+export const AvatarPreview = (
+    {
+        file,
+        classes
+    }) => {
     const [previewString, setPreviewString] = useState(null);
 
     useEffect(() => {
-        if(!!file){
+        if(!!file && typeof file === 'object'){
             let reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewString(reader.result);

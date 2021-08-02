@@ -1,11 +1,15 @@
 import LoginView from "../views/Login";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { loginRequest } from "../redux/actions";
 import { useHistory } from "react-router-dom";
+import {getUserLoading, isLoginSucceeded} from "../redux/selectors";
+import {useEffect} from "react";
 
 export const LoginContainer = () => {
+    const isLogined = useSelector(isLoginSucceeded);
+    const idLoading = useSelector(getUserLoading);
     const dispatch = useDispatch();
     const history = useHistory();
     const formik = useFormik({
@@ -25,7 +29,6 @@ export const LoginContainer = () => {
         }),
         onSubmit: (values) => {
             dispatch(loginRequest(values));
-            history.push("/");
         },
     });
     const touchedEmail = formik.touched.email;
@@ -34,6 +37,11 @@ export const LoginContainer = () => {
     const passwordError = formik.errors.password;
     const emailFieldProps = formik.getFieldProps('email');
     const passwordFieldProps = formik.getFieldProps('password');
+
+    useEffect(() => {
+        if(idLoading === false && isLogined === true)
+            history.push("/");
+    }, [idLoading, isLogined]);
 
     return <LoginView
         onSubmitForm={formik.handleSubmit}

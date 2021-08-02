@@ -90,7 +90,7 @@ const Index = (
 
 Index.propTypes = {
     classes: PropTypes.object.isRequired,
-    isLogined: PropTypes.bool.isRequired,
+    isLogined: PropTypes.bool,
     onClickLogout: PropTypes.func.isRequired,
     fullName: PropTypes.string,
     avatar: PropTypes.string,
