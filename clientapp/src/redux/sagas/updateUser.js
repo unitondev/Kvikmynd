@@ -1,9 +1,16 @@
 import {call, put} from "redux-saga/effects";
 import {axiosWithJwtAndData} from "../../axios";
-import {enqueueSnackbarError, enqueueSnackbarSuccess, updateUserRequestSuccess} from "../actions";
+import {
+    enqueueSnackbarError,
+    enqueueSnackbarSuccess,
+    startLoadingUser,
+    stopLoadingUser,
+    updateUserRequestSuccess
+} from "../actions";
 
 
 export function* sagaUpdateUserRequest(data){
+    yield put(startLoadingUser());
     try{
         const response = yield call(
             axiosWithJwtAndData,
@@ -17,7 +24,7 @@ export function* sagaUpdateUserRequest(data){
             yield put(updateUserRequestSuccess(response.data));
             yield put(enqueueSnackbarSuccess(
                 {
-                    message: 'Updating successful',
+                    message: 'Updating successful.  Now you will be redirected to login page',
                     key: new Date().getTime() + Math.random(),
                 })
             );
@@ -28,6 +35,7 @@ export function* sagaUpdateUserRequest(data){
                     key: new Date().getTime() + Math.random(),
                 })
             );
+        yield put(stopLoadingUser());
     } catch (e) {
         yield put(enqueueSnackbarError(
             {
@@ -35,5 +43,6 @@ export function* sagaUpdateUserRequest(data){
                 key: new Date().getTime() + Math.random(),
             })
         );
+        yield put(stopLoadingUser());
     }
 }

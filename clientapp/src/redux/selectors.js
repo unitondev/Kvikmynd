@@ -1,8 +1,9 @@
 export const getJwt = state => state.login.user?.jwtToken;
 export const getUser = state => state.login.user;
 export const getFullName = state => state.login.user?.fullName;
-export const isLoginSucceeded = state => state.login.isLoginSucceeded;
+export const isLoginSucceeded = state => state.login?.isLoginSucceeded;
 export const getUserAvatar = state => state.login.user?.avatar;
+export const getUserLoading = state => state.login.loading;
 export const getNotifications = state => state.snackbar.notifications;
 export const getMovieList = state => state.movieList.movies;
 export const getMovie = state => state.movie.movie;

@@ -1,14 +1,18 @@
 import RegisterView from "../views/Register";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {registerRequest} from "../redux/actions";
 import {useHistory} from "react-router-dom";
 import {toBase64} from "../helpers";
+import {getUserLoading, isLoginSucceeded} from "../redux/selectors";
+import {useEffect} from "react";
 
 export const RegisterContainer = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const isLogined = useSelector(isLoginSucceeded);
+    const idLoading = useSelector(getUserLoading);
     const handleSelectingFile = event => {
         formik.setFieldValue('avatar',
             event.currentTarget.files[0]);
@@ -37,9 +41,14 @@ export const RegisterContainer = () => {
             if(!!values.avatar)
                 values.avatar = await toBase64(values.avatar)
             dispatch(registerRequest(values));
-            history.push('/');
         }
     });
+
+    useEffect(() => {
+        if(idLoading === false && isLogined === true){
+            setTimeout(() => history.push("/"), 1000);
+        }
+    }, [idLoading, isLogined]);
 
     return <RegisterView
         onSubmitForm={formik.handleSubmit}

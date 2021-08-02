@@ -31,7 +31,6 @@ const Index = (
         writtenComment,
         onCommentChange,
         handleCommentSet,
-        handleRatingsUpdateClick,
         currentUserUserName,
         handleDeleteCommentClick
     }
@@ -62,9 +61,6 @@ const Index = (
                             <Typography className={classes.selectedMovieRating}>
                                 Rating: {movie.rating === 0 ? 'No one has rated yet' : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`}
                             </Typography>
-                            <Button size="small" color="primary" onClick={handleRatingsUpdateClick}>
-                                Update rating
-                            </Button>
                             <Typography className={classes.secondPriorityText}>
                                 Genres:
                                 {
@@ -151,7 +147,6 @@ Index.propTypes = {
     writtenComment: PropTypes.string.isRequired,
     onCommentChange: PropTypes.func.isRequired,
     handleCommentSet: PropTypes.func.isRequired,
-    handleRatingsUpdateClick: PropTypes.func.isRequired,
     currentUserUserName: PropTypes.string.isRequired,
     handleDeleteCommentClick: PropTypes.func.isRequired
 }

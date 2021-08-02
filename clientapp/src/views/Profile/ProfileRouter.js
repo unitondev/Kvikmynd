@@ -3,14 +3,11 @@ import React from "react";
 import {withStyles} from "@material-ui/core/styles";
 import styles from './styles'
 import { NavBarContainer } from "../../containers/NavBarContainer";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import { Route, Switch, useRouteMatch} from "react-router-dom";
 import ProfileView from "./ProfileView";
 import ProfileUpdateUserView from "./ProfileUpdateUserView";
 import ProfileDeleteView from "./ProfileDeleteView";
-import {useDispatch, useSelector} from "react-redux";
-import {getJwt} from "../../redux/selectors";
-import {deleteUserRequest} from "../../redux/actions";
 import NotificationContainer from "../../containers/NotificationsContainer";
 import PropTypes from "prop-types";
 
@@ -22,7 +19,8 @@ const Index = (
         user,
         toBase64,
         currentAvatar,
-        handleSelectingFile
+        handleSelectingFile,
+        deleteAccount
     }) => {
 
     const {path, url} = useRouteMatch();
@@ -30,14 +28,6 @@ const Index = (
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
-    const dispatch = useDispatch();
-    const jwtToken = useSelector(getJwt);
-    const history = useHistory();
-
-    const deleteAccount = () => {
-        dispatch(deleteUserRequest(jwtToken));
-        history.push('/');
-    }
 
     return(
         <div>
@@ -111,7 +101,8 @@ Index.propTypes = {
     user: PropTypes.object.isRequired,
     toBase64: PropTypes.func.isRequired,
     currentAvatar: PropTypes.string.isRequired,
-    handleSelectingFile: PropTypes.func.isRequired
+    handleSelectingFile: PropTypes.func.isRequired,
+    deleteAccount: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Index);

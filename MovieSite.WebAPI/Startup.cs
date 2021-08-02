@@ -98,7 +98,7 @@ namespace MovieSite
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<SignalRHub>("/comments");
+                endpoints.MapHub<SignalRHub>("/moviePage");
                 endpoints.MapControllers();
             });
 

@@ -14,5 +14,10 @@ namespace MovieSite.Hubs
         {
             await Clients.Group(userConnection.MovieId).SendAsync("CommentsHasChanged");
         }
+        
+        public async Task UserHasChangedRating(UserConnection userConnection)
+        {
+            await Clients.Group(userConnection.MovieId).SendAsync("RatingHasChanged");
+        }
     }
 }

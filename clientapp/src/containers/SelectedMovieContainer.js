@@ -32,8 +32,7 @@ export const SelectedMovieContainer = () => {
     const user = useSelector(getUser);
     const jwtToken = useSelector(getJwt);
     const avatar = useSelector(getUserAvatar);
-    const loading = useSelector(getMovieLoading);
-    const isFirstRun = useRef(true);
+    const movieLoading = useSelector(getMovieLoading);
 
     useEffect(() => {
         dispatch(selectedMovieRequest(id));
@@ -68,9 +67,9 @@ export const SelectedMovieContainer = () => {
     })
 
     useEffect(() => {
-        if(!isFirstRun.current && loading === false)
+        if(movieLoading === false)
             changeCommentSignalR(user.userName, id)
-    }, [loading]);
+    }, [movieLoading]);
 
     const onRatingChange = (event, value) => {
         setSettedRating(value);
@@ -82,6 +81,7 @@ export const SelectedMovieContainer = () => {
             movieId: movie.id,
             jwtToken
         }));
+        changeRatingSignalR(user.userName, id);
     }
     const [writtenComment, setWrittenComment] = useState('');
     const onCommentChange = (event) => {
@@ -96,15 +96,6 @@ export const SelectedMovieContainer = () => {
         }));
         setWrittenComment('');
     }
-    const handleRatingsUpdateClick = () => {
-        dispatch(selectedMovieRequest(movie.id));
-        dispatch(userRatingRequest({
-            userId: user.id,
-            movieId: movie.id,
-            jwtToken
-        }));
-        dispatch(movieRatingsRequest(movie.id));
-    };
 
     const handleDeleteCommentClick = (id) => {
         dispatch(deleteCommentRequest({
@@ -116,7 +107,7 @@ export const SelectedMovieContainer = () => {
     const joinMoviePage = async(userName, movieId) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl("https://localhost:5001/comments")
+                .withUrl("https://localhost:5001/moviePage")
                 .configureLogging(LogLevel.Information)
                 .build();
 
@@ -124,8 +115,13 @@ export const SelectedMovieContainer = () => {
                 dispatch(movieCommentsRequest(movieId));
             });
 
+            connection.on("RatingHasChanged", () => {
+                dispatch(selectedMovieRequest(movieId));
+                dispatch(movieRatingsRequest(movieId));
+            })
+
             connection.onclose(() => {
-                setSignalrConnection();
+                signalrConnectionRef.current = null;
             });
 
             await connection.start();
@@ -138,7 +134,15 @@ export const SelectedMovieContainer = () => {
 
     const changeCommentSignalR = async (userName, movieId) => {
         try {
-            await signalrConnection.invoke("UserHasChangedComment", {userName, movieId});
+            await signalrConnection?.invoke("UserHasChangedComment", {userName, movieId});
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const changeRatingSignalR = async (userName, movieId) => {
+        try {
+            await signalrConnection?.invoke("UserHasChangedRating", {userName, movieId});
         } catch (e) {
             console.log(e);
         }
@@ -151,11 +155,6 @@ export const SelectedMovieContainer = () => {
             console.log(e);
         }
     }
-
-    useEffect(() => {
-        if(isFirstRun.current)
-            isFirstRun.current = false;
-    });
 
     return <SelectedMovieView
         movie={movie}
@@ -171,7 +170,6 @@ export const SelectedMovieContainer = () => {
         writtenComment={writtenComment}
         onCommentChange={onCommentChange}
         handleCommentSet={handleCommentSet}
-        handleRatingsUpdateClick={handleRatingsUpdateClick}
         currentUserUserName={user.userName}
         handleDeleteCommentClick={handleDeleteCommentClick}
     />

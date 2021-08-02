@@ -1,9 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 import {getJwt, getUser, getUserAvatar} from "../redux/selectors";
-import {updateUserRequest} from "../redux/actions";
+import {deleteUserRequest, updateUserRequest} from "../redux/actions";
 import {useFormik} from "formik";
 import * as Yup from "yup";
-import {useHistory} from "react-router-dom";
 import React from "react";
 import ProfileRouter from "../views/Profile/ProfileRouter";
 import {toBase64} from "../helpers";
@@ -14,7 +13,6 @@ export const ProfileContainer = () => {
     const jwtToken = useSelector(getJwt);
     const currentAvatar = useSelector(getUserAvatar);
     const dispatch = useDispatch();
-    const history = useHistory();
     const requiredMessage = 'This field is required';
     const handleSelectingFile = event => {
         formik.setFieldValue('avatar',
@@ -49,9 +47,12 @@ export const ProfileContainer = () => {
             else
                 values.avatar = currentAvatar;
             dispatch(updateUserRequest({...values, jwtToken}));
-            history.push('/login');
         }
     });
+
+    const deleteAccount = () => {
+        dispatch(deleteUserRequest(jwtToken));
+    }
 
     return(
         <ProfileRouter
@@ -61,6 +62,7 @@ export const ProfileContainer = () => {
             toBase64={toBase64}
             currentAvatar={currentAvatar}
             handleSelectingFile={handleSelectingFile}
+            deleteAccount={deleteAccount}
         />
     )
 }
