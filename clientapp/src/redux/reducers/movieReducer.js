@@ -1,11 +1,11 @@
 import {handleActions} from "redux-actions";
 import {
     cleanMovieStore,
-    movieCommentsRequestSuccess,
-    movieRatingsRequestSuccess,
-    selectedMovieRequestSuccess,
-    setUserRatingRequestSuccess, startLoadingMovie, stopLoadingMovie,
-    userRatingRequestSuccess
+    movieCommentsSuccess,
+    movieRatingsSuccess, needToUpdateMovie, noNeedToUpdateMovie,
+    selectedMovieSuccess,
+    setUserRatingSuccess,
+    userRatingSuccess
 } from "../actions";
 
 const initState = {
@@ -14,36 +14,36 @@ const initState = {
     ratings: [],
     genres: [],
     userRating: 0,
-    loading: false,
+    movieToUpdate: false,
 }
 
 export const movieReducer = handleActions({
-    [selectedMovieRequestSuccess]: (state, action) => (
+    [selectedMovieSuccess]: (state, action) => (
         {
             ...state,
             movie: action.payload.movie,
             genres: action.payload.genreNames
         }
     ),
-    [movieCommentsRequestSuccess]: (state, action) => (
+    [movieCommentsSuccess]: (state, action) => (
         {
             ...state,
             comments: action.payload,
         }
     ),
-    [movieRatingsRequestSuccess]: (state, action) => (
+    [movieRatingsSuccess]: (state, action) => (
         {
             ...state,
             ratings: action.payload,
         }
     ),
-    [userRatingRequestSuccess]: (state, action) => (
+    [userRatingSuccess]: (state, action) => (
         {
             ...state,
             userRating: action.payload,
         }
     ),
-    [setUserRatingRequestSuccess]: (state, action) => (
+    [setUserRatingSuccess]: (state, action) => (
         {
             ...state,
             userRating: action.payload,
@@ -55,19 +55,19 @@ export const movieReducer = handleActions({
             comments: [],
             ratings: [],
             userRating: 0,
-            loading: false,
+            commentsUpdate: false,
         }
     ),
-    [stopLoadingMovie]: (state) => (
+    [needToUpdateMovie]: (state) => (
         {
             ...state,
-            loading: false,
+            movieToUpdate: true,
         }
     ),
-    [startLoadingMovie]: (state) => (
+    [noNeedToUpdateMovie]: (state) => (
         {
             ...state,
-            loading: true
+            movieToUpdate: false
         }
     ),
 }, initState);

@@ -2,7 +2,7 @@ import SelectedMovieView from "../views/SelectedMovie"
 import {useDispatch, useSelector} from "react-redux";
 import {
     getComments,
-    getJwt, getMovie, getMovieGenres, getMovieLoading,
+    getMovie, getMovieGenres, getNeedToUpdateMovie,
     getRatings,
     getUser,
     getUserAvatar,
@@ -13,7 +13,7 @@ import {useEffect, useRef, useState} from "react";
 import {
     cleanMovieStore, deleteCommentRequest,
     movieCommentsRequest,
-    movieRatingsRequest,
+    movieRatingsRequest, noNeedToUpdateMovie,
     selectedMovieRequest,
     setUserRatingRequest,
     userCommentRequest,
@@ -30,9 +30,8 @@ export const SelectedMovieContainer = () => {
     const genres = useSelector(getMovieGenres);
     const userRating = useSelector(getUserRating);
     const user = useSelector(getUser);
-    const jwtToken = useSelector(getJwt);
     const avatar = useSelector(getUserAvatar);
-    const movieLoading = useSelector(getMovieLoading);
+    const updateMovieNeed = useSelector(getNeedToUpdateMovie);
 
     useEffect(() => {
         dispatch(selectedMovieRequest(id));
@@ -41,7 +40,6 @@ export const SelectedMovieContainer = () => {
         dispatch(userRatingRequest({
             userId: user.id,
             movieId: id,
-            jwtToken
         }));
         joinMoviePage(user.userName, id);
         return () => {
@@ -67,9 +65,12 @@ export const SelectedMovieContainer = () => {
     })
 
     useEffect(() => {
-        if(movieLoading === false)
+        if(updateMovieNeed === true){
             changeCommentSignalR(user.userName, id)
-    }, [movieLoading]);
+            changeRatingSignalR(user.userName, id);
+            dispatch(noNeedToUpdateMovie());
+        }
+    }, [updateMovieNeed]);
 
     const onRatingChange = (event, value) => {
         setSettedRating(value);
@@ -79,9 +80,7 @@ export const SelectedMovieContainer = () => {
             value: settedRating,
             userId: user.id,
             movieId: movie.id,
-            jwtToken
         }));
-        changeRatingSignalR(user.userName, id);
     }
     const [writtenComment, setWrittenComment] = useState('');
     const onCommentChange = (event) => {
@@ -92,7 +91,6 @@ export const SelectedMovieContainer = () => {
             text: writtenComment,
             userId: user.id,
             movieId: movie.id,
-            jwtToken
         }));
         setWrittenComment('');
     }
@@ -100,7 +98,6 @@ export const SelectedMovieContainer = () => {
     const handleDeleteCommentClick = (id) => {
         dispatch(deleteCommentRequest({
             id,
-            jwtToken
         }));
     }
 
