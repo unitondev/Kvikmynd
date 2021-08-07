@@ -11,4 +11,4 @@ export const getMovieGenres = state => state.movie.genres;
 export const getComments = state => state.movie.comments;
 export const getRatings = state => state.movie.ratings;
 export const getUserRating = state => state.movie.userRating;
-export const getMovieLoading = state => state.movie.loading;
+export const getNeedToUpdateMovie = state => state.movie.movieToUpdate;

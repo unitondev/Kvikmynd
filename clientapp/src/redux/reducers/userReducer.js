@@ -1,11 +1,11 @@
 import {handleActions} from "redux-actions";
 import {
-    deleteUserRequestSuccess,
-    loginRequestSuccess,
-    logoutRequestSuccess, refreshTokensRequestFailed,
-    refreshTokensRequestSuccess,
-    registerRequestSuccess, startLoadingUser, stopLoadingUser,
-    updateUserRequestSuccess
+    deleteUserSuccess,
+    loginSuccess,
+    logoutSuccess, refreshTokensFail,
+    refreshTokensSuccess,
+    registerSuccess, startLoadingUser, stopLoadingUser,
+    updateUserSuccess
 } from "../actions";
 
 const initState = {
@@ -16,42 +16,42 @@ const initState = {
 
 export const userReducer = handleActions(
     {
-        [loginRequestSuccess]: (state, action) => (
+        [loginSuccess]: (state, action) => (
             {
                 ...state,
                 isLoginSucceeded: true,
                 user: action.payload,
             }),
-        [logoutRequestSuccess] : (state, action) => (
+        [logoutSuccess] : (state, action) => (
             {
                 ...state,
                 isLoginSucceeded: false,
                 user: null,
             }),
-        [refreshTokensRequestSuccess]: (state, action) => (
+        [refreshTokensSuccess]: (state, action) => (
             {
                 ...state,
                 isLoginSucceeded: true,
                 user: action.payload,
             }),
-        [refreshTokensRequestFailed]: (state) => (
+        [refreshTokensFail]: (state) => (
             {
                 ...state,
                 isLoginSucceeded: false,
             }),
-        [updateUserRequestSuccess] : (state, action) => (
+        [updateUserSuccess] : (state, action) => (
             {
                 ...state,
                 isLoginSucceeded: false,
                 user: action.payload,
             }),
-        [deleteUserRequestSuccess] : (state) => (
+        [deleteUserSuccess] : (state) => (
             {
                 ...state,
                 isLoginSucceeded: false,
                 user: null,
             }),
-        [registerRequestSuccess] : (state, action) => (
+        [registerSuccess] : (state, action) => (
             {
                 ...state,
                 isLoginSucceeded: true,

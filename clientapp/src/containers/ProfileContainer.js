@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {getJwt, getUser, getUserAvatar} from "../redux/selectors";
+import {getUser, getUserAvatar} from "../redux/selectors";
 import {deleteUserRequest, updateUserRequest} from "../redux/actions";
 import {useFormik} from "formik";
 import * as Yup from "yup";
@@ -10,7 +10,6 @@ import {toBase64} from "../helpers";
 
 export const ProfileContainer = () => {
     const user = useSelector(getUser);
-    const jwtToken = useSelector(getJwt);
     const currentAvatar = useSelector(getUserAvatar);
     const dispatch = useDispatch();
     const requiredMessage = 'This field is required';
@@ -46,12 +45,12 @@ export const ProfileContainer = () => {
                 values.avatar =  await toBase64(values.avatar)
             else
                 values.avatar = currentAvatar;
-            dispatch(updateUserRequest({...values, jwtToken}));
+            dispatch(updateUserRequest(values));
         }
     });
 
     const deleteAccount = () => {
-        dispatch(deleteUserRequest(jwtToken));
+        dispatch(deleteUserRequest());
     }
 
     return(
