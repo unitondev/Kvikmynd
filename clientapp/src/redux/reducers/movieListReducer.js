@@ -1,15 +1,16 @@
-import {handleActions} from "redux-actions";
-import {movieListSuccess} from "../actions";
+import { handleActions } from 'redux-actions'
+import { movieListSuccess } from '../actions'
 
 const initState = {
-    movies: [],
+  movies: [],
 }
 
-export const movieListReducer = handleActions({
-    [movieListSuccess]: (state, action) => (
-        {
-            ...state,
-            movies: action.payload,
-        }
-    ),
-}, initState)
+export const movieListReducer = handleActions(
+  {
+    [movieListSuccess]: (state, action) => ({
+      ...state,
+      movies: action.payload,
+    }),
+  },
+  initState
+)
