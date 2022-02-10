@@ -46,7 +46,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 type='text'
                 variant='standard'
                 {...formik.getFieldProps('fullName')}
-              ></TextField>
+              />
             </CardContent>
           </Card>
         </div>
@@ -67,7 +67,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 type='text'
                 variant='standard'
                 {...formik.getFieldProps('userName')}
-              ></TextField>
+              />
             </CardContent>
           </Card>
         </div>
@@ -88,7 +88,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 type='text'
                 variant='standard'
                 {...formik.getFieldProps('email')}
-              ></TextField>
+              />
             </CardContent>
           </Card>
         </div>
@@ -109,7 +109,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 type='password'
                 variant='standard'
                 {...formik.getFieldProps('oldPassword')}
-              ></TextField>
+              />
             </CardContent>
           </Card>
         </div>
@@ -130,7 +130,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 type='password'
                 variant='standard'
                 {...formik.getFieldProps('newPassword')}
-              ></TextField>
+              />
             </CardContent>
           </Card>
         </div>
