@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 
-import SelectedMovieView from '../views/SelectedMovie'
+import SelectedMovieView from '../components/SelectedMovie'
 import {
   getComments,
   getMovie,
@@ -13,8 +13,8 @@ import {
   getUser,
   getUserAvatar,
   getUserRating,
-} from '../redux/selectors'
-import * as rawActions from '../redux/actions'
+} from '../selectors/selectors'
+import * as rawActions from '../actions'
 
 export const SelectedMovieContainer = () => {
   const dispatch = useDispatch()

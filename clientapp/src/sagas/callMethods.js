@@ -1,5 +1,5 @@
 import { call } from 'redux-saga/effects'
-import { axiosDefault, axiosWithJwt, axiosWithJwtAndData } from '../../axios'
+import { axiosDefault, axiosWithJwt, axiosWithJwtAndData } from '../axios'
 
 export function * loginRequest (payload) {
   return yield call(

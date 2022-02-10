@@ -1,7 +1,7 @@
 import lodash from 'lodash'
 import { put, select, takeEvery } from 'redux-saga/effects'
 
-import { getJwt } from '../selectors'
+import { getJwt } from '../selectors/selectors'
 import * as callMethods from './callMethods'
 import { enqueueSnackbarError, needToUpdateMovie } from '../actions'
 

@@ -8,8 +8,8 @@ import { Provider } from 'react-redux'
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { rootReducer } from './redux/reducers/rootReducer'
-import { sagaWatcher } from './redux/sagas'
+import { rootReducer } from './reducers/rootReducer'
+import { sagaWatcher } from './sagas'
 
 const saga = createSagaMiddleware()
 

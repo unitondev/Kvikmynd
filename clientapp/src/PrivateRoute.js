@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 import { CircularProgress } from '@mui/material'
 
-import { getJwt, isLoginSucceeded } from './redux/selectors'
+import { getJwt, isLoginSucceeded } from './selectors/selectors'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const jwtToken = useSelector(getJwt)

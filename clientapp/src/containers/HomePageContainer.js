@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import HomePageView from '../views/HomePage'
-import { movieListRequest } from '../redux/actions'
-import { getMovieList } from '../redux/selectors'
+import HomePageView from '../components/HomePage'
+import { movieListRequest } from '../actions'
+import { getMovieList } from '../selectors/selectors'
 
 export const HomePageContainer = () => {
   const dispatch = useDispatch()

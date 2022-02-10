@@ -4,10 +4,10 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 
-import RegisterView from '../views/Register'
-import { registerRequest } from '../redux/actions'
+import RegisterView from '../components/Register'
+import { registerRequest } from '../actions'
 import { toBase64 } from '../helpers'
-import { getUserLoading, isLoginSucceeded } from '../redux/selectors'
+import { getUserLoading, isLoginSucceeded } from '../selectors/selectors'
 
 export const RegisterContainer = () => {
   const dispatch = useDispatch()

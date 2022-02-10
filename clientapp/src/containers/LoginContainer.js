@@ -4,9 +4,9 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 
-import LoginView from '../views/Login'
-import { loginRequest } from '../redux/actions'
-import { getUserLoading, isLoginSucceeded } from '../redux/selectors'
+import LoginView from '../components/Login'
+import { loginRequest } from '../actions'
+import { getUserLoading, isLoginSucceeded } from '../selectors/selectors'
 
 export const LoginContainer = () => {
   const isLogined = useSelector(isLoginSucceeded)

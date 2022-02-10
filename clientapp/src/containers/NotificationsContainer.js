@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
-import { getNotifications } from '../redux/selectors'
-import { removeSnackbar } from '../redux/actions'
+import { getNotifications } from '../selectors/selectors'
+import { removeSnackbar } from '../actions'
 
 let displayed = []
 

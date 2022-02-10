@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-import { getUser, getUserAvatar } from '../redux/selectors'
-import { deleteUserRequest, updateUserRequest } from '../redux/actions'
-import ProfileRouter from '../views/Profile/ProfileRouter'
+import { getUser, getUserAvatar } from '../selectors/selectors'
+import { deleteUserRequest, updateUserRequest } from '../actions'
+import ProfileRouter from '../components/Profile/ProfileRouter'
 import { toBase64 } from '../helpers'
 
 export const ProfileContainer = () => {
