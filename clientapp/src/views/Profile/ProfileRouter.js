@@ -1,6 +1,6 @@
-import { List, ListItem, ListItemText } from '@material-ui/core'
+import { List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { NavBarContainer } from '../../containers/NavBarContainer'
 import { Link } from 'react-router-dom'

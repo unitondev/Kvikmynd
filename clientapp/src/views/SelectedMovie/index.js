@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { NavBarContainer } from '../../containers/NavBarContainer'
 import React from 'react'
@@ -10,7 +10,7 @@ import {
   CircularProgress,
   Slider,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import YouTube from 'react-youtube'
 import NotificationContainer from '../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'

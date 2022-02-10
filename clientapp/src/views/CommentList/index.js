@@ -1,6 +1,6 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
-import { Avatar, Button, Card, CardContent, TextField, Typography } from '@material-ui/core'
+import { Avatar, Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Comment from '../Comment'

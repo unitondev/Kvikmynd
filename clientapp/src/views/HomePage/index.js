@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { NavBarContainer } from '../../containers/NavBarContainer'
 import React from 'react'
@@ -12,9 +12,9 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import { Link } from 'react-router-dom'
-import SearchIcon from '@material-ui/icons/Search'
+import SearchIcon from '@mui/icons-material/Search'
 import PropTypes from 'prop-types'
 
 const Index = ({ classes, movies, searchRequest, handleSearchBarChange }) => (

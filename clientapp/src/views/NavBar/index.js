@@ -1,8 +1,8 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { Avatar, List, ListItem, ListItemText } from '@material-ui/core'
+import { Avatar, List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
 
 const Index = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (

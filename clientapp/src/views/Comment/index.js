@@ -1,7 +1,7 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
-import { Avatar, Card, CardContent, IconButton, TextField, Typography } from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
+import { Avatar, Card, CardContent, IconButton, TextField, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -27,7 +27,7 @@ const Index = ({
                 <IconButton
                   aria-label='delete'
                   onClick={() => handleDeleteCommentClick(comment.commentId)}
-                >
+                  size="large">
                   <DeleteIcon />
                 </IconButton>
               </div>

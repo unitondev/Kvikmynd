@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
 
 import { getJwt, isLoginSucceeded } from './redux/selectors'
 

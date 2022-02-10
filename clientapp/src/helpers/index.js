@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar } from '@material-ui/core'
+import { Avatar } from '@mui/material'
 
 export const toBase64 = (file) =>
   new Promise((resolve, reject) => {

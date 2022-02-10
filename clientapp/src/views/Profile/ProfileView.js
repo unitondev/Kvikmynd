@@ -1,7 +1,7 @@
 import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
-import { Avatar, Card, CardContent, Typography } from '@material-ui/core'
+import { Avatar, Card, CardContent, Typography } from '@mui/material'
 import NotificationContainer from '../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
 

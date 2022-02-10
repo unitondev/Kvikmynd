@@ -1,7 +1,7 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import PropTypes from 'prop-types'
 
 const Index = ({ classes, deleteAccount }) => (

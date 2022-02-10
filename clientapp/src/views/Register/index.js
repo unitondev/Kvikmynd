@@ -1,6 +1,6 @@
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
-import { Avatar, Button, TextField, Typography } from '@material-ui/core'
+import { Avatar, Button, TextField, Typography } from '@mui/material'
 import { NavBarContainer } from '../../containers/NavBarContainer'
 import React from 'react'
 import { AvatarPreview } from '../../helpers'
