@@ -1,9 +1,9 @@
 import lodash from 'lodash'
 import { put, select, takeEvery } from 'redux-saga/effects'
 
-import { getJwt } from '../selectors/selectors'
 import * as callMethods from './callMethods'
 import { enqueueSnackbarError } from '../actions'
+import { getJwt } from '../modules/account/selectors'
 
 export function * sagaAllMovies (action) {
   yield takeEvery(({ type }) => /_REQUESTFORMOVIE$/g.test(type), GenericMoviesSaga)

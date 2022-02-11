@@ -1,10 +1,10 @@
 import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { Avatar, Button, TextField, Typography } from '@mui/material'
-import { NavBarContainer } from '../../containers/NavBarContainer'
+import { NavBarContainer } from '../../../../containers/NavBarContainer'
 import React from 'react'
-import { AvatarPreview } from '../../helpers'
-import NotificationContainer from '../../containers/NotificationsContainer'
+import { AvatarPreview } from '../../../../helpers'
+import NotificationContainer from '../../../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
 
 const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (

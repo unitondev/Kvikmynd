@@ -2,13 +2,13 @@ import { List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
 import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
-import { NavBarContainer } from '../../containers/NavBarContainer'
+import { NavBarContainer } from '../../../../containers/NavBarContainer'
 import { Link } from 'react-router-dom'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import ProfileView from './ProfileView'
 import ProfileUpdateUserView from './ProfileUpdateUserView'
 import ProfileDeleteView from './ProfileDeleteView'
-import NotificationContainer from '../../containers/NotificationsContainer'
+import NotificationContainer from '../../../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
 
 const Index = ({

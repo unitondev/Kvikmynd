@@ -1,0 +1,17 @@
+import { createAction } from 'redux-actions'
+
+export const loginRequest = createAction('LOGIN_REQUEST')
+export const loginSuccess = createAction('LOGIN_SUCCESS')
+export const logoutRequest = createAction('LOGOUT_REQUEST')
+export const logoutSuccess = createAction('LOGOUT_SUCCESS')
+export const refreshTokensRequest = createAction('REFRESH_TOKENS_REQUEST')
+export const refreshTokensSuccess = createAction('REFRESH_TOKENS_SUCCESS')
+export const refreshTokensFail = createAction('REFRESH_TOKENS_FAIL')
+export const updateUserRequest = createAction('UPDATE_USER_REQUEST')
+export const updateUserSuccess = createAction('UPDATE_USER_SUCCESS')
+export const deleteUserRequest = createAction('DELETE_USER_REQUEST')
+export const deleteUserSuccess = createAction('DELETE_USER_SUCCESS')
+export const registerRequest = createAction('REGISTER_REQUEST')
+export const registerSuccess = createAction('REGISTER_SUCCESS')
+export const startLoadingUser = createAction('START_LOADING_USER')
+export const stopLoadingUser = createAction('STOP_LOADING_USER')

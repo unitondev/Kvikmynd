@@ -10,11 +10,10 @@ import {
   getMovieGenres,
   getNeedToUpdateMovie,
   getRatings,
-  getUser,
-  getUserAvatar,
   getUserRating,
 } from '../selectors/selectors'
 import * as rawActions from '../actions'
+import { getUser, getUserAvatar } from '../modules/account/selectors'
 
 export const SelectedMovieContainer = () => {
   const dispatch = useDispatch()

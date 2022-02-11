@@ -1,10 +1,11 @@
-import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { Button, TextField, Typography } from '@mui/material'
-import { NavBarContainer } from '../../containers/NavBarContainer'
-import NotificationContainer from '../../containers/NotificationsContainer'
 import React from 'react'
 import PropTypes from 'prop-types'
+import withStyles from '@mui/styles/withStyles';
+import { Button, TextField, Typography } from '@mui/material'
+
+import { NavBarContainer } from '../../../../containers/NavBarContainer'
+import NotificationContainer from '../../../../containers/NotificationsContainer'
+import styles from './styles'
 
 const Index = ({
   classes,
@@ -34,7 +35,7 @@ const Index = ({
           className={classes.textField}
           variant='outlined'
           {...emailFieldProps}
-        ></TextField>
+        />
         <TextField
           error={!!(touchedPassword && passwordError)}
           helperText={!!(touchedPassword && passwordError) === false ? null : passwordError}
@@ -43,7 +44,7 @@ const Index = ({
           className={classes.textField}
           variant='outlined'
           {...passwordFieldProps}
-        ></TextField>
+        />
         <Button variant='outlined' color='primary' type='submit'>
           Login
         </Button>

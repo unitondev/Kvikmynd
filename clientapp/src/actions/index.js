@@ -1,18 +1,5 @@
 import { createAction } from 'redux-actions'
 
-export const loginRequest = createAction('LOGIN_REQUEST')
-export const loginSuccess = createAction('LOGIN_SUCCESS')
-export const registerRequest = createAction('REGISTER_REQUEST')
-export const registerSuccess = createAction('REGISTER_SUCCESS')
-export const logoutRequest = createAction('LOGOUT_REQUEST')
-export const logoutSuccess = createAction('LOGOUT_SUCCESS')
-export const refreshTokensRequest = createAction('REFRESH_TOKENS_REQUEST')
-export const refreshTokensSuccess = createAction('REFRESH_TOKENS_SUCCESS')
-export const refreshTokensFail = createAction('REFRESH_TOKENS_FAIL')
-export const updateUserRequest = createAction('UPDATE_USER_REQUEST')
-export const updateUserSuccess = createAction('UPDATE_USER_SUCCESS')
-export const deleteUserRequest = createAction('DELETE_USER_REQUEST')
-export const deleteUserSuccess = createAction('DELETE_USER_SUCCESS')
 export const enqueueSnackbarInfo = createAction('ENQUEUE_SNACKBAR_INFO')
 export const enqueueSnackbarSuccess = createAction('ENQUEUE_SNACKBAR_SUCCESS')
 export const enqueueSnackbarError = createAction('ENQUEUE_SNACKBAR_ERROR')
@@ -34,5 +21,4 @@ export const deleteCommentRequest = createAction('DELETE_COMMENT_REQUESTFORUPDAT
 export const needToUpdateMovie = createAction('NEED_TO_UPDATE_COMMENTS')
 export const noNeedToUpdateMovie = createAction('NO_NEED_TO_UPDATE_COMMENTS')
 export const cleanMovieStore = createAction('CLEAN_MOVIE_STORE')
-export const startLoadingUser = createAction('START_LOADING_USER')
-export const stopLoadingUser = createAction('STOP_LOADING_USER')
+

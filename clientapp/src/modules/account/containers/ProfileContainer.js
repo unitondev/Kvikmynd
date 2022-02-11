@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-import { getUser, getUserAvatar } from '../selectors/selectors'
-import { deleteUserRequest, updateUserRequest } from '../actions'
+
+import * as rawActions from '../actions'
 import ProfileRouter from '../components/Profile/ProfileRouter'
+import { getUser, getUserAvatar } from '../selectors'
 import { toBase64 } from '../helpers'
 
-export const ProfileContainer = () => {
+const ProfileContainer = () => {
   const user = useSelector(getUser)
   const currentAvatar = useSelector(getUserAvatar)
   const dispatch = useDispatch()
@@ -39,12 +40,12 @@ export const ProfileContainer = () => {
     onSubmit: async (values) => {
       if (values.avatar != null) values.avatar = await toBase64(values.avatar)
       else values.avatar = currentAvatar
-      dispatch(updateUserRequest(values))
+      dispatch(rawActions.updateUserRequest(values))
     },
   })
 
   const deleteAccount = () => {
-    dispatch(deleteUserRequest())
+    dispatch(rawActions.deleteUserRequest())
   }
 
   return (
@@ -59,3 +60,5 @@ export const ProfileContainer = () => {
     />
   )
 }
+
+export default ProfileContainer

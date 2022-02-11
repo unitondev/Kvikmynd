@@ -5,11 +5,11 @@ import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 
 import RegisterView from '../components/Register'
-import { registerRequest } from '../actions'
+import * as rawActions from '../actions'
+import { getUserLoading, isLoginSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
-import { getUserLoading, isLoginSucceeded } from '../selectors/selectors'
 
-export const RegisterContainer = () => {
+const RegisterContainer = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const isLogined = useSelector(isLoginSucceeded)
@@ -39,7 +39,7 @@ export const RegisterContainer = () => {
     }),
     onSubmit: async (values) => {
       if (!!values.avatar) values.avatar = await toBase64(values.avatar)
-      dispatch(registerRequest(values))
+      dispatch(rawActions.registerRequest(values))
     },
   })
 
@@ -57,3 +57,5 @@ export const RegisterContainer = () => {
     />
   )
 }
+
+export default RegisterContainer

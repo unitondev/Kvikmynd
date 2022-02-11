@@ -2,16 +2,14 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import { LoginContainer } from './containers/LoginContainer'
-import { RegisterContainer } from './containers/RegisterContainer'
-import PrivateRoute from './PrivateRoute'
-import { ProfileContainer } from './containers/ProfileContainer'
-import { getUser } from './selectors/selectors'
-import { refreshTokensRequest } from './actions'
-import { HomePageContainer } from './containers/HomePageContainer'
-import { SelectedMovieContainer } from './containers/SelectedMovieContainer'
+import PrivateRoute from '../../PrivateRoute'
+import { HomePageContainer } from '../../containers/HomePageContainer'
+import { SelectedMovieContainer } from '../../containers/SelectedMovieContainer'
+import { refreshTokensRequest } from '../../modules/account/actions'
+import { LoginPage, ProfilePage, RegisterPage } from '../../modules/account'
+import { getUser } from '../../modules/account/selectors'
 
-export const AppRouter = () => {
+const App = () => {
   const user = useSelector(getUser)
   const dispatch = useDispatch()
   useEffect(() => {
@@ -25,14 +23,16 @@ export const AppRouter = () => {
           <HomePageContainer />
         </Route>
         <Route path='/login'>
-          <LoginContainer />
+          <LoginPage />
         </Route>
         <Route path='/register'>
-          <RegisterContainer />
+          <RegisterPage />
         </Route>
-        <PrivateRoute path='/profile' component={() => <ProfileContainer />} />
+        <PrivateRoute path='/profile' component={() => <ProfilePage />} />
         <PrivateRoute path='/movie:id' component={() => <SelectedMovieContainer />} />
       </Switch>
     </Router>
   )
 }
+
+export default App

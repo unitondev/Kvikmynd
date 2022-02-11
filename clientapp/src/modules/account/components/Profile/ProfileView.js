@@ -2,7 +2,7 @@ import React from 'react'
 import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { Avatar, Card, CardContent, Typography } from '@mui/material'
-import NotificationContainer from '../../containers/NotificationsContainer'
+import NotificationContainer from '../../../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
 
 const Index = ({ classes, user }) => (

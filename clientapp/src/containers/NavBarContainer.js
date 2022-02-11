@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import NavBar from '../components/NavBar'
-import { getFullName, getUserAvatar, isLoginSucceeded } from '../selectors/selectors'
-import { logoutRequest } from '../actions'
+import { logoutRequest } from '../modules/account/actions'
+import { getFullName, getUserAvatar, isLoginSucceeded } from '../modules/account/selectors'
 
 export const NavBarContainer = () => {
   const dispatch = useDispatch()

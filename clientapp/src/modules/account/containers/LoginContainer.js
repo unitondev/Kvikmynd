@@ -5,10 +5,10 @@ import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 
 import LoginView from '../components/Login'
-import { loginRequest } from '../actions'
-import { getUserLoading, isLoginSucceeded } from '../selectors/selectors'
+import * as rawActions from '../actions'
+import { getUserLoading, isLoginSucceeded } from '../selectors'
 
-export const LoginContainer = () => {
+const LoginContainer = () => {
   const isLogined = useSelector(isLoginSucceeded)
   const idLoading = useSelector(getUserLoading)
   const dispatch = useDispatch()
@@ -29,7 +29,7 @@ export const LoginContainer = () => {
         .required('Required'),
     }),
     onSubmit: (values) => {
-      dispatch(loginRequest(values))
+      dispatch(rawActions.loginRequest(values))
     },
   })
   const touchedEmail = formik.touched.email
@@ -55,3 +55,5 @@ export const LoginContainer = () => {
     />
   )
 }
+
+export default LoginContainer
