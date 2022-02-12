@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-
 import * as rawActions from '../actions'
 import ProfileRouter from '../components/Profile/ProfileRouter'
 import { getUser, getUserAvatar } from '../selectors'

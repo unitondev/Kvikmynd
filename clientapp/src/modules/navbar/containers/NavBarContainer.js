@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import NavBar from '../components/NavBar'
-import { logoutRequest } from '../modules/account/actions'
-import { getFullName, getUserAvatar, isLoginSucceeded } from '../modules/account/selectors'
+import { logoutRequest } from '../../account/actions'
+import { getFullName, getUserAvatar, isLoginSucceeded } from '../../account/selectors'
 
-export const NavBarContainer = () => {
+const NavBarContainer = () => {
   const dispatch = useDispatch()
   const isLogined = useSelector(isLoginSucceeded)
   const fullName = useSelector(getFullName)
@@ -27,3 +27,5 @@ export const NavBarContainer = () => {
     />
   )
 }
+
+export default NavBarContainer

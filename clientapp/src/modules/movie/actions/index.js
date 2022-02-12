@@ -1,1 +1,17 @@
 import { createAction } from 'redux-actions'
+
+export const selectedMovieRequest = createAction('SELECTED_MOVIE_REQUESTFORMOVIE')
+export const selectedMovieSuccess = createAction('SELECTED_MOVIE_SUCCESS')
+export const movieCommentsRequest = createAction('MOVIE_COMMENTS_REQUESTFORMOVIE')
+export const movieCommentsSuccess = createAction('MOVIE_COMMENTS_SUCCESS')
+export const movieRatingsRequest = createAction('MOVIE_RATINGS_REQUESTFORMOVIE')
+export const movieRatingsSuccess = createAction('MOVIE_RATINGS_SUCCESS')
+export const userRatingRequest = createAction('USER_RATING_REQUESTFORMOVIE')
+export const userRatingSuccess = createAction('USER_RATING_SUCCESS')
+export const cleanMovieStore = createAction('CLEAN_MOVIE_STORE')
+export const noNeedToUpdateMovie = createAction('NO_NEED_TO_UPDATE_COMMENTS')
+export const setUserRatingRequest = createAction('SET_USER_RATING_REQUESTFORUPDATE')
+export const setUserRatingSuccess = createAction('SET_USER_RATING_SUCCESS')
+export const userCommentRequest = createAction('USER_COMMENT_REQUESTFORUPDATE')
+export const deleteCommentRequest = createAction('DELETE_COMMENT_REQUESTFORUPDATE')
+export const needToUpdateMovie = createAction('NEED_TO_UPDATE_COMMENTS')

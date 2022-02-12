@@ -1,14 +1,15 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { Avatar, Button, Card, CardContent, TextField, Typography } from '@mui/material'
-import { AvatarPreview } from '../../../../helpers'
-import NotificationContainer from '../../../../containers/NotificationsContainer'
-import PropTypes from 'prop-types'
 
-const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFile }) => (
+import { Notifications } from '../../../shared/snackBarNotification'
+import { AvatarPreview } from '../../helpers'
+
+const ProfileUpdateUserView = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFile }) => (
   <div className={classes.profileBlock}>
-    <NotificationContainer />
+    <Notifications />
     <div className={classes.profileInfoBlock}>
       <form className={classes.formBlock} onSubmit={onSubmitForm}>
         <div className={classes.avatarProfile}>
@@ -18,7 +19,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
                 <AvatarPreview file={formik.values.avatar} classes={classes.avatarBig} />
               )
               : (
-              <Avatar src={currentAvatar} className={classes.avatarBig} />
+                <Avatar src={currentAvatar} className={classes.avatarBig} />
               )
           }
           <input
@@ -144,7 +145,7 @@ const Index = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFi
   </div>
 )
 
-Index.propTypes = {
+ProfileUpdateUserView.propTypes = {
   classes: PropTypes.object.isRequired,
   onSubmitForm: PropTypes.func.isRequired,
   formik: PropTypes.object.isRequired,
@@ -152,4 +153,4 @@ Index.propTypes = {
   handleSelectingFile: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(ProfileUpdateUserView)

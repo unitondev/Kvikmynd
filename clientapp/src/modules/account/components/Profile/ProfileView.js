@@ -2,12 +2,13 @@ import React from 'react'
 import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { Avatar, Card, CardContent, Typography } from '@mui/material'
-import NotificationContainer from '../../../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
 
-const Index = ({ classes, user }) => (
+import { Notifications } from '../../../shared/snackBarNotification'
+
+const ProfileView = ({ classes, user }) => (
   <div className={classes.profileBlock}>
-    <NotificationContainer />
+    <Notifications />
     <div className={classes.profileInfoBlock}>
       <div className={classes.avatarProfile}>
         <Avatar src={user.avatar} className={classes.avatarBig} />
@@ -46,9 +47,9 @@ const Index = ({ classes, user }) => (
   </div>
 )
 
-Index.propTypes = {
+ProfileView.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(ProfileView)

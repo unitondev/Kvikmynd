@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import PrivateRoute from '../../PrivateRoute'
-import { HomePageContainer } from '../../containers/HomePageContainer'
-import { SelectedMovieContainer } from '../../containers/SelectedMovieContainer'
 import { refreshTokensRequest } from '../../modules/account/actions'
 import { LoginPage, ProfilePage, RegisterPage } from '../../modules/account'
 import { getUser } from '../../modules/account/selectors'
+import { MovieListPage } from '../../modules/movieList'
+import { MoviePage } from '../../modules/movie'
 
 const App = () => {
   const user = useSelector(getUser)
@@ -20,7 +20,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path='/'>
-          <HomePageContainer />
+          <MovieListPage />
         </Route>
         <Route path='/login'>
           <LoginPage />
@@ -29,7 +29,7 @@ const App = () => {
           <RegisterPage />
         </Route>
         <PrivateRoute path='/profile' component={() => <ProfilePage />} />
-        <PrivateRoute path='/movie:id' component={() => <SelectedMovieContainer />} />
+        <PrivateRoute path='/movie:id' component={() => <MoviePage />} />
       </Switch>
     </Router>
   )

@@ -1,7 +1,7 @@
-import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { NavBarContainer } from '../../containers/NavBarContainer'
 import React from 'react'
+import PropTypes from 'prop-types'
+import withStyles from '@mui/styles/withStyles';
+import { Link } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -13,13 +13,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Link } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
-import PropTypes from 'prop-types'
 
-const Index = ({ classes, movies, searchRequest, handleSearchBarChange }) => (
+import { NavBar } from '../../../navbar'
+import styles from './styles'
+
+const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) => (
   <>
-    <NavBarContainer />
+    <NavBar />
     <div className={classes.movieListBlock}>
       <TextField
         id='outlined-basic'
@@ -86,11 +87,11 @@ const Index = ({ classes, movies, searchRequest, handleSearchBarChange }) => (
   </>
 )
 
-Index.propTypes = {
+MovieList.propTypes = {
   classes: PropTypes.object.isRequired,
   movies: PropTypes.array.isRequired,
   searchRequest: PropTypes.string.isRequired,
   handleSearchBarChange: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(MovieList)

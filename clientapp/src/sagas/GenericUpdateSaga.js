@@ -2,8 +2,9 @@ import lodash from 'lodash'
 import { put, select, takeEvery } from 'redux-saga/effects'
 
 import * as callMethods from './callMethods'
-import { enqueueSnackbarError, needToUpdateMovie } from '../actions'
 import { getJwt } from '../modules/account/selectors'
+import { needToUpdateMovie } from '../modules/movie/actions'
+import { enqueueSnackbarError } from '../modules/shared/snackBarNotification/actions'
 
 export function * sagaAllUpdates (action) {
   yield takeEvery(({ type }) => /_REQUESTFORUPDATE$/g.test(type), GenericUpdateSaga)

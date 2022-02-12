@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
 import { Button, TextField, Typography } from '@mui/material'
 
-import { NavBarContainer } from '../../../../containers/NavBarContainer'
-import NotificationContainer from '../../../../containers/NotificationsContainer'
+import { Notifications } from '../../../shared/snackBarNotification'
+import { NavBar } from '../../../navbar'
 import styles from './styles'
 
-const Index = ({
+const Login = ({
   classes,
   onSubmitForm,
   touchedEmail,
@@ -18,8 +18,8 @@ const Index = ({
   passwordFieldProps,
 }) => (
   <>
-    <NotificationContainer />
-    <NavBarContainer />
+    <Notifications />
+    <NavBar />
     <div className={classes.viewTitleBlock}>
       <Typography variant='h2' component='h2' className={classes.viewTitleText}>
         Login
@@ -53,7 +53,7 @@ const Index = ({
   </>
 )
 
-Index.propTypes = {
+Login.propTypes = {
   classes: PropTypes.object.isRequired,
   onSubmitForm: PropTypes.func.isRequired,
   touchedEmail: PropTypes.bool,
@@ -64,4 +64,4 @@ Index.propTypes = {
   passwordFieldProps: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(Login)

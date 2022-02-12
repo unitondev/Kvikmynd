@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
-import { getNotifications } from '../selectors/selectors'
-import { removeSnackbar } from '../actions'
+import * as rawActions from '../actions'
+import { getNotifications } from '../selectors'
 
 let displayed = []
 
@@ -25,7 +25,7 @@ const NotificationContainer = () => {
         key,
         ...options,
         onExited: (event, newKey) => {
-          dispatch(removeSnackbar(newKey))
+          dispatch(rawActions.removeSnackbar(newKey))
           removeDisplayed(newKey)
         },
       })

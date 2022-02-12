@@ -1,16 +1,7 @@
 import { handleActions } from 'redux-actions'
-import {
-  cleanMovieStore,
-  movieCommentsSuccess,
-  movieRatingsSuccess,
-  needToUpdateMovie,
-  noNeedToUpdateMovie,
-  selectedMovieSuccess,
-  setUserRatingSuccess,
-  userRatingSuccess,
-} from '../actions'
+import * as movieActions from '../actions'
 
-const initState = {
+const defaultState = {
   movie: {},
   comments: [],
   ratings: [],
@@ -19,44 +10,44 @@ const initState = {
   movieToUpdate: false,
 }
 
-export const movieReducer = handleActions(
+export default handleActions(
   {
-    [selectedMovieSuccess]: (state, action) => ({
+    [movieActions.selectedMovieSuccess]: (state, action) => ({
       ...state,
       movie: action.payload.movie,
       genres: action.payload.genreNames,
     }),
-    [movieCommentsSuccess]: (state, action) => ({
+    [movieActions.movieCommentsSuccess]: (state, action) => ({
       ...state,
       comments: action.payload,
     }),
-    [movieRatingsSuccess]: (state, action) => ({
+    [movieActions.movieRatingsSuccess]: (state, action) => ({
       ...state,
       ratings: action.payload,
     }),
-    [userRatingSuccess]: (state, action) => ({
+    [movieActions.userRatingSuccess]: (state, action) => ({
       ...state,
       userRating: action.payload,
     }),
-    [setUserRatingSuccess]: (state, action) => ({
+    [movieActions.setUserRatingSuccess]: (state, action) => ({
       ...state,
       userRating: action.payload,
     }),
-    [cleanMovieStore]: (state, action) => ({
+    [movieActions.cleanMovieStore]: (state, action) => ({
       movie: {},
       comments: [],
       ratings: [],
       userRating: 0,
       commentsUpdate: false,
     }),
-    [needToUpdateMovie]: (state) => ({
+    [movieActions.needToUpdateMovie]: (state) => ({
       ...state,
       movieToUpdate: true,
     }),
-    [noNeedToUpdateMovie]: (state) => ({
+    [movieActions.noNeedToUpdateMovie]: (state) => ({
       ...state,
       movieToUpdate: false,
     }),
   },
-  initState
+  defaultState
 )

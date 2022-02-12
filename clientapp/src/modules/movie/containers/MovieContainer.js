@@ -3,19 +3,12 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 
-import SelectedMovieView from '../components/SelectedMovie'
-import {
-  getComments,
-  getMovie,
-  getMovieGenres,
-  getNeedToUpdateMovie,
-  getRatings,
-  getUserRating,
-} from '../selectors/selectors'
+import Movie from '../components/Movie'
 import * as rawActions from '../actions'
-import { getUser, getUserAvatar } from '../modules/account/selectors'
+import { getUser, getUserAvatar } from '../../account/selectors'
+import { getComments, getMovie, getMovieGenres, getNeedToUpdateMovie, getRatings, getUserRating } from '../selectors'
 
-export const SelectedMovieContainer = () => {
+const MovieContainer = () => {
   const dispatch = useDispatch()
   let { id } = useParams()
   const movie = useSelector(getMovie)
@@ -156,7 +149,7 @@ export const SelectedMovieContainer = () => {
   }
 
   return (
-    <SelectedMovieView
+    <Movie
       movie={movie}
       comments={comments}
       ratings={ratings}
@@ -175,3 +168,5 @@ export const SelectedMovieContainer = () => {
     />
   )
 }
+
+export default MovieContainer

@@ -1,0 +1,1 @@
+export const getMovieList = (state) => state.movieList.list.movies

@@ -1,17 +1,18 @@
-import { List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
+import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { NavBarContainer } from '../../../../containers/NavBarContainer'
 import { Link } from 'react-router-dom'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { List, ListItem, ListItemText } from '@mui/material'
+
 import ProfileView from './ProfileView'
 import ProfileUpdateUserView from './ProfileUpdateUserView'
 import ProfileDeleteView from './ProfileDeleteView'
-import NotificationContainer from '../../../../containers/NotificationsContainer'
-import PropTypes from 'prop-types'
+import { Notifications } from '../../../shared/snackBarNotification'
+import { NavBar } from '../../../navbar'
+import styles from './styles'
 
-const Index = ({
+const ProfileRouter = ({
   classes,
   onSubmitForm,
   formik,
@@ -29,8 +30,8 @@ const Index = ({
 
   return (
     <div>
-      <NotificationContainer />
-      <NavBarContainer />
+      <Notifications />
+      <NavBar />
       <div className={classes.mainBlock}>
         <List
           component='nav'
@@ -87,7 +88,7 @@ const Index = ({
   )
 }
 
-Index.propTypes = {
+ProfileRouter.propTypes = {
   classes: PropTypes.object.isRequired,
   onSubmitForm: PropTypes.func.isRequired,
   formik: PropTypes.object.isRequired,
@@ -98,4 +99,4 @@ Index.propTypes = {
   deleteAccount: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(ProfileRouter)

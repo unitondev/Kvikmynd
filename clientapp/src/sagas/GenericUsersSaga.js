@@ -2,9 +2,9 @@ import lodash from 'lodash'
 import { put, select, takeEvery } from 'redux-saga/effects'
 
 import * as callMethods from './callMethods'
-import { enqueueSnackbarError } from '../actions'
 import { startLoadingUser, stopLoadingUser } from '../modules/account/actions'
 import { getJwt } from '../modules/account/selectors'
+import { enqueueSnackbarError } from '../modules/shared/snackBarNotification/actions'
 
 export function * sagaAllUsers (action) {
   yield takeEvery(({ type }) => /_REQUEST$/g.test(type), GenericUsersSaga)

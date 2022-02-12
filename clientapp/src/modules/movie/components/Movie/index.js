@@ -1,7 +1,7 @@
-import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { NavBarContainer } from '../../containers/NavBarContainer'
 import React from 'react'
+import PropTypes from 'prop-types'
+import withStyles from '@mui/styles/withStyles';
+import YouTube from 'react-youtube'
 import {
   Button,
   Card,
@@ -11,12 +11,13 @@ import {
   Slider,
   Typography,
 } from '@mui/material'
-import YouTube from 'react-youtube'
-import NotificationContainer from '../../containers/NotificationsContainer'
-import PropTypes from 'prop-types'
-import CommentsList from '../CommentList'
 
-const Index = ({
+import CommentsList from '../CommentList'
+import { Notifications } from '../../../shared/snackBarNotification'
+import { NavBar } from '../../../navbar'
+import styles from './styles'
+
+const Movie = ({
   classes,
   movie,
   comments,
@@ -35,8 +36,8 @@ const Index = ({
   handleDeleteCommentClick,
 }) => (
   <>
-    <NotificationContainer />
-    <NavBarContainer />
+    <Notifications />
+    <NavBar />
     <div className={classes.selectedMovieBlock}>
       <Card className={classes.selectedMovieCardBlock}>
         <CardContent className={classes.selectedMovieCardContent}>
@@ -126,7 +127,7 @@ const Index = ({
   </>
 )
 
-Index.propTypes = {
+Movie.propTypes = {
   classes: PropTypes.object.isRequired,
   movie: PropTypes.object.isRequired,
   comments: PropTypes.array.isRequired,
@@ -145,4 +146,4 @@ Index.propTypes = {
   handleDeleteCommentClick: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(Movie)

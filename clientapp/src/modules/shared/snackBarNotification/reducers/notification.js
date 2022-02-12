@@ -1,13 +1,13 @@
 import { handleActions } from 'redux-actions'
-import { enqueueSnackbarError, enqueueSnackbarInfo, enqueueSnackbarSuccess, removeSnackbar } from '../actions'
+import * as notificationActions from '../actions'
 
-const initState = {
+const defaultState = {
   notifications: [],
 }
 
-export const snackbarReducer = handleActions(
+export default handleActions(
   {
-    [enqueueSnackbarSuccess]: (state, action) => ({
+    [notificationActions.enqueueSnackbarSuccess]: (state, action) => ({
       notifications: [
         ...state.notifications,
         {
@@ -19,7 +19,7 @@ export const snackbarReducer = handleActions(
         },
       ],
     }),
-    [enqueueSnackbarError]: (state, action) => ({
+    [notificationActions.enqueueSnackbarError]: (state, action) => ({
       notifications: [
         ...state.notifications,
         {
@@ -31,7 +31,7 @@ export const snackbarReducer = handleActions(
         },
       ],
     }),
-    [enqueueSnackbarInfo]: (state, action) => ({
+    [notificationActions.enqueueSnackbarInfo]: (state, action) => ({
       notifications: [
         ...state.notifications,
         {
@@ -43,9 +43,9 @@ export const snackbarReducer = handleActions(
         },
       ],
     }),
-    [removeSnackbar]: (state, action) => ({
+    [notificationActions.removeSnackbar]: (state, action) => ({
       notifications: state.notifications.filter((notification) => notification.key !== action.payload),
     }),
   },
-  initState
+  defaultState
 )

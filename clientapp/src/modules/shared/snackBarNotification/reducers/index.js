@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import movie from './movie'
+import notification from './notification'
 
 export default combineReducers({
-  movie,
+  notification,
 })

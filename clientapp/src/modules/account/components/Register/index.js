@@ -1,16 +1,17 @@
-import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { Avatar, Button, TextField, Typography } from '@mui/material'
-import { NavBarContainer } from '../../../../containers/NavBarContainer'
 import React from 'react'
-import { AvatarPreview } from '../../../../helpers'
-import NotificationContainer from '../../../../containers/NotificationsContainer'
 import PropTypes from 'prop-types'
+import withStyles from '@mui/styles/withStyles';
+import { Avatar, Button, TextField, Typography } from '@mui/material'
 
-const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
+import { Notifications } from '../../../shared/snackBarNotification'
+import { NavBar } from '../../../navbar'
+import { AvatarPreview } from '../../helpers'
+import styles from './styles'
+
+const Register = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
   <div>
-    <NotificationContainer />
-    <NavBarContainer />
+    <Notifications />
+    <NavBar />
     <div className={classes.viewTitleBlock}>
       <Typography variant='h2' component='h2' className={classes.viewTitleText}>
         Register
@@ -44,7 +45,7 @@ const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
           className={classes.textField}
           variant='outlined'
           {...formik.getFieldProps('email')}
-        ></TextField>
+        />
         <TextField
           error={!!(formik.touched.userName && formik.errors.userName)}
           helperText={
@@ -57,7 +58,7 @@ const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
           className={classes.textField}
           variant='outlined'
           {...formik.getFieldProps('userName')}
-        ></TextField>
+        />
         <TextField
           error={!!(formik.touched.fullName && formik.errors.fullName)}
           helperText={
@@ -70,7 +71,7 @@ const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
           className={classes.textField}
           variant='outlined'
           {...formik.getFieldProps('fullName')}
-        ></TextField>
+        />
         <TextField
           error={!!(formik.touched.password && formik.errors.password)}
           helperText={
@@ -83,7 +84,7 @@ const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
           className={classes.textField}
           variant='outlined'
           {...formik.getFieldProps('password')}
-        ></TextField>
+        />
         <Button variant='outlined' color='primary' type='submit'>
           Register
         </Button>
@@ -92,11 +93,11 @@ const Index = ({ classes, onSubmitForm, formik, handleSelectingFile }) => (
   </div>
 )
 
-Index.propTypes = {
+Register.propTypes = {
   classes: PropTypes.object.isRequired,
   onSubmitForm: PropTypes.func.isRequired,
   formik: PropTypes.object.isRequired,
   handleSelectingFile: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(Register)

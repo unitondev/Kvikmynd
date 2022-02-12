@@ -1,11 +1,12 @@
-import withStyles from '@mui/styles/withStyles';
-import styles from './styles'
-import { Avatar, Card, CardContent, IconButton, TextField, Typography } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
 import React from 'react'
 import PropTypes from 'prop-types'
+import withStyles from '@mui/styles/withStyles';
+import { Avatar, Card, CardContent, IconButton, TextField, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 
-const Index = ({
+import styles from './styles'
+
+const Comment = ({
   classes,
   comment,
   currentUserUserName,
@@ -52,7 +53,7 @@ const Index = ({
   </div>
 )
 
-Index.propTypes = {
+Comment.propTypes = {
   classes: PropTypes.object.isRequired,
   comment: PropTypes.object.isRequired,
   currentUserUserName: PropTypes.string.isRequired,
@@ -60,4 +61,4 @@ Index.propTypes = {
   onCommentChange: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Index)
+export default withStyles(styles)(Comment)

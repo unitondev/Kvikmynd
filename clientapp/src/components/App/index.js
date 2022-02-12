@@ -8,7 +8,7 @@ import createSagaMiddleware from 'redux-saga'
 import { applyMiddleware, createStore } from 'redux'
 
 import UI from './App'
-import { rootReducer } from '../../reducers/rootReducer'
+import { rootReducer } from '../../state/reducers'
 import { sagaWatcher } from '../../sagas'
 
 const theme = createTheme()
