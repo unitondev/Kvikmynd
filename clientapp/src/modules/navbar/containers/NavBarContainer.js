@@ -4,18 +4,19 @@ import { useHistory } from 'react-router-dom'
 
 import NavBar from '../components/NavBar'
 import { logoutRequest } from '../../account/actions'
-import { getFullName, getUserAvatar, isLoginSucceeded } from '../../account/selectors'
+import { getFullName, getUserAvatar, getIsLoginSucceeded } from '../../account/selectors'
+import routes from '../../../Routes'
 
 const NavBarContainer = () => {
   const dispatch = useDispatch()
-  const isLogined = useSelector(isLoginSucceeded)
+  const isLogined = useSelector(getIsLoginSucceeded)
   const fullName = useSelector(getFullName)
   const avatar = useSelector(getUserAvatar)
   const history = useHistory()
 
   const onClickLogout = () => {
     dispatch(logoutRequest())
-    history.push('/')
+    history.push(routes.root)
   }
 
   return (

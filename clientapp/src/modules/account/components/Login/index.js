@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
 import { Button, TextField, Typography } from '@mui/material'
 
-import { Notifications } from '../../../shared/snackBarNotification'
-import { NavBar } from '../../../navbar'
 import styles from './styles'
 
 const Login = ({
@@ -18,8 +16,6 @@ const Login = ({
   passwordFieldProps,
 }) => (
   <>
-    <Notifications />
-    <NavBar />
     <div className={classes.viewTitleBlock}>
       <Typography variant='h2' component='h2' className={classes.viewTitleText}>
         Login

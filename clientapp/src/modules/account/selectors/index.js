@@ -1,6 +1,6 @@
 export const getIsUserLoading = (state) => state.account.isLoading
 
-export const isLoginSucceeded = (state) => state.account.isLoginSucceeded
+export const getIsLoginSucceeded = (state) => state.account.isLoginSucceeded
 
 export const getUser = (state) => state.account.me
 export const getUserAvatar = (state) => state.account.me?.avatar

@@ -6,10 +6,11 @@ import { useHistory } from 'react-router-dom'
 
 import LoginView from '../components/Login'
 import * as rawActions from '../actions'
-import { getIsUserLoading, isLoginSucceeded } from '../selectors'
+import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
+import routes from '../../../Routes'
 
 const LoginContainer = () => {
-  const isLogined = useSelector(isLoginSucceeded)
+  const isLogined = useSelector(getIsLoginSucceeded)
   const idLoading = useSelector(getIsUserLoading)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -40,7 +41,7 @@ const LoginContainer = () => {
   const passwordFieldProps = formik.getFieldProps('password')
 
   useEffect(() => {
-    if (idLoading === false && isLogined === true) history.push('/')
+    if (idLoading === false && isLogined === true) history.push(routes.root)
   }, [idLoading, isLogined])
 
   return (

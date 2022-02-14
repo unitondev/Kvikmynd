@@ -4,11 +4,8 @@ import styles from './styles'
 import { Avatar, Card, CardContent, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
-import { Notifications } from '../../../shared/snackBarNotification'
-
 const ProfileView = ({ classes, user }) => (
   <div className={classes.profileBlock}>
-    <Notifications />
     <div className={classes.profileInfoBlock}>
       <div className={classes.avatarProfile}>
         <Avatar src={user.avatar} className={classes.avatarBig} />

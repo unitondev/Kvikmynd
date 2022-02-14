@@ -4,12 +4,10 @@ import withStyles from '@mui/styles/withStyles';
 import styles from './styles'
 import { Avatar, Button, Card, CardContent, TextField, Typography } from '@mui/material'
 
-import { Notifications } from '../../../shared/snackBarNotification'
 import { AvatarPreview } from '../../helpers'
 
 const ProfileUpdateUserView = ({ classes, onSubmitForm, formik, currentAvatar, handleSelectingFile }) => (
   <div className={classes.profileBlock}>
-    <Notifications />
     <div className={classes.profileInfoBlock}>
       <form className={classes.formBlock} onSubmit={onSubmitForm}>
         <div className={classes.avatarProfile}>

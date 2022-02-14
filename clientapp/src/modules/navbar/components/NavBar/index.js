@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { Avatar, List, ListItem, ListItemText } from '@mui/material'
 
 import styles from './styles'
+import routes from '../../../../Routes'
 
 const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
   <nav className={classes.navbarBlock}>
@@ -14,7 +15,7 @@ const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
       aria-label='mailbox folders'
     >
       <NavLink
-        to='/'
+        to={routes.root}
         className={classes.navBarLink}
         hover='true'
         activeClassName={classes.activeNavBarLink}
@@ -29,7 +30,7 @@ const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
           ? null
           : (
           <NavLink
-            to='/login'
+            to={routes.login}
             className={classes.navBarLink}
             hover='true'
             activeClassName={classes.activeNavBarLink}
@@ -45,7 +46,7 @@ const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
           ? null
           : (
           <NavLink
-            to='/register'
+            to={routes.register}
             className={classes.navBarLink}
             hover='true'
             activeClassName={classes.activeNavBarLink}
@@ -61,7 +62,7 @@ const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
           ? null
           : (
           <NavLink
-            to='/profile'
+            to={routes.profile}
             className={classes.navBarLink}
             hover='true'
             activeClassName={classes.activeNavBarLink}

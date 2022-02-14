@@ -1,14 +1,12 @@
 import { handleActions } from 'redux-actions'
 import * as notificationActions from '../actions'
 
-const defaultState = {
-  notifications: [],
-}
+const defaultState = []
 
 export default handleActions(
   {
-    [notificationActions.enqueueSnackbarSuccess]: (state, action) => ({
-      notifications: [
+    [notificationActions.enqueueSnackbarSuccess]: (state, action) => {
+      return [
         ...state.notifications,
         {
           key: action.payload.key,
@@ -17,10 +15,10 @@ export default handleActions(
             variant: 'success',
           },
         },
-      ],
-    }),
-    [notificationActions.enqueueSnackbarError]: (state, action) => ({
-      notifications: [
+      ]
+    },
+    [notificationActions.enqueueSnackbarError]: (state, action) => {
+      return [
         ...state.notifications,
         {
           key: action.payload.key,
@@ -29,10 +27,10 @@ export default handleActions(
             variant: 'error',
           },
         },
-      ],
-    }),
-    [notificationActions.enqueueSnackbarInfo]: (state, action) => ({
-      notifications: [
+      ]
+    },
+    [notificationActions.enqueueSnackbarInfo]: (state, action) => {
+      return [
         ...state.notifications,
         {
           key: action.payload.key,
@@ -41,11 +39,11 @@ export default handleActions(
             variant: 'info',
           },
         },
-      ],
-    }),
-    [notificationActions.removeSnackbar]: (state, action) => ({
-      notifications: state.notifications.filter((notification) => notification.key !== action.payload),
-    }),
+      ]
+    },
+    [notificationActions.removeSnackbar]: (state, action) => {
+      return state.notifications.filter((notification) => notification.key !== action.payload)
+    },
   },
   defaultState
 )

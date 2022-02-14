@@ -8,8 +8,6 @@ import { List, ListItem, ListItemText } from '@mui/material'
 import ProfileView from './ProfileView'
 import ProfileUpdateUserView from './ProfileUpdateUserView'
 import ProfileDeleteView from './ProfileDeleteView'
-import { Notifications } from '../../../shared/snackBarNotification'
-import { NavBar } from '../../../navbar'
 import styles from './styles'
 
 const ProfileRouter = ({
@@ -30,8 +28,6 @@ const ProfileRouter = ({
 
   return (
     <div>
-      <Notifications />
-      <NavBar />
       <div className={classes.mainBlock}>
         <List
           component='nav'

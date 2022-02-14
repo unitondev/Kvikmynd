@@ -6,13 +6,14 @@ import { useHistory } from 'react-router-dom'
 
 import RegisterView from '../components/Register'
 import * as rawActions from '../actions'
-import { getIsUserLoading, isLoginSucceeded } from '../selectors'
+import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
+import routes from '../../../Routes'
 
 const RegisterContainer = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const isLogined = useSelector(isLoginSucceeded)
+  const isLogined = useSelector(getIsLoginSucceeded)
   const idLoading = useSelector(getIsUserLoading)
   const handleSelectingFile = (event) => {
     formik.setFieldValue('avatar', event.currentTarget.files[0])
@@ -45,7 +46,7 @@ const RegisterContainer = () => {
 
   useEffect(() => {
     if (idLoading === false && isLogined === true) {
-      setTimeout(() => history.push('/'), 1000)
+      setTimeout(() => history.push(routes.root), 1000)
     }
   }, [idLoading, isLogined])
 
