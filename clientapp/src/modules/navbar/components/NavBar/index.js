@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { Avatar, List, ListItem, ListItemText } from '@mui/material'
 
 import styles from './styles'
-import routes from '../../../../Routes'
+import routes from '@movie/routes'
 
 const NavBar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
   <nav className={classes.navbarBlock}>

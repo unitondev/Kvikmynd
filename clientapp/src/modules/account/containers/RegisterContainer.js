@@ -8,7 +8,7 @@ import RegisterView from '../components/Register'
 import * as rawActions from '../actions'
 import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
-import routes from '../../../Routes'
+import routes from '@movie/routes'
 
 const RegisterContainer = () => {
   const dispatch = useDispatch()

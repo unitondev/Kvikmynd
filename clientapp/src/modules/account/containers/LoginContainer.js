@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import LoginView from '../components/Login'
 import * as rawActions from '../actions'
 import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
-import routes from '../../../Routes'
+import routes from '@movie/routes'
 
 const LoginContainer = () => {
   const isLogined = useSelector(getIsLoginSucceeded)

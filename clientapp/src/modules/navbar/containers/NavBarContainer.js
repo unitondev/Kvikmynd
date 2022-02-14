@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import { logoutRequest } from '../../account/actions'
 import { getFullName, getUserAvatar, getIsLoginSucceeded } from '../../account/selectors'
-import routes from '../../../Routes'
+import routes from '@movie/routes'
 
 const NavBarContainer = () => {
   const dispatch = useDispatch()

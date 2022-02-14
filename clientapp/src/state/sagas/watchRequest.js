@@ -1,8 +1,8 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash'
 
-import { getJwt } from '../../modules/account/selectors'
-import APIRequests from '../../modules/shared/utils/API'
+import { getJwt } from '@movie/modules/account/selectors'
+import APIRequests from '@movie/modules/shared/utils/API'
 import ApiService from '../../services/API'
 
 export function* callApi(action) {

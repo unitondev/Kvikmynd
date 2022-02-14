@@ -2,12 +2,12 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import PrivateRoute from '../../PrivateRoute'
-import { LoginPage, ProfilePage, RegisterPage } from '../../modules/account'
-import { MovieListPage } from '../../modules/movieList'
-import { MoviePage } from '../../modules/movie'
-import { NavBar } from '../../modules/navbar'
-import { Notifications } from '../../modules/shared/snackBarNotification'
-import routes from '../../Routes'
+import { LoginPage, ProfilePage, RegisterPage } from '@movie/modules/account'
+import { MovieListPage } from '@movie/modules/movieList'
+import { MoviePage } from '@movie/modules/movie'
+import { NavBar } from '@movie/modules/navbar'
+import { Notifications } from '@movie/modules/shared/snackBarNotification'
+import routes from '@movie/routes'
 
 const App = () => (
   <>

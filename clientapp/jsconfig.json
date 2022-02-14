@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@movie/routes": ["src/Routes"],
+      "@movie/modules/*": ["src/modules/*"],
+      "@movie/shared/*": ["src/modules/shared/*"],
+      "@movie/services/*": ["src/services/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
