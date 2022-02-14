@@ -1,12 +1,12 @@
 import { handleActions } from 'redux-actions'
 import * as movieActions from '../actions'
 
-const defaultState = {}
+const defaultState = []
 
 export default handleActions(
   {
-    [movieActions.selectedMovieSuccess]: (state, action) => {
-      return action.response.data.movie
+    [movieActions.movieCommentsSuccess]: (state, action) => {
+      return action.response.data
     },
     [movieActions.cleanMovieStore]: (state, action) => {
       return defaultState

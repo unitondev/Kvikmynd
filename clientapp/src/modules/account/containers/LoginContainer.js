@@ -6,11 +6,11 @@ import { useHistory } from 'react-router-dom'
 
 import LoginView from '../components/Login'
 import * as rawActions from '../actions'
-import { getUserLoading, isLoginSucceeded } from '../selectors'
+import { getIsUserLoading, isLoginSucceeded } from '../selectors'
 
 const LoginContainer = () => {
   const isLogined = useSelector(isLoginSucceeded)
-  const idLoading = useSelector(getUserLoading)
+  const idLoading = useSelector(getIsUserLoading)
   const dispatch = useDispatch()
   const history = useHistory()
   const formik = useFormik({

@@ -6,14 +6,14 @@ import { useHistory } from 'react-router-dom'
 
 import RegisterView from '../components/Register'
 import * as rawActions from '../actions'
-import { getUserLoading, isLoginSucceeded } from '../selectors'
+import { getIsUserLoading, isLoginSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
 
 const RegisterContainer = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const isLogined = useSelector(isLoginSucceeded)
-  const idLoading = useSelector(getUserLoading)
+  const idLoading = useSelector(getIsUserLoading)
   const handleSelectingFile = (event) => {
     formik.setFieldValue('avatar', event.currentTarget.files[0])
   }

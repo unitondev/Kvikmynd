@@ -1,73 +1,25 @@
-import { handleActions } from 'redux-actions'
+import { handleActions, combineActions } from 'redux-actions'
 import * as accountActions from '../actions'
 
-const defaultState = {
-  isLoginSucceeded: undefined,
-  user: null,
-  loading: false,
-}
+const defaultState = null
 
 export default handleActions(
   {
     [accountActions.loginSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: true,
-        user: action.response.data,
-      }
+      return action.response.data
     },
-    [accountActions.logoutSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: false,
-        user: null,
-      }
+    [combineActions(
+      accountActions.updateUserSuccess,
+      accountActions.deleteUserSuccess,
+      accountActions.logoutSuccess
+    )](state, action) {
+      return defaultState
     },
     [accountActions.refreshTokensSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: true,
-        user: action.response.data,
-      }
-    },
-    [accountActions.refreshTokensFailure](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: false,
-      }
-    },
-    [accountActions.updateUserSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: false,
-        user: null,
-      }
-    },
-    [accountActions.deleteUserSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: false,
-        user: null,
-      }
+      return action.response.data
     },
     [accountActions.registerSuccess](state, action) {
-      return {
-        ...state,
-        isLoginSucceeded: true,
-        user: action.response.data,
-      }
-    },
-    [accountActions.startLoadingUser](state, action) {
-      return {
-        ...state,
-        loading: true,
-      }
-    },
-    [accountActions.stopLoadingUser](state, action) {
-      return {
-        ...state,
-        loading: false,
-      }
+      return action.response.data
     },
   },
   defaultState

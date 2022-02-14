@@ -9,5 +9,5 @@ export const rootReducer = combineReducers({
   account,
   notifications,
   movieList,
-  movie,
+  currentMovie: movie,
 })
