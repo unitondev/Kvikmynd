@@ -13,7 +13,7 @@ export default handleActions(
       return {
         ...state,
         isLoginSucceeded: true,
-        user: action.payload,
+        user: action.response.data,
       }
     },
     [accountActions.logoutSuccess](state, action) {
@@ -27,10 +27,10 @@ export default handleActions(
       return {
         ...state,
         isLoginSucceeded: true,
-        user: action.payload,
+        user: action.response.data,
       }
     },
-    [accountActions.refreshTokensFail](state, action) {
+    [accountActions.refreshTokensFailure](state, action) {
       return {
         ...state,
         isLoginSucceeded: false,
@@ -40,7 +40,7 @@ export default handleActions(
       return {
         ...state,
         isLoginSucceeded: false,
-        user: action.payload,
+        user: null,
       }
     },
     [accountActions.deleteUserSuccess](state, action) {
@@ -54,7 +54,7 @@ export default handleActions(
       return {
         ...state,
         isLoginSucceeded: true,
-        user: action.payload,
+        user: action.response.data,
       }
     },
     [accountActions.startLoadingUser](state, action) {
