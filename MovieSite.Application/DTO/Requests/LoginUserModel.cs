@@ -2,7 +2,7 @@
 
 namespace MovieSite.Application.DTO.Requests
 {
-    public class AuthRequestUser
+    public class LoginUserModel
     {
         [Required]
         [MaxLength(30)]

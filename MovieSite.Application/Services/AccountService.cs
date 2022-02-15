@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
@@ -18,24 +17,24 @@ using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Services
 {
-    public class UserService : IUserService, IDisposable, IAsyncDisposable
+    public class AccountService : IAccountService, IDisposable, IAsyncDisposable
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        private readonly IJwtSigningEncodingKey _jwtSigningEncodingKey;
+        private readonly ITokenService _tokenService;
 
-        public UserService(
+        public AccountService(
             IUnitOfWork unitOfWork,
             UserManager<User> userManager,
             IMapper mapper,
-            IJwtSigningEncodingKey jwtSigningEncodingKey
+            ITokenService tokenService
             )
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
-            _jwtSigningEncodingKey = jwtSigningEncodingKey;
+            _tokenService = tokenService;
         }
         
         public async Task<User> GetByIdOrDefaultAsync(int userId)
@@ -48,19 +47,29 @@ namespace MovieSite.Application.Services
             return await _unitOfWork.UserRepository.GetAllAsync();
         }
 
-        public async Task<Result<AuthResponseUser>> CreateAsync(UserRegisterRequest registerUserRequest)
+        public async Task<Result<AuthResponseUser>> CreateAsync(UserRegistrationModel registerUserRequest)
         {
             var registeredUser = await _userManager.FindByEmailAsync(registerUserRequest.Email) 
                                  ?? await _userManager.FindByNameAsync(registerUserRequest.Username);
+
             if (registeredUser != null) return Result<AuthResponseUser>.BadRequest(Error.UserAlreadyExists);
             
-            var createdUser = _mapper.Map<UserRegisterRequest, User>(registerUserRequest);
+            var createdUser = _mapper.Map<UserRegistrationModel, User>(registerUserRequest);
+
             var refreshToken = GenerateRefreshToken();
             createdUser.RefreshTokens.Add(refreshToken);
+
             await _userManager.CreateAsync(createdUser, registerUserRequest.Password);
-            var jwtToken = GenerateJwtToken(createdUser);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(createdUser.Id))
+            };
+
+            var jwtToken = _tokenService.GetJwtToken(claims);
             
             var responseUser = new AuthResponseUser(createdUser, jwtToken, refreshToken.Token);
+
             return Result<AuthResponseUser>.Success(responseUser);
         }
         
@@ -76,23 +85,25 @@ namespace MovieSite.Application.Services
             await _userManager.DeleteAsync(deletedUser);
         }
 
-        public async Task<Result<AuthResponseUser>> AuthenticateAsync(AuthRequestUser authRequestUser)
+        public async Task<Result<AuthResponseUser>> AuthenticateAsync(LoginUserModel loginUserModel)
         {
-            var user = await _userManager.FindByEmailAsync(authRequestUser.Email);
+            var user = await _userManager.FindByEmailAsync(loginUserModel.Email);
+            if (user == null) return Result<AuthResponseUser>.NotFound(Error.UserNotFound);
 
-            if (user == null)
-                return Result<AuthResponseUser>.NotFound(Error.UserNotFound);
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginUserModel.Password);
+            if (!isPasswordCorrect) return Result<AuthResponseUser>.BadRequest(Error.PasswordIsNotCorrect);
 
-            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, authRequestUser.Password);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
+            };
 
-            if (!isPasswordCorrect)
-                return Result<AuthResponseUser>.BadRequest(Error.PasswordIsNotCorrect);
+            var jwtToken = _tokenService.GetJwtToken(claims);
 
-            
-            var jwtToken = GenerateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
             
             user.RefreshTokens.Add(refreshToken);
+
             await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CommitAsync();
 
@@ -108,83 +119,70 @@ namespace MovieSite.Application.Services
             
             foreach (var refreshToken in user.RefreshTokens)
             {
-                if (refreshToken.IsActive)
-                    await RevokeTokenAsync(user, refreshToken);
+                if (refreshToken.IsActive) await RevokeTokenAsync(user, refreshToken);
             }
         }
 
         public async Task<Result<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser)
         {
             var user = await _userManager.FindByEmailAsync(requestedUser.Email);
-            if (user == null)
-                return Result<EditUserResponse>.NotFound(Error.UserNotFound);
+            if (user == null) return Result<EditUserResponse>.NotFound(Error.UserNotFound);
 
             _mapper.Map<EditUserRequest, User>(requestedUser, user);
+
             await _userManager.UpdateAsync(user);
-            if(!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
+
+            if (!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
+            {
                 await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
+            }
 
             var responseUser = _mapper.Map<User, EditUserResponse>(user);
             
             return Result<EditUserResponse>.Success(responseUser);
         }
 
-        private string GenerateJwtToken(User user)
-        {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
-            };
-            
-            var token = new JwtSecurityToken(
-                "https://localhost:5001/", 
-                "https://localhost:5001/",
-                claims,
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.AddMinutes(10),
-                new SigningCredentials(
-                    _jwtSigningEncodingKey.GetKey(),
-                    _jwtSigningEncodingKey.SigningAlgorithm));
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-        
         private RefreshToken GenerateRefreshToken()
         {
-            using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var randomBytes = new byte[64];
+            rngCryptoServiceProvider.GetBytes(randomBytes);
+            return new RefreshToken
             {
-                var randomBytes = new byte[64];
-                rngCryptoServiceProvider.GetBytes(randomBytes);
-                return new RefreshToken
-                {
-                    Token = Convert.ToBase64String(randomBytes),
-                    Expires = DateTime.UtcNow.AddDays(7),
-                    Created = DateTime.UtcNow,
-                };
-            }
+                Token = Convert.ToBase64String(randomBytes),
+                Expires = DateTime.UtcNow.AddDays(7),
+                Created = DateTime.UtcNow,
+            };
         }
 
         public async Task<Result<AuthResponseUser>> RefreshTokenAsync(string refreshedTokenPlainText)
         {
-            var refreshedUser = await _unitOfWork.UserRepository.FirstOrDefaultAsync(user =>
-                user.RefreshTokens.Any(token => token.Token == refreshedTokenPlainText));
+            var refreshedUser = await _unitOfWork.UserRepository.FirstOrDefaultAsync(i =>
+                i.RefreshTokens.Any(token => token.Token == refreshedTokenPlainText));
 
-            if (refreshedUser == null)
-                return Result<AuthResponseUser>.NotFound(Error.TokenNotFound);
+            if (refreshedUser == null) return Result<AuthResponseUser>.NotFound(Error.TokenNotFound);
 
             var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(token => token.Token == refreshedTokenPlainText);
-            if (!refreshedToken.IsActive)
-                return Result<AuthResponseUser>.BadRequest(Error.TokenIsNotActive); 
+
+            if (!refreshedToken.IsActive) return Result<AuthResponseUser>.BadRequest(Error.TokenIsNotActive); 
 
             var newRefreshToken = GenerateRefreshToken();
             refreshedToken.Revoked = DateTime.Now;
             refreshedToken.ReplacedByToken = newRefreshToken.Token;
             refreshedUser.RefreshTokens.Add(newRefreshToken);
+
             await _unitOfWork.UserRepository.UpdateAsync(refreshedUser);
             await _unitOfWork.CommitAsync();
 
-            var newJwtToken = GenerateJwtToken(refreshedUser);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(refreshedUser.Id))
+            };
+
+            var newJwtToken = _tokenService.GetJwtToken(claims);
+
             var authResponseUser = new AuthResponseUser(refreshedUser, newJwtToken, newRefreshToken.Token);
+
             return Result<AuthResponseUser>.Success(authResponseUser);
         }
 
@@ -197,18 +195,17 @@ namespace MovieSite.Application.Services
         
         public async Task<bool> RevokeTokenAsync(string revokedTokenPlainText)
         {
-            var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(user =>
-                user.RefreshTokens.Any(token => token.Token == revokedTokenPlainText));
+            var user = await _unitOfWork.UserRepository.FirstOrDefaultAsync(i =>
+                i.RefreshTokens.Any(token => token.Token == revokedTokenPlainText));
             
-            if (user == null) 
-                return false;
+            if (user == null) return false;
 
             var revokedToken = user.RefreshTokens.FirstOrDefault(token => token.Token == revokedTokenPlainText);
             
-            if (!revokedToken.IsActive)
-                return false;
+            if (!revokedToken.IsActive) return false;
 
             revokedToken.Revoked = DateTime.Now;
+
             await _unitOfWork.UserRepository.UpdateAsync(user);     
             await _unitOfWork.CommitAsync();
 

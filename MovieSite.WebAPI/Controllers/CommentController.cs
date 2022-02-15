@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO.Requests;
@@ -8,8 +7,9 @@ using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
@@ -19,17 +19,17 @@ namespace MovieSite.Controllers
             _commentService = commentService;
         }
         
-        [HttpPost("add_comment")]
-        public async Task<IActionResult> CreateComment([FromBody] CommentRequest commentRequest)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CommentRequest commentRequest)
         {
             var response = await _commentService.CreateCommentAsync(commentRequest);
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpGet("delete_comment{commentId}")]
-        public async Task<IActionResult> DeleteCommentById(int commentId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            await _commentService.DeleteCommentByIdAsync(commentId);
+            await _commentService.DeleteCommentByIdAsync(id);
             return Ok();
         }
     }

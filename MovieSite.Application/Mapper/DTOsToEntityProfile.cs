@@ -10,7 +10,7 @@ namespace MovieSite.Application.Mapper
     {
         public DTOsToEntityProfile()
         {
-            CreateMap<UserRegisterRequest, User>()
+            CreateMap<UserRegistrationModel, User>()
                 .ForMember(dest => dest.Avatar, opt =>
                 {
                     opt.PreCondition(src => src.Avatar != null);

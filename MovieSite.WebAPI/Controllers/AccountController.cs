@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,57 +12,45 @@ using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [ApiController]
-    public class UserController : ControllerBase
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
 
-        public UserController(IUserService userService)
+        public AccountController(IAccountService accountService)
         {
-            _userService = userService;
+            _accountService = accountService;
         }
 
-        [AllowAnonymous]
-        [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = await _userService.GetAllAsync();
-            if (result == null)
-                return NotFound(Error.UserNotFound);
-            return Ok(result);
-        }
-        
-        [AllowAnonymous]
-        [HttpGet("user{id}")]
-        public async Task<IActionResult> GetUserById(int id)
-        {
-            var result = await _userService.GetByIdOrDefaultAsync(id);
-            if (result == null)
-                return NotFound(Error.UserNotFound);
+            var result = await _accountService.GetByIdOrDefaultAsync(id);
+            if (result == null) return NotFound(Error.UserNotFound);
+
             return Ok(result);
         }
         
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterRequest registerRequest)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
-            if (registerRequest == null)
-                return NotFound(Error.UserNotFound);
-
-            if (ModelState.IsValid)
+            if (model.Password.Trim().Length != model.Password.Length)
             {
-                var response = await _userService.CreateAsync(registerRequest);
-                return HandleResponseCodeAndSetToken(response);
+                return BadRequest(Error.PasswordSpacesAtTheBeginningOrAtTheEnd);
             }
-            return BadRequest(Error.ModelIsInvalid);
+
+            var response = await _accountService.CreateAsync(model);
+            return HandleResponseCodeAndSetToken(response);
         }
         
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthRequestUser user)
+        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
         {
-            var response = await _userService.AuthenticateAsync(user);
+            var response = await _accountService.AuthenticateAsync(model);
             return HandleResponseCodeAndSetToken(response);
         }
         
@@ -72,43 +59,46 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> LogOut()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if(jwtToken != "undefined")
-                await _userService.LogOut(jwtToken);
+            if (jwtToken.Length == 0) return BadRequest(Error.TokenNotFound);
+            
+            await _accountService.LogOut(jwtToken);
+
             return Ok();
         }
 
-        [HttpPost("update_user")]
-        public async Task<IActionResult> UpdateUser([FromBody] EditUserRequest user)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] EditUserRequest user)
         {
-            var response = await _userService.UpdateUserAsync(user);
+            var response = await _accountService.UpdateUserAsync(user);
             return ResponseHandler.HandleResponseCode(response);
         } 
 
-        [HttpGet("delete_user")]
-        public async Task<IActionResult> DeleteUser()
+        [HttpDelete]
+        public async Task<IActionResult> Delete()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            await _userService.DeleteByIdFromJwtAsync(jwtToken);
+            await _accountService.DeleteByIdFromJwtAsync(jwtToken);
+
             return Ok();
         }
 
         [AllowAnonymous]
-        [HttpGet("refresh_token")]
+        [HttpGet("refreshToken")]
         public async Task<IActionResult> RefreshTokenAsync()
         {
             var refreshToken = Request.Cookies["refresh_token"];
-            var response =  await _userService.RefreshTokenAsync(refreshToken);
+            var response =  await _accountService.RefreshTokenAsync(refreshToken);
+
             return HandleResponseCodeAndSetToken(response);
         }
 
-        [HttpGet("revoke_token")]
+        [HttpGet("revokeToken")]
         public async Task<IActionResult> RevokeTokenAsync()
         {
             var revokedToken = Request.Cookies["refresh_token"];
-            var response = await _userService.RevokeTokenAsync(revokedToken);
+            var response = await _accountService.RevokeTokenAsync(revokedToken);
 
-            if (response == false)
-                return BadRequest(Error.UserNotFound);
+            if (response == false) return BadRequest(Error.UserNotFound);
 
             return Ok();
         }

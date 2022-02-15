@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Interfaces.Services;
@@ -6,7 +7,9 @@ using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class RatingController : ControllerBase
     {
         private readonly IRatingService _ratingService;
@@ -18,26 +21,28 @@ namespace MovieSite.Controllers
             _movieService = movieService;
         }
 
-        [HttpPost("create_rating")]
-        public async Task<IActionResult> CreateRatings([FromBody] CreateRatingRequest ratingRequest)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateRatingRequest ratingRequest)
         {
             var response = await _ratingService.CreateRatingAsync(ratingRequest);
             await _movieService.RecalculateMovieRatingAsync(ratingRequest.MovieId);
+
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpPost("get_rating")]
+        [HttpPost("getRating")]
         public async Task<IActionResult> GetRating([FromBody] RatingRequest ratingRequest)
         {
             var response = await _ratingService.GetRatingByUserAndMovieIdAsync(ratingRequest);
             return ResponseHandler.HandleResponseCode(response);
         }
         
-        [HttpPost("delete_rating")]
-        public async Task<IActionResult> DeleteRating([FromBody] RatingRequest ratingRequest)
+        [HttpPost("deleteRating")]
+        public async Task<IActionResult> Delete([FromBody] RatingRequest ratingRequest)
         {
             await _ratingService.DeleteRatingByUserAndMovieIdAsync(ratingRequest);
             await _movieService.RecalculateMovieRatingAsync(ratingRequest.MovieId);
+
             return Ok();
         }
 

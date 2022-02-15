@@ -1,29 +1,29 @@
 const accountRequests = {
   loginRequest: (data) => ({
-    url: 'login',
+    url: 'api/account/login',
     method: 'post',
     data,
   }),
   logoutRequest: (data) => ({
-    url: 'logout',
+    url: 'api/account/logout',
     method: 'get',
     data,
   }),
   refreshTokensRequest: () => ({
-    url: 'refresh_token',
+    url: 'api/account/refreshToken',
     method: 'get',
   }),
   updateUserRequest: (data) => ({
-    url: 'update_user',
-    method: 'post',
+    url: 'api/account',
+    method: 'put',
     data,
   }),
   deleteUserRequest: () => ({
-    url: 'delete_user',
-    method: 'get',
+    url: 'api/account',
+    method: 'delete',
   }),
   registerRequest: (data) => ({
-    url: 'register',
+    url: 'api/account/register',
     method: 'post',
     data,
   }),

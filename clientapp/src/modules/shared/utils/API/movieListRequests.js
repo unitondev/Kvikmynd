@@ -1,6 +1,6 @@
 const movieListRequests = {
   movieListRequest: () => ({
-    url: 'api/movies',
+    url: 'api/movie',
     method: 'get',
   }),
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.DTO.Responses;
@@ -11,7 +11,9 @@ using MovieSite.ViewModels;
 
 namespace MovieSite.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
@@ -23,77 +25,69 @@ namespace MovieSite.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("api/movies")]
-        public async Task<IActionResult> GetAllMovies()
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
             var result = await _movieService.GetAllMoviesAsync();
-            if (result == null)
-                return NotFound(Error.MovieNotFound);
+            if (result == null) return NotFound(Error.MovieNotFound);
+
             return Ok(result);
         }
 
-        [HttpGet("api/movie{movieId}")]
-        public async Task<IActionResult> GetMovieById(int movieId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            var result = await _movieService.GetMovieByIdAsync(movieId);
-            if (result == null)
-                return NotFound(Error.MovieNotFound);
+            var result = await _movieService.GetMovieByIdAsync(id);
+            if (result == null) return NotFound(Error.MovieNotFound);
+
             return Ok(result);
         }
         
-        [HttpGet("api/movie{movieId}/withGenres")]
-        public async Task<IActionResult> GetMovieWithGenresById(int movieId)
+        [HttpGet("{id}/withGenres")]
+        public async Task<IActionResult> GetMovieWithGenresById(int id)
         {
-            var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(movieId);
-            if (movieWithGenres == null)
-                return NotFound(Error.MovieNotFound);
+            var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(id);
+            if (movieWithGenres == null) return NotFound(Error.MovieNotFound);
             
             var movieWithGenresViewModel = _mapper.Map<MovieWithGenresResponse, MovieWithGenresViewModel>(movieWithGenres);
             return Ok(movieWithGenresViewModel);
         }
 
-        [HttpPost("add_movie")]
-        public async Task<IActionResult> CreateMovie([FromBody] MovieRequest movieRequest)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] MovieRequest movieRequest)
         {
-            if (movieRequest == null)
-                return NotFound(Error.MovieNotFound);
+            if (movieRequest == null) return NotFound(Error.MovieNotFound);
             
             var response = await _movieService.CreateMovieAsync(movieRequest);
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpPost("update_movie")]
-        public async Task<IActionResult> UpdateMovie([FromBody] EditMovieRequest editMovieRequest)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] EditMovieRequest editMovieRequest)
         {
-            if (editMovieRequest == null)
-                return NotFound(Error.MovieNotFound);
+            if (editMovieRequest == null) return NotFound(Error.MovieNotFound);
             
             var response = await _movieService.UpdateMovieAsync(editMovieRequest);
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpGet("api/movie{movieId}/comments")]
-        public async Task<IActionResult> GetMovieComments(int movieId)
+        [HttpGet("{id}/comments")]
+        public async Task<IActionResult> GetMovieComments(int id)
         {
-            var response = await _movieService.GetMovieComments(movieId);
+            var response = await _movieService.GetMovieComments(id);
             return ResponseHandler.HandleResponseCode(response);
         }
         
-        [HttpGet("api/movie{movieId}/ratings")]
-        public async Task<IActionResult> GetMovieRatings(int movieId)
+        [HttpGet("{id}/ratings")]
+        public async Task<IActionResult> GetMovieRatings(int id)
         {
-            var response = await _movieService.GetMovieRatings(movieId);
+            var response = await _movieService.GetMovieRatings(id);
             return ResponseHandler.HandleResponseCode(response);
         }
 
-        [HttpGet("api/recalculate_movie{movieId}_rating")]
-        public async Task<IActionResult> RecalculateMovieRating(int movieId)
-        {
-            var response = await _movieService.RecalculateMovieRatingAsync(movieId);
-            return ResponseHandler.HandleResponseCode(response);
-        }
 
-        [HttpGet("delete_movie{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
             await _movieService.DeleteMovieByIdAsync(id);

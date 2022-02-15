@@ -32,15 +32,16 @@ namespace MovieSite.Application.Services
         public async Task<Result<Comment>> CreateCommentAsync(CommentRequest commentRequest)
         {
             var user = await _userManager.FindByIdAsync(Convert.ToString(commentRequest.UserId));
-            if(user == null)
-                return Result<Comment>.NotFound(Error.UserNotFound);
+            if(user == null) return Result<Comment>.NotFound(Error.UserNotFound);
+
             var movie = await _unitOfWork.MovieRepository.GetByIdOrDefaultAsync(commentRequest.MovieId);
-            if(movie == null)
-                return Result<Comment>.NotFound(Error.MovieNotFound);
+            if(movie == null) return Result<Comment>.NotFound(Error.MovieNotFound);
 
             var createdComment = _mapper.Map<CommentRequest, Comment>(commentRequest);
+
             await _unitOfWork.CommentRepository.AddAsync(createdComment);
             await _unitOfWork.CommitAsync();
+
             return Result<Comment>.Success(createdComment);
         }
 
