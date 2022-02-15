@@ -1,24 +1,26 @@
-import {Route, Redirect} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {getJwt, isLoginSucceeded} from "./redux/selectors";
-import {CircularProgress} from "@material-ui/core";
-import React from "react";
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Route, Redirect } from 'react-router-dom'
+import { CircularProgress } from '@mui/material'
 
-const PrivateRoute = ({component: Component, ...rest}) => {
-    const jwtToken = useSelector(getJwt);
-    const isLogined = useSelector(isLoginSucceeded);
-    if( isLogined === undefined ){
-        return <CircularProgress/>
-    } else {
-        return <Route
-            {...rest}
-            render={props => (
-                !!jwtToken
-                    ? <Component {...props} />
-                    : <Redirect to='/login'/>
-            )}
-        />
-    }
+import routes from '@movie/routes'
+import { getJwt, getIsLoginSucceeded } from '@movie/modules/account/selectors'
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const jwtToken = useSelector(getJwt)
+  const isLoginSucceeded = useSelector(getIsLoginSucceeded)
+
+  return isLoginSucceeded === null
+    ? <CircularProgress />
+    : <Route
+      {...rest}
+      render={
+        (props) => (!!jwtToken
+          ? <Component {...props} />
+          : <Redirect to={routes.login} />
+        )
+      }
+    />
 }
 
-export default PrivateRoute;
+export default PrivateRoute
