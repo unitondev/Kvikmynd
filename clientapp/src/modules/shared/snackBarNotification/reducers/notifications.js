@@ -5,44 +5,44 @@ const defaultState = []
 
 export default handleActions(
   {
-    [notificationActions.enqueueSnackbarSuccess]: (state, action) => {
+    [notificationActions.enqueueSnackbarSuccess]: (state, {payload}) => {
       return [
-        ...state.notifications,
+        ...state,
         {
-          key: action.payload.key,
-          message: action.payload.message,
+          key: payload.key ? payload.key : new Date().getTime() + Math.random(),
+          message: payload.message,
           options: {
             variant: 'success',
           },
         },
       ]
     },
-    [notificationActions.enqueueSnackbarError]: (state, action) => {
+    [notificationActions.enqueueSnackbarError]: (state, {payload}) => {
       return [
-        ...state.notifications,
+        ...state,
         {
-          key: action.payload.key,
-          message: action.payload.message,
+          key: payload.key ? payload.key : new Date().getTime() + Math.random(),
+          message: payload.message,
           options: {
             variant: 'error',
           },
         },
       ]
     },
-    [notificationActions.enqueueSnackbarInfo]: (state, action) => {
+    [notificationActions.enqueueSnackbarInfo]: (state, {payload}) => {
       return [
-        ...state.notifications,
+        ...state,
         {
-          key: action.payload.key,
-          message: action.payload.message,
+          key: payload.key ? payload.key : new Date().getTime() + Math.random(),
+          message: payload.message,
           options: {
             variant: 'info',
           },
         },
       ]
     },
-    [notificationActions.removeSnackbar]: (state, action) => {
-      return state.notifications.filter((notification) => notification.key !== action.payload)
+    [notificationActions.removeSnackbar]: (state, {payload}) => {
+      return state.filter((i) => i.key !== payload)
     },
   },
   defaultState

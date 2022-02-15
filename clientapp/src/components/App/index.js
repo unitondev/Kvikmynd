@@ -19,24 +19,23 @@ const App = () => {
   return (
     <Provider store={store}>
       <React.StrictMode>
-        <SnackbarProvider
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          autoHideDuration={3000}
-          maxSnack={3}
-        >
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <SnackbarProvider
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              autoHideDuration={1500}
+            >
               <Container maxWidth='lg'>
                 <div className='App'>
                   <UI />
                 </div>
               </Container>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </SnackbarProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </StyledEngineProvider>
       </React.StrictMode>
     </Provider>
   )
