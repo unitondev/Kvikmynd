@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieSite.Application.DTO.Requests
+namespace MovieSite.Application.Models
 {
     public class LoginUserModel
     {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MovieSite.Application.DTO.Responses;
+using MovieSite.Application.ViewModels;
 
 namespace MovieSite.ViewModels
 {

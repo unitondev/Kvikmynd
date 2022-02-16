@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace MovieSite.Application.DTO.Responses
+﻿namespace MovieSite.Application.ViewModels
 {
     public class MovieResponse
     {

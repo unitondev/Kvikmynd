@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using MovieSite.Domain.Models;
 
-namespace MovieSite.Application.DTO.Responses
+namespace MovieSite.Application.ViewModels
 {
     public class CommentResponse
     {

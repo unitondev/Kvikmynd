@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Interfaces.Repositories;
+using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Infrastructure.Repositories

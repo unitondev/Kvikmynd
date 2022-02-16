@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MovieSite.Application.DTO.Responses;
+using MovieSite.Application.ViewModels;
 using MovieSite.ViewModels;
 
 namespace MovieSite.Application.Mapper

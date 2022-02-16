@@ -2,10 +2,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieSite.Application.DTO.Requests;
-using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
 using MovieSite.Helper;
 using MovieSite.ViewModels;
 

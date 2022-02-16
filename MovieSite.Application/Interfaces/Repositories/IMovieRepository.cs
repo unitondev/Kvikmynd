@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MovieSite.Application.DTO.Responses;
+using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Repositories

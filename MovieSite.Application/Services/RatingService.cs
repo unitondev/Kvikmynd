@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Application.Models;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Services

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieSite.Application.DTO.Requests;
 using MovieSite.Application.Interfaces.Services;
+using MovieSite.Application.Models;
 using MovieSite.Helper;
 
 namespace MovieSite.Controllers

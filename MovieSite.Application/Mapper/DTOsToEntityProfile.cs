@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
-using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Models;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Mapper

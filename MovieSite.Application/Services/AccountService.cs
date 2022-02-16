@@ -7,12 +7,12 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using MovieSite.Application.DTO.Requests;
-using MovieSite.Application.DTO.Responses;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Jwt;
+using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Services
