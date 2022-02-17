@@ -52,13 +52,12 @@ namespace MovieSite.Application.Services
             try
             {
                 var result = await _repository.CreateAsync(entity);
-                // TODO
-                await _repository.SaveAsync();
-                // await _work.CommitAsync();
+                await _work.CommitAsync();
                 return new ServiceResult<T>(result);
             }
             catch (Exception e)
             {
+                // TODO add message from exception
                 return new ServiceResult<T>(ErrorCode.EntityNotCreated);
             }
         }
@@ -68,8 +67,7 @@ namespace MovieSite.Application.Services
             try
             {
                 var result = await _repository.CreateRangeAsync(entities);
-                // await _work.CommitAsync();
-                await _repository.SaveAsync();
+                await _work.CommitAsync();
                 return new ServiceResult<IEnumerable<T>>(result);
             }
             catch (Exception e)
@@ -83,8 +81,7 @@ namespace MovieSite.Application.Services
             try
             {
                 await _repository.UpdateAsync(entity);
-                // await _work.CommitAsync();
-                await _repository.SaveAsync();
+                await _work.CommitAsync();
                 return new ServiceResult();
             }
             catch (Exception e)
@@ -98,8 +95,7 @@ namespace MovieSite.Application.Services
             try
             {
                 await _repository.DeleteAsync(entity);
-                // await _work.CommitAsync();
-                await _repository.SaveAsync();
+                await _work.CommitAsync();
                 return new ServiceResult();
             }
             catch (Exception e)
