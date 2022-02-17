@@ -21,9 +21,9 @@ namespace MovieSite.Application.Services
             _work = work;
         }
         
-        public virtual IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll(params Expression<Func<T, object>>[] includes)
         {
-            return _repository.All();
+            return _repository.All(includes);
         }
 
         public virtual async Task<bool> ExistsAsync(int key)
@@ -37,14 +37,14 @@ namespace MovieSite.Application.Services
             return await _repository.FindByKeyAsync(key);
         }
 
-        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> expression)
+        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
-            return await _repository.FindAsync(expression);
+            return await _repository.FindAsync(expression, includes);
         }
 
-        public virtual IQueryable<T> Filter(Expression<Func<T, bool>> expression)
+        public virtual IQueryable<T> Filter(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
-            return _repository.Filter(expression);
+            return _repository.Filter(expression, includes);
         }
 
         public virtual async Task<ServiceResult<T>> CreateAsync(T entity)

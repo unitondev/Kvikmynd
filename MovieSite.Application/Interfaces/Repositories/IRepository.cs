@@ -13,10 +13,10 @@ namespace MovieSite.Application.Interfaces.Repositories
     
     public interface IRepository<T, in TKey> : IRepository where T : class
     {
-        IQueryable<T> All();
+        IQueryable<T> All(params Expression<Func<T, object>>[] includes);
         Task<T> FindByKeyAsync(TKey key);
-        Task<T> FindAsync(Expression<Func<T, bool>> expression);
-        IQueryable<T> Filter(Expression<Func<T, bool>> expression);
+        Task<T> FindAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
+        IQueryable<T> Filter(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
         Task<T> CreateAsync(T entity);
         Task<IEnumerable<T>> CreateRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);

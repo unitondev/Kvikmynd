@@ -21,9 +21,12 @@ namespace MovieSite.Infrastructure.Repositories
             DbSet = DbContext.Set<T>();
         }
 
-        public virtual IQueryable<T> All()
+        public virtual IQueryable<T> All(params Expression<Func<T, object>>[] includes)
         {
-            return DbSet.AsNoTracking().AsQueryable();
+            var query = DbSet.AsNoTracking().AsQueryable();
+            if (includes == null || !includes.Any()) return query;
+
+            return includes.Aggregate(query, ((current, include) => current.Include(include)));
         }
 
         public virtual async Task<T> FindByKeyAsync(int key)
@@ -31,14 +34,20 @@ namespace MovieSite.Infrastructure.Repositories
             return await DbSet.FindAsync(key);
         }
 
-        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> expression)
+        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
-            return await DbSet.AsNoTracking().FirstOrDefaultAsync(expression);
+            var query = DbSet.AsNoTracking();
+            if (includes == null || !includes.Any()) return await query.FirstOrDefaultAsync(expression);
+            
+            return await includes.Aggregate(query, ((current, include) => current.Include(include))).FirstOrDefaultAsync(expression);;
         }
 
-        public virtual IQueryable<T> Filter(Expression<Func<T, bool>> expression)
+        public virtual IQueryable<T> Filter(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
-            return DbSet.AsNoTracking().Where(expression).AsQueryable();
+            var query = DbSet.AsNoTracking().Where(expression).AsQueryable();
+            if (includes == null || !includes.Any()) return query;
+            
+            return includes.Aggregate(query, ((current, include) => current.Include(include)));
         }
 
         public virtual async Task<T> CreateAsync(T entity)

@@ -1,11 +1,18 @@
-﻿namespace MovieSite.Domain.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace MovieSite.Domain.Models
 {
     public class GenreMovie
     {
+        [Required]
         public int GenreId { get; set; }
-        public Genre Genre { get; set; }
+        [JsonIgnore]
+        public virtual Genre Genre { get; set; }
         
+        [Required]
         public int MovieId { get; set; }
-        public Movie Movie { get; set; }
+        [JsonIgnore]
+        public virtual Movie Movie { get; set; }
     }
 }

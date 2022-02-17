@@ -19,6 +19,7 @@ using MovieSite.Domain.Models;
 using MovieSite.Hubs;
 using MovieSite.Infrastructure;
 using MovieSite.Infrastructure.Repositories;
+using Newtonsoft.Json;
 
 namespace MovieSite
 {
@@ -83,7 +84,12 @@ namespace MovieSite
 
             #endregion
             
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MovieSite.WebAPI", Version = "v1"});
