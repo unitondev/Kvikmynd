@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
@@ -29,8 +30,13 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> GetRating([FromBody] RatingModel model)
         {
             var result = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
-
-            var viewModel = _mapper.Map<MovieRating, MovieRatingViewModel>(result);
+            if (!result.IsSucceeded)
+            {
+                if (result.Error != ErrorCode.UserRatingNotFound) return BadRequest(result.Error);
+                return NoContent();
+            }
+            
+            var viewModel = _mapper.Map<MovieRating, MovieRatingViewModel>(result.Result);
             
             return Ok(viewModel);
         }
@@ -50,10 +56,14 @@ namespace MovieSite.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] RatingModel model)
         {
-            var rating = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
-            if (rating == null) return NotFound();
+            var getRatingResult = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
+            if (!getRatingResult.IsSucceeded)
+            {
+                if (getRatingResult.Error == ErrorCode.UserRatingNotFound) return NotFound(getRatingResult.Error);
+                return BadRequest(getRatingResult.Error);
+            }
 
-            var result = await _ratingService.DeleteAsync(rating);
+            var result = await _ratingService.DeleteAsync(getRatingResult.Result);
             if (!result.IsSucceeded) return BadRequest();
             
             await _movieService.RecalculateMovieRatingAsync(model.MovieId);

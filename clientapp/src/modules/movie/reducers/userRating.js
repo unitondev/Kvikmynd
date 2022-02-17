@@ -6,7 +6,7 @@ const defaultState = 0
 export default handleActions(
   {
     [movieActions.userRatingSuccess]: (state, action) => {
-      return action.response.data.value
+      return action.response.status === 204 ? defaultState : action.response.data.value
     },
     [movieActions.setUserRatingSuccess]: (state, action) => {
       return action.response.data.value

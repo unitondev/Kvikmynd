@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MovieSite.Application.Common.Enums;
+using MovieSite.Application.Common.Services;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Domain.Models;
@@ -15,21 +17,15 @@ namespace MovieSite.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<MovieRating> GetByUserAndMovieIdAsync(int userId, int movieId)
+        public async Task<ServiceResult<MovieRating>> GetByUserAndMovieIdAsync(int userId, int movieId)
         {
             var rating = await _unitOfWork.RatingRepository.GetByUserAndMovieIdAsync(userId, movieId);
             if (rating == null)
             {
-                // TODO fix this mistake
-                return new MovieRating
-                {
-                    MovieId = movieId,
-                    UserId = userId,
-                    Value = 0
-                };
+                return new ServiceResult<MovieRating>(ErrorCode.UserRatingNotFound);
             }
 
-            return rating;
+            return new ServiceResult<MovieRating>(rating);
         }
 
         public void Dispose()

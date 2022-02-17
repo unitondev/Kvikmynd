@@ -22,5 +22,6 @@
         PasswordSpacesAtTheBeginningOrAtTheEnd = 1016,
         ErrorWhileSettingRefreshToken = 1017,
         RefreshTokenNotFound = 1018,
+        UserRatingNotFound = 1019,
     }
 }
