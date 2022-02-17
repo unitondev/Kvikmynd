@@ -32,7 +32,7 @@ namespace MovieSite.Application.Common.Services
         public T Result { get; set; }
         public ServiceResult() : base() { }
 
-        public ServiceResult(ErrorCode? errorCode) : base() { }
+        public ServiceResult(ErrorCode? errorCode) : base(errorCode) { }
 
         public ServiceResult(T result)
         {
