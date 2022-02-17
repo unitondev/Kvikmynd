@@ -5,7 +5,7 @@ using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Repositories
 {
-    public interface IMovieRepository : IRepositoryAsync<Movie>
+    public interface IMovieRepository : IRepository<Movie>
     {
         Task<bool> IsContains(int movieId); 
         Task<Movie> FindByTitleAsync(string title);

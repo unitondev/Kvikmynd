@@ -5,7 +5,7 @@ using MovieSite.Domain.Models;
 
 namespace MovieSite.Infrastructure.Repositories
 {
-    public class GenreRepository : RepositoryAsync<Genre>, IGenreRepository
+    public class GenreRepository : GenericRepository<Genre>, IGenreRepository
     {
         private readonly DbContext _dbContext;
 

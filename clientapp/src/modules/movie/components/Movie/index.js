@@ -52,9 +52,11 @@ const Movie = ({
             <Typography className={classes.selectedMovieCardTitle}>{movie.title}</Typography>
             <Typography className={classes.selectedMovieRating}>
               Rating:{' '}
-              {movie.rating === 0
+              {
+                movie.rating === 0
                 ? 'No one has rated yet'
-                : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`}
+                : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`
+              }
             </Typography>
             <Typography className={classes.secondPriorityText}>
               Genres:

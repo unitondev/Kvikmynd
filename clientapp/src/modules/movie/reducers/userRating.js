@@ -6,10 +6,10 @@ const defaultState = 0
 export default handleActions(
   {
     [movieActions.userRatingSuccess]: (state, action) => {
-      return action.response.data
+      return action.response.data.value
     },
     [movieActions.setUserRatingSuccess]: (state, action) => {
-      return action.response.data
+      return action.response.data.value
     },
     [movieActions.cleanMovieStore]: (state, action) => {
       return defaultState

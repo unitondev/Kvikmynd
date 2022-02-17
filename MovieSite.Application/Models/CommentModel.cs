@@ -1,8 +1,8 @@
 ﻿namespace MovieSite.Application.Models
 {
-    public class CreateRatingRequest
+    public class CommentModel
     {
-        public int Value { get; set; }
+        public string Text { get; set; }
         public int UserId { get; set; }
         public int MovieId { get; set; }
     }

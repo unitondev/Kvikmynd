@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
-using MovieSite.Helper;
 
 namespace MovieSite.Controllers
 {
@@ -27,8 +27,8 @@ namespace MovieSite.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _accountService.GetByIdOrDefaultAsync(id);
-            if (result == null) return NotFound(Error.UserNotFound);
+            var result = await _accountService.FindByIdAsync(id);
+            if (result == null) return NotFound(ErrorCode.UserNotFound);
 
             return Ok(result);
         }
@@ -39,19 +39,41 @@ namespace MovieSite.Controllers
         {
             if (model.Password.Trim().Length != model.Password.Length)
             {
-                return BadRequest(Error.PasswordSpacesAtTheBeginningOrAtTheEnd);
+                return BadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
             }
 
-            var response = await _accountService.CreateAsync(model);
-            return HandleResponseCodeAndSetToken(response);
+            var result = await _accountService.RegisterAsync(model);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
+
+            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
+            if (!setRefreshTokenResult)
+            {
+                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+            }
+            
+            return Ok(result.Result);
         }
         
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserModel model)
         {
-            var response = await _accountService.AuthenticateAsync(model);
-            return HandleResponseCodeAndSetToken(response);
+            var result = await _accountService.LoginAsync(model);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
+            
+            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
+            if (!setRefreshTokenResult)
+            {
+                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+            }
+            
+            return Ok(result.Result);
         }
         
         [AllowAnonymous]
@@ -59,9 +81,13 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> LogOut()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if (jwtToken.Length == 0) return BadRequest(Error.TokenNotFound);
+            if (jwtToken.Length == 0) return BadRequest(ErrorCode.AccessTokenNotFound);
             
-            await _accountService.LogOut(jwtToken);
+            var result = await _accountService.LogOut(jwtToken);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
 
             return Ok();
         }
@@ -69,15 +95,25 @@ namespace MovieSite.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditUserRequest user)
         {
-            var response = await _accountService.UpdateUserAsync(user);
-            return ResponseHandler.HandleResponseCode(response);
+            var result = await _accountService.UpdateUserAsync(user);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Result);
         } 
 
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            await _accountService.DeleteByIdFromJwtAsync(jwtToken);
+            
+            var result = await _accountService.DeleteByJwtTokenAsync(jwtToken);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
 
             return Ok();
         }
@@ -87,23 +123,39 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> RefreshTokenAsync()
         {
             var refreshToken = Request.Cookies["refresh_token"];
-            var response =  await _accountService.RefreshTokenAsync(refreshToken);
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(ErrorCode.RefreshTokenNotFound);
+            }
+            
+            var result =  await _accountService.RefreshTokenAsync(refreshToken);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
 
-            return HandleResponseCodeAndSetToken(response);
+            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
+            if (!setRefreshTokenResult)
+            {
+                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+            }
+            
+            return Ok(result.Result);
         }
 
         [HttpGet("revokeToken")]
         public async Task<IActionResult> RevokeTokenAsync()
         {
             var revokedToken = Request.Cookies["refresh_token"];
-            var response = await _accountService.RevokeTokenAsync(revokedToken);
-
-            if (response == false) return BadRequest(Error.UserNotFound);
+            var result = await _accountService.RevokeTokenAsync(revokedToken);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(result.Error);
+            }
 
             return Ok();
         }
         
-
         private bool SetRefreshTokenCookie(string refreshToken)
         {
             try
@@ -120,29 +172,6 @@ namespace MovieSite.Controllers
             {
                 Console.WriteLine(e);
                 return false;
-            }
-        }
-
-        private IActionResult HandleResponseCodeAndSetToken(Result<AuthResponseUser> response)
-        {
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    var result = SetRefreshTokenCookie(response.Value.RefreshToken);
-            
-                    if(result)
-                        return Ok(response.Value);
-                    return BadRequest(Error.ErrorWhileSettingRefreshToken);
-                case HttpStatusCode.BadRequest:
-                    return BadRequest(response.Message);
-                case HttpStatusCode.NotFound:
-                    return NotFound(response.Message);
-                case HttpStatusCode.InternalServerError:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
-                case HttpStatusCode.Unauthorized:
-                    return Unauthorized(response.Message);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response.Message);
             }
         }
     }

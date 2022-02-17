@@ -20,6 +20,8 @@ namespace MovieSite.Application.Mapper
             CreateMap<Comment, CommentResponse>()
                 .ForMember(dest => dest.User, opt =>
                     opt.MapFrom(src => src.User));
+            
+            CreateMap<MovieRating, MovieRatingViewModel>();
         }
     }
 }

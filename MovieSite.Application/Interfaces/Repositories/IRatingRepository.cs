@@ -3,9 +3,8 @@ using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Repositories
 {
-    public interface IRatingRepository : IRepositoryAsync<MovieRating>
+    public interface IRatingRepository : IRepository<MovieRating>
     {
-        Task<MovieRating> GetRatingByUserAndMovieIdAsync(int userId, int movieId);
-        Task DeleteRatingByUserAndMovieIdAsync(int userId, int movieId);
+        Task<MovieRating> GetByUserAndMovieIdAsync(int userId, int movieId);
     }
 }

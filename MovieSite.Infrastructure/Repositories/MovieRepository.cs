@@ -9,7 +9,7 @@ using MovieSite.Domain.Models;
 
 namespace MovieSite.Infrastructure.Repositories
 {
-    public class MovieRepository : RepositoryAsync<Movie>, IMovieRepository
+    public class MovieRepository : GenericRepository<Movie>, IMovieRepository
     {
         private readonly DbContext _dbContext;
 

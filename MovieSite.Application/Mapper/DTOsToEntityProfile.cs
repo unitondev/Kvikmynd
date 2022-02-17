@@ -2,6 +2,7 @@
 using System.Text;
 using AutoMapper;
 using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Mapper
@@ -46,9 +47,11 @@ namespace MovieSite.Application.Mapper
                 .AfterMap((src, dest) =>
                     dest.GenreMovies = new List<GenreMovie>());
 
-            CreateMap<CommentRequest, Comment>();
+            CreateMap<CommentModel, Comment>();
+            
+            CreateMap<MovieRating, MovieRatingViewModel>();
 
-            CreateMap<CreateRatingRequest, MovieRating>();
+            CreateMap<MovieRatingViewModel, MovieRating>();
         }
     }
 }

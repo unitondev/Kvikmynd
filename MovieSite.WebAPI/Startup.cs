@@ -88,14 +88,19 @@ namespace MovieSite
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MovieSite.WebAPI", Version = "v1"});
             });
+            
             services.AddTransient<DbContext, MovieSiteDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            
+            services.AddScoped(typeof(IService<>), typeof(GenericService<>));
             services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<IRatingService, RatingService>();
             services.AddSingleton<ITokenService, TokenService>();
+            
             services.AddAutoMapper(typeof(DTOsToEntityProfile));;
+            
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }
 

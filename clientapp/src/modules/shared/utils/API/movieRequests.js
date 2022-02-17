@@ -12,7 +12,7 @@ const movieRequests = {
     method: 'get',
   }),
   userRatingRequest: (data) => ({
-    url: 'api/rating/getRating',
+    url: 'api/rating/get',
     method: 'post',
     data,
   }),

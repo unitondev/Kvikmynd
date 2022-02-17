@@ -1,13 +1,10 @@
 ﻿using System.Threading.Tasks;
-using MovieSite.Application.Helper;
-using MovieSite.Application.Models;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Application.Interfaces.Services
 {
-    public interface IRatingService
+    public interface IRatingService : IService<MovieRating>
     {
-        Task<Result<int>> GetRatingByUserAndMovieIdAsync(RatingRequest ratingRequest);
-        Task<Result<int>> CreateRatingAsync(CreateRatingRequest ratingRequest);
-        Task DeleteRatingByUserAndMovieIdAsync(RatingRequest ratingRequest);
+        Task<MovieRating> GetByUserAndMovieIdAsync(int userId, int movieId);
     }
 }
