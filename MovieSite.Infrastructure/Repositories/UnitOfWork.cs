@@ -10,9 +10,9 @@ namespace MovieSite.Infrastructure.Repositories
         private readonly DbContext _dbContext;
 
         private IRepository<User> _userRepository;
-        private IGenreRepository _genreRepository;
+        private IRepository<Genre> _genreRepository;
         private IMovieRepository _movieRepository;
-        private IRatingRepository _ratingRepository;
+        private IRepository<MovieRating> _ratingRepository;
         private IRepository<Comment> _commentRepository;
 
         public UnitOfWork(DbContext dbContext)
@@ -25,9 +25,9 @@ namespace MovieSite.Infrastructure.Repositories
             get { return _userRepository ??= new GenericRepository<User>(_dbContext); }
         }
 
-        public IGenreRepository GenreRepository
+        public IRepository<Genre> GenreRepository
         {
-            get { return _genreRepository ??= new GenreRepository(_dbContext); }
+            get { return _genreRepository ??= new GenericRepository<Genre>(_dbContext); }
         }
         
         public IMovieRepository MovieRepository
@@ -35,9 +35,9 @@ namespace MovieSite.Infrastructure.Repositories
             get { return _movieRepository ??= new MovieRepository(_dbContext); }
         }
         
-        public IRatingRepository RatingRepository
+        public IRepository<MovieRating> RatingRepository
         {
-            get { return _ratingRepository ??= new RatingRepository(_dbContext); }
+            get { return _ratingRepository ??= new GenericRepository<MovieRating>(_dbContext); }
         }
         
         public IRepository<Comment> CommentRepository

@@ -18,18 +18,18 @@ namespace MovieSite.Application.Services
 {
     public class AccountService : IAccountService, IDisposable, IAsyncDisposable
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _work;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
 
         public AccountService(
-            IUnitOfWork unitOfWork,
+            IUnitOfWork work,
             UserManager<User> userManager,
             IMapper mapper,
             ITokenService tokenService)
         {
-            _unitOfWork = unitOfWork;
+            _work = work;
             _userManager = userManager;
             _mapper = mapper;
             _tokenService = tokenService;
@@ -130,8 +130,8 @@ namespace MovieSite.Application.Services
             var refreshToken = _tokenService.GenerateRefreshToken();
             user.RefreshTokens.Add(refreshToken);
 
-            await _unitOfWork.UserRepository.UpdateAsync(user);
-            await _unitOfWork.CommitAsync();
+            await _work.UserRepository.UpdateAsync(user);
+            await _work.CommitAsync();
 
             var authResponseUser = new AuthResponseUser(user, jwtToken, refreshToken.Token);
 
@@ -187,7 +187,7 @@ namespace MovieSite.Application.Services
 
         public async Task<ServiceResult<AuthResponseUser>> RefreshTokenAsync(string refreshedTokenPlainText)
         {
-            var refreshedUser = await _unitOfWork.UserRepository.FindAsync(i =>
+            var refreshedUser = await _work.UserRepository.FindAsync(i =>
                 i.RefreshTokens.Any(t => t.Token == refreshedTokenPlainText));
 
             if (refreshedUser == null)
@@ -204,8 +204,8 @@ namespace MovieSite.Application.Services
             refreshedToken.ReplacedByToken = newRefreshToken.Token;
             refreshedUser.RefreshTokens.Add(newRefreshToken);
 
-            await _unitOfWork.UserRepository.UpdateAsync(refreshedUser);
-            await _unitOfWork.CommitAsync();
+            await _work.UserRepository.UpdateAsync(refreshedUser);
+            await _work.CommitAsync();
 
             var claims = new[]
             {
@@ -222,15 +222,15 @@ namespace MovieSite.Application.Services
         public async Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken revokedToken)
         {
             revokedToken.Revoked = DateTime.Now;
-            await _unitOfWork.UserRepository.UpdateAsync(user);     
-            await _unitOfWork.CommitAsync();
+            await _work.UserRepository.UpdateAsync(user);     
+            await _work.CommitAsync();
 
             return new ServiceResult();
         }
         
         public async Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText)
         {
-            var user = await _unitOfWork.UserRepository.FindAsync(i =>
+            var user = await _work.UserRepository.FindAsync(i =>
                 i.RefreshTokens.Any(t => t.Token == revokedTokenPlainText));
             
             if (user == null) return new ServiceResult(ErrorCode.UserNotFound);
@@ -240,8 +240,8 @@ namespace MovieSite.Application.Services
 
             revokedToken.Revoked = DateTime.Now;
 
-            await _unitOfWork.UserRepository.UpdateAsync(user);     
-            await _unitOfWork.CommitAsync();
+            await _work.UserRepository.UpdateAsync(user);     
+            await _work.CommitAsync();
 
             return new ServiceResult();
         }
@@ -254,12 +254,12 @@ namespace MovieSite.Application.Services
 
         public void Dispose()
         {
-            _unitOfWork.Dispose();
+            _work.Dispose();
         }
 
         public async ValueTask DisposeAsync()
         {
-            await _unitOfWork.DisposeAsync();
+            await _work.DisposeAsync();
         }
     }
 }

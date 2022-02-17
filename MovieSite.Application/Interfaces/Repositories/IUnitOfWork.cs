@@ -8,9 +8,9 @@ namespace MovieSite.Application.Interfaces.Repositories
     public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
         IRepository<User> UserRepository { get; }
-        IGenreRepository GenreRepository { get; }
+        IRepository<Genre> GenreRepository { get; }
         IMovieRepository MovieRepository { get; }
-        IRatingRepository RatingRepository { get; }
+        IRepository<MovieRating> RatingRepository { get; }
         IRepository<Comment> CommentRepository { get; }
         
         Task<int> CommitAsync();

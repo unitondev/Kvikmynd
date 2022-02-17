@@ -10,16 +10,16 @@ namespace MovieSite.Application.Services
 {
     public class RatingService : GenericService<MovieRating>, IRatingService, IDisposable, IAsyncDisposable
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _work;
 
-        public RatingService(IUnitOfWork unitOfWork) : base(unitOfWork.RatingRepository, unitOfWork)
+        public RatingService(IUnitOfWork work) : base(work.RatingRepository, work)
         {
-            _unitOfWork = unitOfWork;
+            _work = work;
         }
 
         public async Task<ServiceResult<MovieRating>> GetByUserAndMovieIdAsync(int userId, int movieId)
         {
-            var rating = await _unitOfWork.RatingRepository.GetByUserAndMovieIdAsync(userId, movieId);
+            var rating = await _work.RatingRepository.FindAsync(r => r.MovieId == movieId && r.UserId == userId);
             if (rating == null)
             {
                 return new ServiceResult<MovieRating>(ErrorCode.UserRatingNotFound);
@@ -30,12 +30,12 @@ namespace MovieSite.Application.Services
 
         public void Dispose()
         {
-            _unitOfWork.Dispose();
+            _work.Dispose();
         }
 
         public async ValueTask DisposeAsync()
         {
-            await _unitOfWork.DisposeAsync();
+            await _work.DisposeAsync();
         }
     }
 }
