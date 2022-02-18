@@ -23,6 +23,7 @@ namespace MovieSite.Application.Models
             {
                 #region General errors. Codes 1000-1099
                 
+                ErrorCode.Unspecified => "An unspecified error occurred.",
                 ErrorCode.Unauthorized => "Unauthorized.",
                 ErrorCode.NotFound => "Resource not found.",
                 ErrorCode.ModelInvalid => "Invalid request model.",
@@ -68,6 +69,14 @@ namespace MovieSite.Application.Models
                 ErrorCode.MovieRatingNotFound => "Movie rating not found.",
                 ErrorCode.UserRatingNotFound => "User rating not found.",
                 
+                #endregion
+                
+                #region Comment errors. Codes 1350-1399
+
+                ErrorCode.CommentNotCreated => "Comment wasn't created.",
+                ErrorCode.CommentNotDeleted => "Comment wasn't deleted.",
+                ErrorCode.CommentNotFound => "Comment not found.",
+
                 #endregion
 
                 _ => ""

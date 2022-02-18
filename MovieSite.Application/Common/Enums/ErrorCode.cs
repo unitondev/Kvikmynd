@@ -4,13 +4,14 @@
     {
         #region General errors. Codes 1000-1099
 
-        Unauthorized = 1000,
-        NotFound = 1001,
-        ModelInvalid = 1002,
-        InternalServerError = 1003,
-        EntityNotCreated = 1004,
-        EntityNotUpdated = 1005,
-        EntityNotDeleted = 1006,
+        Unspecified = 1000,
+        Unauthorized = 1001,
+        NotFound = 1002,
+        ModelInvalid = 1003,
+        InternalServerError = 1004,
+        EntityNotCreated = 1005,
+        EntityNotUpdated = 1006,
+        EntityNotDeleted = 1007,
 
         #endregion
 
@@ -51,5 +52,12 @@
 
         #endregion
 
+        #region Comment errors. Codes 1350-1399
+
+        CommentNotCreated = 1350,
+        CommentNotDeleted = 1351,
+        CommentNotFound = 1352,
+
+        #endregion
     }
 }

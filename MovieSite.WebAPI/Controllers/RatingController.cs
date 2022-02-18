@@ -13,7 +13,7 @@ namespace MovieSite.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class RatingController : ControllerBase
+    public class RatingController : BaseApiController
     {
         private readonly IRatingService _ratingService;
         private readonly IMovieService _movieService;
@@ -32,7 +32,7 @@ namespace MovieSite.Controllers
             var result = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
             if (!result.IsSucceeded)
             {
-                if (result.Error != ErrorCode.UserRatingNotFound) return BadRequest(result.Error);
+                if (result.Error != ErrorCode.UserRatingNotFound) return CustomBadRequest(result.Error);
                 return NoContent();
             }
             
@@ -47,7 +47,7 @@ namespace MovieSite.Controllers
             var entity = _mapper.Map<MovieRatingViewModel, MovieRating>(model);
             
             var result = await _ratingService.CreateAsync(entity);
-            if (!result.IsSucceeded) return BadRequest();
+            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
             
             await _movieService.RecalculateMovieRatingAsync(model.MovieId);
             return Ok(result.Result);
@@ -59,12 +59,12 @@ namespace MovieSite.Controllers
             var getRatingResult = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
             if (!getRatingResult.IsSucceeded)
             {
-                if (getRatingResult.Error == ErrorCode.UserRatingNotFound) return NotFound(getRatingResult.Error);
-                return BadRequest(getRatingResult.Error);
+                if (getRatingResult.Error == ErrorCode.UserRatingNotFound) return CustomNotFound(getRatingResult.Error);
+                return CustomBadRequest(getRatingResult.Error);
             }
 
             var result = await _ratingService.DeleteAsync(getRatingResult.Result);
-            if (!result.IsSucceeded) return BadRequest();
+            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
             
             await _movieService.RecalculateMovieRatingAsync(model.MovieId);
             return Ok();

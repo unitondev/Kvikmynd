@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
 using MovieSite.Domain.Models;
@@ -11,7 +12,7 @@ namespace MovieSite.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CommentController : ControllerBase
+    public class CommentController : BaseApiController
     {
         private readonly IService<Comment> _commentService;
         private readonly IMapper _mapper;
@@ -28,7 +29,7 @@ namespace MovieSite.Controllers
             var entity = _mapper.Map<CommentModel, Comment>(model);
             
             var result = await _commentService.CreateAsync(entity);
-            if (!result.IsSucceeded) return BadRequest();
+            if (!result.IsSucceeded) return CustomBadRequest(ErrorCode.CommentNotCreated);
 
             return Ok();
         }
@@ -37,9 +38,11 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var entity = await _commentService.GetByKeyAsync(id);
-            
+            if (entity == null) return CustomNotFound(ErrorCode.CommentNotFound);
+
             var result = await _commentService.DeleteAsync(entity);
-            if (!result.IsSucceeded) return BadRequest();
+            if (!result.IsSucceeded) return CustomBadRequest(ErrorCode.CommentNotDeleted);
+            
             
             return Ok();
         }

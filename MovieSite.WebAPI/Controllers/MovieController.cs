@@ -11,7 +11,7 @@ namespace MovieSite.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class MovieController : ControllerBase
+    public class MovieController : BaseApiController
     {
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _movieService.GetAllMoviesAsync();
-            if (result == null) return NotFound(ErrorCode.MovieNotFound);
+            if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
             return Ok(result);
         }
@@ -36,7 +36,7 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var result = await _movieService.GetByKeyAsync(id);
-            if (result == null) return NotFound(ErrorCode.MovieNotFound);
+            if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
             return Ok(result);
         }
@@ -47,7 +47,7 @@ namespace MovieSite.Controllers
             var isMovieExists = await _movieService.ExistsAsync(id);
             if (!isMovieExists)
             {
-                return NotFound(ErrorCode.MovieNotFound);
+                return CustomNotFound(ErrorCode.MovieNotFound);
             }
             
             var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(id);
@@ -61,7 +61,7 @@ namespace MovieSite.Controllers
             var result = await _movieService.CreateMovieAsync(model);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             return Ok(result.Result);
@@ -73,7 +73,7 @@ namespace MovieSite.Controllers
             var result = await _movieService.UpdateMovieAsync(model);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             return Ok(result.Result);
@@ -85,7 +85,7 @@ namespace MovieSite.Controllers
             var result = await _movieService.GetMovieComments(id);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             return Ok(result.Result);
@@ -97,7 +97,7 @@ namespace MovieSite.Controllers
             var result = await _movieService.GetMovieRatings(id);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             return Ok(result.Result);
@@ -110,13 +110,13 @@ namespace MovieSite.Controllers
             var movie = await _movieService.GetByKeyAsync(id);
             if (movie == null)
             {
-                return NotFound(ErrorCode.MovieNotFound);
+                return CustomNotFound(ErrorCode.MovieNotFound);
             }
             
             var result = await _movieService.DeleteAsync(movie);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             return Ok();

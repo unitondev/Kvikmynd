@@ -12,7 +12,7 @@ namespace MovieSite.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly IAccountService _accountService;
 
@@ -25,7 +25,7 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _accountService.FindByIdAsync(id);
-            if (result == null) return NotFound(ErrorCode.UserNotFound);
+            if (result == null) return CustomNotFound(ErrorCode.UserNotFound);
 
             return Ok(result);
         }
@@ -36,19 +36,19 @@ namespace MovieSite.Controllers
         {
             if (model.Password.Trim().Length != model.Password.Length)
             {
-                return BadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
+                return CustomBadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
             }
 
             var result = await _accountService.RegisterAsync(model);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
             if (!setRefreshTokenResult)
             {
-                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
             return Ok(result.Result);
@@ -61,13 +61,13 @@ namespace MovieSite.Controllers
             var result = await _accountService.LoginAsync(model);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
             
             var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
             if (!setRefreshTokenResult)
             {
-                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
             return Ok(result.Result);
@@ -78,12 +78,12 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> LogOut()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if (jwtToken.Length == 0) return BadRequest(ErrorCode.AccessTokenNotFound);
+            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
             
             var result = await _accountService.LogOut(jwtToken);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             return Ok();
@@ -95,7 +95,7 @@ namespace MovieSite.Controllers
             var result = await _accountService.UpdateUserAsync(user);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             return Ok(result.Result);
@@ -109,7 +109,7 @@ namespace MovieSite.Controllers
             var result = await _accountService.DeleteByJwtTokenAsync(jwtToken);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             return Ok();
@@ -122,19 +122,19 @@ namespace MovieSite.Controllers
             var refreshToken = Request.Cookies["refresh_token"];
             if (string.IsNullOrEmpty(refreshToken))
             {
-                return BadRequest(ErrorCode.RefreshTokenNotFound);
+                return CustomNotFound(ErrorCode.RefreshTokenNotFound);
             }
             
             var result =  await _accountService.RefreshTokenAsync(refreshToken);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
             if (!setRefreshTokenResult)
             {
-                return BadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
+                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
             return Ok(result.Result);
@@ -147,7 +147,7 @@ namespace MovieSite.Controllers
             var result = await _accountService.RevokeTokenAsync(revokedToken);
             if (!result.IsSucceeded)
             {
-                return BadRequest(result.Error);
+                return CustomBadRequest(result.Error);
             }
 
             return Ok();
