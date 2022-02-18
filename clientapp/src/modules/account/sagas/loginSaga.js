@@ -1,4 +1,4 @@
-import { all, put, take, takeLatest } from 'redux-saga/effects'
+import { all, put, select, take, takeLatest } from 'redux-saga/effects'
 import { push } from 'connected-react-router'
 
 import * as accountActions from '../actions'
@@ -9,7 +9,10 @@ function * onLogin(action) {
   yield put(accountActions.getTokenRequest(action.payload))
   const result = yield take([accountActions.getTokenSuccess, accountActions.getTokenFailure])
   if (result.type === accountActions.getTokenFailure().type) {
-    yield put(push(routes.login))
+    const location = yield select(state => state.router.location.pathname)
+    if (!location.startsWith(routes.login)) {
+      yield put(push(routes.login))
+    }
     return
   }
 
