@@ -54,27 +54,7 @@ namespace MovieSite.Controllers
             
             return Ok(result.Result);
         }
-        
-        // TODO delete it, it never used anymore
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
-        {
-            var result = await _accountService.LoginAsync(model);
-            if (!result.IsSucceeded)
-            {
-                return CustomBadRequest(result.Error);
-            }
-            
-            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
-            if (!setRefreshTokenResult)
-            {
-                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
-            }
-            
-            return Ok(result.Result);
-        }
-        
+
         [AllowAnonymous]
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
@@ -116,31 +96,6 @@ namespace MovieSite.Controllers
             }
 
             return Ok();
-        }
-
-        [AllowAnonymous]
-        [HttpGet("refreshToken")]
-        public async Task<IActionResult> RefreshTokenAsync()
-        {
-            var refreshToken = Request.Cookies["refresh_token"];
-            if (string.IsNullOrEmpty(refreshToken))
-            {
-                return CustomNotFound(ErrorCode.RefreshTokenNotFound);
-            }
-            
-            var result =  await _accountService.RefreshTokenAsync(refreshToken);
-            if (!result.IsSucceeded)
-            {
-                return CustomBadRequest(result.Error);
-            }
-
-            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
-            if (!setRefreshTokenResult)
-            {
-                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
-            }
-            
-            return Ok(result.Result);
         }
 
         [HttpGet("revokeToken")]

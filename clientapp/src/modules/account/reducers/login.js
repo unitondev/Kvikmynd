@@ -15,9 +15,6 @@ export default handleActions(
     )](state, action) {
       return defaultState
     },
-    [accountActions.refreshTokensSuccess](state, action) {
-      return action.response.data
-    },
     [accountActions.registerSuccess](state, action) {
       return action.response.data
     },

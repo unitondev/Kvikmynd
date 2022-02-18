@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using MovieSite.Application.Authentication;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Common.Services;
 using MovieSite.Application.Interfaces.Repositories;
@@ -68,6 +69,7 @@ namespace MovieSite.Application.Services
             return new ServiceResult<User>(user);
         }
 
+        // TODO rewrite this endpoint
         public async Task<ServiceResult<AuthResponseUser>> RegisterAsync(UserRegistrationModel model)
         {
             var registeredUser = await _userManager.FindByEmailAsync(model.Email) 
@@ -96,7 +98,8 @@ namespace MovieSite.Application.Services
 
             var jwtToken = _tokenService.GetJwtToken(claims);
             
-            var responseUser = new AuthResponseUser(createdUser, jwtToken, refreshToken.Token);
+            var responseUser = new AuthResponseUser(createdUser, jwtToken.AccessToken, refreshToken.Token);
+            // TODO replaced by userViewModel and 
 
             return new ServiceResult<AuthResponseUser>(responseUser);
         }
@@ -135,36 +138,18 @@ namespace MovieSite.Application.Services
             return new ServiceResult();
         }
 
-        // TODO delete it, it never used anymore
-        public async Task<ServiceResult<AuthResponseUser>> LoginAsync(LoginUserModel loginUserModel)
+        public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId)
         {
-            var user = await _userManager.FindByEmailAsync(loginUserModel.Email);
-            if (user == null)
-            {
-                return new ServiceResult<AuthResponseUser>(ErrorCode.UserNotFound);
-            }
-
-            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginUserModel.Password);
-            if (!isPasswordCorrect)
-            {
-                return new ServiceResult<AuthResponseUser>(ErrorCode.PasswordIsNotCorrect);
-            }
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
-            };
-
-            var jwtToken = _tokenService.GetJwtToken(claims);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null) return new ServiceResult<RefreshToken>(ErrorCode.UserNotFound);
+            
             var refreshToken = _tokenService.GenerateRefreshToken();
             user.RefreshTokens.Add(refreshToken);
-
+            
             await _work.UserRepository.UpdateAsync(user);
             await _work.CommitAsync();
 
-            var authResponseUser = new AuthResponseUser(user, jwtToken, refreshToken.Token);
-
-            return new ServiceResult<AuthResponseUser>(authResponseUser);
+            return new ServiceResult<RefreshToken>(refreshToken);
         }
 
         public async Task<ServiceResult> LogOut(string jwtTokenPlainText)
@@ -214,38 +199,40 @@ namespace MovieSite.Application.Services
             return new ServiceResult<EditUserResponse>(responseUser);
         }
 
-        public async Task<ServiceResult<AuthResponseUser>> RefreshTokenAsync(string refreshedTokenPlainText)
+        public async Task<ServiceResult<RefreshAndJwtTokenModel>> RefreshTokenAsync(string refreshedTokenPlainText)
         {
-            var refreshedUser = await _work.UserRepository.FindAsync(i =>
-                i.RefreshTokens.Any(t => t.Token == refreshedTokenPlainText));
+            var refreshedUser = await _work.UserRepository.FindAsync(i => i.RefreshTokens
+                .Any(t => t.Token == refreshedTokenPlainText));
 
             if (refreshedUser == null)
             {
-                return new ServiceResult<AuthResponseUser>(ErrorCode.AccessTokenNotFound);
+                return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.AccessTokenNotFound);
             }
 
             var refreshedToken = refreshedUser.RefreshTokens.FirstOrDefault(t => t.Token == refreshedTokenPlainText);
 
-            if (!refreshedToken.IsActive) return new ServiceResult<AuthResponseUser>(ErrorCode.AccessTokenIsNotActive);
-
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            if (!refreshedToken.IsActive) return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.AccessTokenIsNotActive);
             refreshedToken.Revoked = DateTime.Now;
-            refreshedToken.ReplacedByToken = newRefreshToken.Token;
-            refreshedUser.RefreshTokens.Add(newRefreshToken);
-
-            await _work.UserRepository.UpdateAsync(refreshedUser);
-            await _work.CommitAsync();
-
+            
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(refreshedUser.Id))
             };
 
             var newJwtToken = _tokenService.GetJwtToken(claims);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            
+            refreshedUser.RefreshTokens.Add(newRefreshToken);
+            await _work.UserRepository.UpdateAsync(refreshedUser);
+            await _work.CommitAsync();
 
-            var authResponseUser = new AuthResponseUser(refreshedUser, newJwtToken, newRefreshToken.Token);
+            var result = new RefreshAndJwtTokenModel
+            {
+                RefreshToken = newRefreshToken,
+                JwtToken = newJwtToken
+            };
 
-            return new ServiceResult<AuthResponseUser>(authResponseUser);
+            return new ServiceResult<RefreshAndJwtTokenModel>(result);
         }
 
         public async Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken revokedToken)

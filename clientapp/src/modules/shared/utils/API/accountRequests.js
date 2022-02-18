@@ -5,7 +5,7 @@ const accountRequests = {
     data,
   }),
   refreshTokensRequest: () => ({
-    url: 'api/account/refreshToken',
+    url: 'api/refreshToken',
     method: 'get',
   }),
   updateUserRequest: (data) => ({

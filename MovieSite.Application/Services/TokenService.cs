@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MovieSite.Application.Authentication;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Authentication;
 using MovieSite.Domain.Models;
@@ -21,20 +22,29 @@ namespace MovieSite.Application.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GetJwtToken(IEnumerable<Claim> claims)
+        public JwtToken GetJwtToken(IEnumerable<Claim> claims)
         {
+            var tokenLifetime = DateTime.Now.AddHours(1);
+                
             var token = new JwtSecurityToken(
                 _jwtSettings.Issuer,
                 _jwtSettings.Audience,
                 claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.Now.AddHours(1),
+                expires: tokenLifetime,
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
                     SecurityAlgorithms.HmacSha256)
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var jwtToken = new JwtToken
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                TokenType = "Bearer",
+                ExpiresIn = (long) tokenLifetime.TimeOfDay.TotalSeconds
+            };
+
+            return jwtToken;
         }
 
         public RefreshToken GenerateRefreshToken()

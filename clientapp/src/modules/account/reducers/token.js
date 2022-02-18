@@ -5,12 +5,15 @@ const defaultState = null
 
 export default handleActions(
   {
-    [accountActions.getTokenSuccess](state, action) {
-      return action.response.data
+    [accountActions.getTokenSuccess] (state, action) {
+      return action.response.data.accessToken
     },
-    [accountActions.logoutSuccess](state, action) {
+    [accountActions.logoutSuccess] (state, action) {
       return defaultState
     },
+    [accountActions.refreshTokensSuccess] (state, action) {
+      return action.response.data.accessToken
+    }
   },
   defaultState
 )

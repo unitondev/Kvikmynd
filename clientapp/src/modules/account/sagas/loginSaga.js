@@ -16,8 +16,19 @@ function * onLogin(action) {
   // TODO add redirect here if exists
 }
 
+function * onRefreshToken(action) {
+  yield put(accountActions.refreshTokensRequest())
+  const result = yield take([accountActions.refreshTokensSuccess, accountActions.refreshTokensFailure])
+  if (result.type === accountActions.refreshTokensSuccess().type) {
+    yield put(accountActions.getMeRequest())
+  }
+}
+
 function * loginSaga() {
-  yield all([takeLatest(accountActions.onLogin, onLogin)])
+  yield all([
+    takeLatest(accountActions.onLogin, onLogin),
+    takeLatest(accountActions.onRefreshToken, onRefreshToken)
+  ])
 }
 
 export default loginSaga

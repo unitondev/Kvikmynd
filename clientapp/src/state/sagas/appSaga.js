@@ -6,7 +6,7 @@ import * as accountActions from '@movie/modules/account/actions'
 
 function * onAppMounted (action) {
   const user = yield select(getUser)
-  if (user === null) yield put(accountActions.refreshTokensRequest())
+  if (user === null) yield put(accountActions.onRefreshToken())
 }
 
 function * appSaga() {
