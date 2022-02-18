@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
 
 namespace MovieSite.Controllers
 {
@@ -54,6 +55,7 @@ namespace MovieSite.Controllers
             return Ok(result.Result);
         }
         
+        // TODO delete it, it never used anymore
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserModel model)
@@ -105,6 +107,7 @@ namespace MovieSite.Controllers
         public async Task<IActionResult> Delete()
         {
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
             
             var result = await _accountService.DeleteByJwtTokenAsync(jwtToken);
             if (!result.IsSucceeded)
@@ -152,7 +155,21 @@ namespace MovieSite.Controllers
 
             return Ok();
         }
-        
+
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
+
+            var result = await _accountService.GetCurrentUserAsync(jwtToken);
+            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
+
+            var userViewModel = new UserViewModel(result.Result, "");
+
+            return Ok(userViewModel);
+        }
+
         private bool SetRefreshTokenCookie(string refreshToken)
         {
             try

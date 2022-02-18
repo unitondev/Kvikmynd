@@ -40,6 +40,34 @@ namespace MovieSite.Application.Services
             return await _userManager.FindByIdAsync(userId.ToString());
         }
 
+        public async Task<ServiceResult<User>> FindByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ServiceResult<User>(ErrorCode.UserNotFound);
+            }
+
+            return new ServiceResult<User>(user);
+        }
+        
+        public async Task<ServiceResult<User>> FindByEmailAndCheckCredentialsAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ServiceResult<User>(ErrorCode.UserNotFound);
+            }
+
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
+            if (!isPasswordValid)
+            {
+                return new ServiceResult<User>(ErrorCode.CredentialsInvalid);
+            }
+            
+            return new ServiceResult<User>(user);
+        }
+
         public async Task<ServiceResult<AuthResponseUser>> RegisterAsync(UserRegistrationModel model)
         {
             var registeredUser = await _userManager.FindByEmailAsync(model.Email) 
@@ -107,6 +135,7 @@ namespace MovieSite.Application.Services
             return new ServiceResult();
         }
 
+        // TODO delete it, it never used anymore
         public async Task<ServiceResult<AuthResponseUser>> LoginAsync(LoginUserModel loginUserModel)
         {
             var user = await _userManager.FindByEmailAsync(loginUserModel.Email);
@@ -244,6 +273,15 @@ namespace MovieSite.Application.Services
             await _work.CommitAsync();
 
             return new ServiceResult();
+        }
+
+        public async Task<ServiceResult<User>> GetCurrentUserAsync(string jwtPlainText)
+        {
+            var userId = GetIdFromFromJwtToken(jwtPlainText);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return new ServiceResult<User>(ErrorCode.UserNotFound);
+
+            return new ServiceResult<User>(user);
         }
 
         private static string GetIdFromFromJwtToken(string jwtPlainText)

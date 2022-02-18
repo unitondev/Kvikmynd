@@ -47,6 +47,7 @@ namespace MovieSite.Application.Models
                 ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd => "There should be no spaces at the beginning and at the end of the password.",
                 ErrorCode.RefreshTokenNotFound => "Refresh token not found.",
                 ErrorCode.ErrorWhileSettingRefreshToken => "An error occurred while refresh token setting.",
+                ErrorCode.CredentialsInvalid => "User credentials are invalid.",
                 
                 #endregion
                 

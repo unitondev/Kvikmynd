@@ -1,9 +1,4 @@
 const accountRequests = {
-  loginRequest: (data) => ({
-    url: 'api/account/login',
-    method: 'post',
-    data,
-  }),
   logoutRequest: (data) => ({
     url: 'api/account/logout',
     method: 'get',
@@ -27,6 +22,15 @@ const accountRequests = {
     method: 'post',
     data,
   }),
+  getTokenRequest: (data) => ({
+    url: 'api/token',
+    method: 'post',
+    data,
+  }),
+  getMeRequest: () => ({
+    url: 'api/account/me',
+    method: 'get',
+  })
 }
 
 export default accountRequests

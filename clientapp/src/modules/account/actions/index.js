@@ -1,9 +1,5 @@
 import { createAction } from 'redux-actions'
 
-export const loginRequest = createAction('LOGIN_REQUEST')
-export const loginSuccess = createAction('LOGIN_SUCCESS')
-export const loginFailure = createAction('LOGIN_FAILURE')
-
 export const logoutRequest = createAction('LOGOUT_REQUEST')
 export const logoutSuccess = createAction('LOGOUT_SUCCESS')
 export const logoutFailure = createAction('LOGOUT_FAILURE')
@@ -26,3 +22,14 @@ export const registerFailure = createAction('REGISTER_FAILURE')
 
 export const startLoadingUser = createAction('START_LOADING_USER')
 export const stopLoadingUser = createAction('STOP_LOADING_USER')
+
+export const onLogin = createAction('ON_LOGIN')
+export const onLogout = createAction('ON_LOGOUT')
+
+export const getTokenRequest = createAction('GET_TOKEN_REQUEST')
+export const getTokenSuccess = createAction('GET_TOKEN_SUCCESS')
+export const getTokenFailure = createAction('GET_TOKEN_FAILURE')
+
+export const getMeRequest = createAction('GET_ME_REQUEST')
+export const getMeSuccess = createAction('GET_ME_SUCCESS')
+export const getMeFailure = createAction('GET_ME_FAILURE')

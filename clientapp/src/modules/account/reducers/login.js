@@ -5,7 +5,7 @@ const defaultState = null
 
 export default handleActions(
   {
-    [accountActions.loginSuccess](state, action) {
+    [accountActions.getMeSuccess](state, action) {
       return action.response.data
     },
     [combineActions(

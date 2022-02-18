@@ -22,6 +22,8 @@ namespace MovieSite.Application.Mapper
                     opt.MapFrom(src => src.User));
             
             CreateMap<MovieRating, MovieRatingViewModel>();
+            
+            CreateMap<User, UserViewModel>();
         }
     }
 }

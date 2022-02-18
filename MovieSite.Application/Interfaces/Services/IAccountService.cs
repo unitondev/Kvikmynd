@@ -9,6 +9,8 @@ namespace MovieSite.Application.Interfaces.Services
     public interface IAccountService
     {
         Task<User> FindByIdAsync(int id);
+        Task<ServiceResult<User>> FindByEmailAsync(string email);
+        Task<ServiceResult<User>> FindByEmailAndCheckCredentialsAsync(string email, string password);
         Task<ServiceResult<AuthResponseUser>> RegisterAsync(UserRegistrationModel item);
         Task<ServiceResult> DeleteByIdAsync(string id);
         Task<ServiceResult> DeleteByJwtTokenAsync(string jwtTokenPlainText);
@@ -18,5 +20,6 @@ namespace MovieSite.Application.Interfaces.Services
         Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText);
         Task<ServiceResult> LogOut(string jwtTokenPlainText);
         Task<ServiceResult<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser);
+        Task<ServiceResult<User>> GetCurrentUserAsync(string jwtPlainText);
     }
 }

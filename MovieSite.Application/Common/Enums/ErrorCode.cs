@@ -28,6 +28,7 @@
         PasswordSpacesAtTheBeginningOrAtTheEnd = 1108,
         RefreshTokenNotFound = 1109,
         ErrorWhileSettingRefreshToken = 1110,
+        CredentialsInvalid = 1111,
 
         #endregion
 
