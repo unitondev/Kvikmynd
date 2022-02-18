@@ -1,4 +1,5 @@
 import { all, put, take, takeLatest } from 'redux-saga/effects'
+import { push } from 'connected-react-router'
 
 import * as accountActions from '../actions'
 import * as notificationActions from '../../shared/snackBarNotification/actions'
@@ -8,8 +9,7 @@ function * onLogin(action) {
   yield put(accountActions.getTokenRequest(action.payload))
   const result = yield take([accountActions.getTokenSuccess, accountActions.getTokenFailure])
   if (result.type === accountActions.getTokenFailure().type) {
-    // push from connected-react-router
-    // yield put(push(routes.login))
+    yield put(push(routes.login))
     return
   }
 
