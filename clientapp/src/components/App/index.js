@@ -3,9 +3,10 @@ import { Container } from '@mui/material'
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles'
 import { Provider } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
+import { ConnectedRouter } from 'connected-react-router'
 
 import UI from './App'
-import createStore from '../../state/createStore'
+import createStore, { history } from '../../state/createStore'
 import * as appActions from '../../state/actions'
 
 const theme = createTheme()
@@ -30,7 +31,9 @@ const App = () => {
             >
               <Container maxWidth='lg'>
                 <div className='App'>
-                  <UI />
+                  <ConnectedRouter history={history}>
+                    <UI />
+                  </ConnectedRouter>
                 </div>
               </Container>
             </SnackbarProvider>
