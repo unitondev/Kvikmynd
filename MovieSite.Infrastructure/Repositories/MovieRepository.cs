@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MovieSite.Application.Extensions;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
@@ -11,88 +12,37 @@ namespace MovieSite.Infrastructure.Repositories
 {
     public class MovieRepository : GenericRepository<Movie>, IMovieRepository
     {
-        public MovieRepository(DbContext dbContext) : base(dbContext) { }
+        public MovieRepository(DbContext dbContext) : base(dbContext) {}
 
-        public async Task<MovieWithGenresResponse> GetMovieWithGenresByIdAsync(int movieId)
+        public async Task<MovieWithGenresModel> GetMovieWithGenresByIdAsync(int id)
         {
-            var movie = await FindAsync(m => m.Id == movieId);
-            var genres = await DbContext.Set<Genre>().AsNoTracking().ToListAsync();
-            
-            var genreMovies = await All()
-                .Where(m => m.Id == movieId)
-                .Include(m => m.GenreMovies)
-                .Select(m => m.GenreMovies)
-                .FirstOrDefaultAsync();
+            var movie = await FindByKeyAsync(id);
 
-            var movieWithGenresResponse = new MovieWithGenresResponse()
+            var genres = await DbContext.Set<GenreMovie>()
+                .Where(gm => gm.MovieId == id)
+                .Select(gm => gm.Genre)
+                .ToListAsync();
+
+            return new MovieWithGenresModel()
             {
                 Movie = movie,
-                GenreNames = new List<string>()
-            };
-
-            var genreNames = genreMovies
-                .Join(genres, genreMovie => genreMovie.GenreId, genre => genre.Id,
-                    (genreMovie, genre) => new
-                    {
-                        GenreName = genre.Name
-                    });
-
-            foreach (var genreName in genreNames)
-            {
-                movieWithGenresResponse.GenreNames.Add(genreName.GenreName);
-            }
-
-            return movieWithGenresResponse;
-        }
-        
-        public async Task<Movie> FindByTitleAsync(string title)
-        {
-            return await DbSet.FirstOrDefaultAsync(movie => movie.Title == title);
-        }
-        
-        public async Task<Movie> FindByTitleForUpdateAsync(string title)
-        {
-            return await DbSet
-                .Include(movie => movie.GenreMovies)
-                .FirstOrDefaultAsync(movie => movie.Title == title);
+                Genres = genres
+            };;
         }
 
-        public async Task<Movie> GetMovieWithRatings(int movieId)
+        public async Task<List<MovieCommentsResponse>> GetMovieCommentsAsync(int id)
         {
-            return await DbSet
-                .Include(movie => movie.MovieRatings)
-                .FirstOrDefaultAsync(movie => movie.Id == movieId);
-        }
-        
-        public async Task<IList<MovieRating>> GetMovieRating(int movieId)
-        {
-            return await DbSet
-                .Where(movie => movie.Id == movieId)
-                .Select(movie => movie.MovieRatings)
+            return await DbContext.Set<Comment>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
-        }
-
-        public void SetMovieRatingIsModified(Movie movie)
-        {
-            DbContext.Entry(movie).Property(movie1 => movie1.Rating).IsModified = true;
-        }
-        
-        public async Task<IReadOnlyList<MovieCommentsResponse>> GetMovieWithCommentsAsync(int movieId)
-        {
-            var movieCommentsResponse = from movie in DbSet
-                where movie.Id == movieId
-                join comments in DbContext.Set<Comment>() on movie.Id equals comments.MovieId
-                join user in DbContext.Set<User>() on comments.UserId equals user.Id
-                select new MovieCommentsResponse
+                .Where(c => c.MovieId == id)
+                .Select(c => new MovieCommentsResponse
                 {
-                    CommentId = comments.Id, 
-                    CommentText =comments.Text,
-                    UserName = user.UserName, 
-                    UserAvatar = Encoding.UTF8.GetString(user.Avatar)
-                };
-
-            return (await movieCommentsResponse.ToListAsync()).AsReadOnly();
+                    CommentId = c.Id,
+                    CommentText = c.Text,
+                    UserName = c.User.UserName,
+                    UserAvatar = Encoding.UTF8.GetString(c.User.Avatar)
+                })
+                .ToListAsync();
         }
     }
 }

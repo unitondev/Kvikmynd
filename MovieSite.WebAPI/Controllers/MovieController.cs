@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
-using MovieSite.Application.ViewModels;
-using MovieSite.ViewModels;
 
 namespace MovieSite.Controllers
 {
@@ -46,11 +44,15 @@ namespace MovieSite.Controllers
         [HttpGet("{id}/withGenres")]
         public async Task<IActionResult> GetMovieWithGenresById(int id)
         {
-            var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(id);
-            if (movieWithGenres == null) return NotFound(ErrorCode.MovieNotFound);
+            var isMovieExists = await _movieService.ExistsAsync(id);
+            if (!isMovieExists)
+            {
+                return NotFound(ErrorCode.MovieNotFound);
+            }
             
-            var movieWithGenresViewModel = _mapper.Map<MovieWithGenresResponse, MovieWithGenresViewModel>(movieWithGenres);
-            return Ok(movieWithGenresViewModel);
+            var movieWithGenres = await _movieService.GetMovieWithGenresByIdAsync(id);
+
+            return Ok(movieWithGenres);
         }
 
         [HttpPost]

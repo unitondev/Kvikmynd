@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.Common.Enums;
-using MovieSite.Application.Helper;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
-using MovieSite.Application.ViewModels;
 
 namespace MovieSite.Controllers
 {

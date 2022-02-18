@@ -11,6 +11,7 @@ using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
+using MovieSite.ViewModels;
 
 namespace MovieSite.Application.Services
 {
@@ -32,14 +33,16 @@ namespace MovieSite.Application.Services
             return _mapper.Map<List<Movie>, List<MovieResponse>>(movies);
         }
         
-        public async Task<MovieWithGenresResponse> GetMovieWithGenresByIdAsync(int movieId)
+        public async Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int id)
         {
-            return await _work.MovieRepository.GetMovieWithGenresByIdAsync(movieId);
+            var entityModel = await _work.MovieRepository.GetMovieWithGenresByIdAsync(id);
+            
+            return _mapper.Map<MovieWithGenresModel, MovieWithGenresViewModel>(entityModel);
         }
         
         public async Task<ServiceResult<Movie>> CreateMovieAsync(MovieRequest movieRequest)
         {
-            var createdMovie = await _work.MovieRepository.FindByTitleAsync(movieRequest.Title);
+            var createdMovie = await _work.MovieRepository.FindAsync(m => m.Title == movieRequest.Title);
             if (createdMovie != null)
             {
                 return new ServiceResult<Movie>(ErrorCode.MovieAlreadyExists);
@@ -77,7 +80,11 @@ namespace MovieSite.Application.Services
         
         public async Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieRequest editMovieRequest)
         {
-            var updatedMovie = await _work.MovieRepository.FindByTitleForUpdateAsync(editMovieRequest.Title);
+            // TODO split for update movie and split genres for movie
+            var updatedMovie = await _work.MovieRepository.All(m => m.GenreMovies)
+                .Where(m => m.Title == editMovieRequest.Title)
+                .FirstOrDefaultAsync();
+
             if (updatedMovie == null)
             {
                 return new ServiceResult<Movie>(ErrorCode.MovieNotFound);
@@ -113,21 +120,24 @@ namespace MovieSite.Application.Services
             return new ServiceResult<Movie>(updatedMovie);
         }
 
-        public async Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int movieId)
+        public async Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id)
         {
-            if (!await ExistsAsync(movieId))
+            if (!await ExistsAsync(id))
             {
                 return new ServiceResult<IEnumerable<MovieRating>>(ErrorCode.MovieNotFound);
             }
 
-            var movieRatings = await _work.MovieRepository.GetMovieRating(movieId);
+            var movieRatings = await _work.MovieRepository.All()
+                .Where(m => m.Id == id)
+                .Select(m => m.MovieRatings)
+                .FirstOrDefaultAsync();
 
             return new ServiceResult<IEnumerable<MovieRating>>(movieRatings);
         }
 
-        public async Task<ServiceResult<MovieRatingValueModel>> RecalculateMovieRatingAsync(int movieId)
+        public async Task<ServiceResult<MovieRatingValueModel>> RecalculateMovieRatingAsync(int id)
         {
-            var movie = await _work.MovieRepository.GetMovieWithRatings(movieId);
+            var movie = await _work.MovieRepository.FindByKeyAsync(id);
             if (movie == null)
             {
                 return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieNotFound);
@@ -139,10 +149,9 @@ namespace MovieSite.Application.Services
             }
 
             var ratingsSum = movie.MovieRatings.Sum(movieRating => movieRating.Value);
-            
             movie.Rating = (double)ratingsSum / movie.MovieRatings.Count;
-
-            _work.MovieRepository.SetMovieRatingIsModified(movie);
+            
+            await _work.MovieRepository.UpdateAsync(movie);
             await _work.CommitAsync();
 
             var result = new MovieRatingValueModel
@@ -153,16 +162,16 @@ namespace MovieSite.Application.Services
             return new ServiceResult<MovieRatingValueModel>(result);
         }
         
-        public async Task<ServiceResult<IReadOnlyList<MovieCommentsResponse>>> GetMovieComments(int movieId)
+        public async Task<ServiceResult<List<MovieCommentsResponse>>> GetMovieComments(int id)
         {
-            if (!await ExistsAsync(movieId))
+            if (!await ExistsAsync(id))
             {
-                return new ServiceResult<IReadOnlyList<MovieCommentsResponse>>(ErrorCode.MovieNotFound);
+                return new ServiceResult<List<MovieCommentsResponse>>(ErrorCode.MovieNotFound);
             }
 
-            var movieComments = await _work.MovieRepository.GetMovieWithCommentsAsync(movieId);
+            var movieComments = await _work.MovieRepository.GetMovieCommentsAsync(id);
             
-            return new ServiceResult<IReadOnlyList<MovieCommentsResponse>>(movieComments);
+            return new ServiceResult<List<MovieCommentsResponse>>(movieComments);
         }
 
         public void Dispose()

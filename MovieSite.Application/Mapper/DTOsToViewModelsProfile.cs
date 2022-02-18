@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MovieSite.Application.ViewModels;
+using MovieSite.Domain.Models;
 using MovieSite.ViewModels;
 
 namespace MovieSite.Application.Mapper
@@ -8,9 +9,13 @@ namespace MovieSite.Application.Mapper
     {
         public DTOsToViewModelsProfile()
         {
-            CreateMap<MovieWithGenresResponse, MovieWithGenresViewModel>()
+            CreateMap<MovieWithGenresModel, MovieWithGenresViewModel>()
                 .ForMember(dest => dest.Movie, opt =>
-                    opt.MapFrom(src => src.Movie));
+                    opt.MapFrom(src => src.Movie))
+                .ForMember(dest => dest.GenreNames, opt =>
+                    opt.MapFrom(src => src.Genres));
+
+            CreateMap<Genre, GenreViewModel>();
         }
     }
 }

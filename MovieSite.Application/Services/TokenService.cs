@@ -28,7 +28,7 @@ namespace MovieSite.Application.Services
                 _jwtSettings.Audience,
                 claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
                     SecurityAlgorithms.HmacSha256)

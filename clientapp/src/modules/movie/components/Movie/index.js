@@ -60,7 +60,7 @@ const Movie = ({
             </Typography>
             <Typography className={classes.secondPriorityText}>
               Genres:
-              {genres?.length > 0 ? genres.map((genre) => ` ${genre}, `) : null}
+              {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
             </Typography>
             <Typography className={classes.selectedMovieCardDescriptionText}>
               {movie.description}

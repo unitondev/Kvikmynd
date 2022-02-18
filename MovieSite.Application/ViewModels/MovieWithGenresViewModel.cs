@@ -6,6 +6,6 @@ namespace MovieSite.ViewModels
     public class MovieWithGenresViewModel
     {
         public MovieResponse Movie { get; set; }
-        public List<string> GenreNames { get; set; }
+        public List<GenreViewModel> GenreNames { get; set; }
     }
 }
