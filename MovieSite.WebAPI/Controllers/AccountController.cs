@@ -46,13 +46,13 @@ namespace MovieSite.Controllers
                 return CustomBadRequest(result.Error);
             }
 
-            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken);
+            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken.Token);
             if (!setRefreshTokenResult)
             {
                 return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
-            return Ok(result.Result);
+            return Ok(result.Result.JwtToken);
         }
 
         [AllowAnonymous]

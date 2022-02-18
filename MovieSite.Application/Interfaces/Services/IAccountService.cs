@@ -12,7 +12,7 @@ namespace MovieSite.Application.Interfaces.Services
         Task<User> FindByIdAsync(int id);
         Task<ServiceResult<User>> FindByEmailAsync(string email);
         Task<ServiceResult<User>> FindByEmailAndCheckCredentialsAsync(string email, string password);
-        Task<ServiceResult<AuthResponseUser>> RegisterAsync(UserRegistrationModel item);
+        Task<ServiceResult<RefreshAndJwtTokenModel>> RegisterAsync(UserRegistrationModel item);
         Task<ServiceResult> DeleteByIdAsync(string id);
         Task<ServiceResult> DeleteByJwtTokenAsync(string jwtTokenPlainText);
         Task<ServiceResult<RefreshAndJwtTokenModel>> RefreshTokenAsync(string token);

@@ -13,6 +13,9 @@ export default handleActions(
     },
     [accountActions.refreshTokensSuccess] (state, action) {
       return action.response.data.accessToken
+    },
+    [accountActions.registerSuccess] (state, action) {
+      return action.response.data.accessToken
     }
   },
   defaultState

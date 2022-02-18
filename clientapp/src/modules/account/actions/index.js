@@ -25,6 +25,7 @@ export const stopLoadingUser = createAction('STOP_LOADING_USER')
 
 export const onLogin = createAction('ON_LOGIN')
 export const onLogout = createAction('ON_LOGOUT')
+export const onRegister = createAction('ON_REGISTER')
 export const onRefreshToken = createAction('ON_REFRESH_TOKEN')
 
 export const getTokenRequest = createAction('GET_TOKEN_REQUEST')

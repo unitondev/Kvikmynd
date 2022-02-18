@@ -68,16 +68,15 @@ namespace MovieSite.Application.Services
             
             return new ServiceResult<User>(user);
         }
-
-        // TODO rewrite this endpoint
-        public async Task<ServiceResult<AuthResponseUser>> RegisterAsync(UserRegistrationModel model)
+        
+        public async Task<ServiceResult<RefreshAndJwtTokenModel>> RegisterAsync(UserRegistrationModel model)
         {
             var registeredUser = await _userManager.FindByEmailAsync(model.Email) 
                                  ?? await _userManager.FindByNameAsync(model.Username);
 
             if (registeredUser != null)
             {
-                return new ServiceResult<AuthResponseUser>(ErrorCode.UserAlreadyExists);
+                return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.UserAlreadyExists);
             }
             
             var createdUser = _mapper.Map<UserRegistrationModel, User>(model);
@@ -88,7 +87,7 @@ namespace MovieSite.Application.Services
             var result = await _userManager.CreateAsync(createdUser, model.Password);
             if (!result.Succeeded)
             {
-                return new ServiceResult<AuthResponseUser>(ErrorCode.UserNotCreated);
+                return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.UserNotCreated);
             }
 
             var claims = new[]
@@ -98,10 +97,13 @@ namespace MovieSite.Application.Services
 
             var jwtToken = _tokenService.GetJwtToken(claims);
             
-            var responseUser = new AuthResponseUser(createdUser, jwtToken.AccessToken, refreshToken.Token);
-            // TODO replaced by userViewModel and 
+            var refreshAndJwtTokenModel = new RefreshAndJwtTokenModel
+            {
+                RefreshToken = refreshToken,
+                JwtToken = jwtToken
+            };
 
-            return new ServiceResult<AuthResponseUser>(responseUser);
+            return new ServiceResult<RefreshAndJwtTokenModel>(refreshAndJwtTokenModel);
         }
         
         public async Task<ServiceResult> DeleteByIdAsync(string userId)

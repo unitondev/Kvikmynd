@@ -1,6 +1,7 @@
 import { all, put, take, takeLatest } from 'redux-saga/effects'
 
 import * as accountActions from '../actions'
+import * as notificationActions from '../../shared/snackBarNotification/actions'
 import routes from '@movie/routes'
 
 function * onLogin(action) {
@@ -24,10 +25,23 @@ function * onRefreshToken(action) {
   }
 }
 
+function * onRegister(action) {
+  yield put(accountActions.registerRequest(action.payload))
+  const result = yield take([accountActions.registerSuccess, accountActions.registerFailure])
+  if (result.type === accountActions.registerFailure().type) {
+    const message = 'Register failure'
+    yield put(notificationActions.enqueueSnackbarError({ message }))
+    return
+  }
+
+  yield put(accountActions.getMeRequest())
+}
+
 function * loginSaga() {
   yield all([
     takeLatest(accountActions.onLogin, onLogin),
-    takeLatest(accountActions.onRefreshToken, onRefreshToken)
+    takeLatest(accountActions.onRefreshToken, onRefreshToken),
+    takeLatest(accountActions.onRegister, onRegister),
   ])
 }
 
