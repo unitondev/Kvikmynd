@@ -33,7 +33,15 @@ namespace MovieSite
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options => 
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.SetIsOriginAllowed(s => true);
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                }));
+            
             services.AddSignalR();
             services.AddIdentity<User, IdentityRole<int>>(options =>
                 {
@@ -122,7 +130,7 @@ namespace MovieSite
                 app.UseHsts();
             }
 
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseSpaStaticFiles();
             
