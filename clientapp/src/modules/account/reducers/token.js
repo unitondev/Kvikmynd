@@ -1,14 +1,18 @@
-import { handleActions } from 'redux-actions'
+import { combineActions, handleActions } from 'redux-actions'
 import * as accountActions from '../actions'
 
-const defaultState = null
+const defaultState = {}
 
 export default handleActions(
   {
     [accountActions.getTokenSuccess] (state, action) {
       return action.response.data.accessToken
     },
-    [accountActions.logoutSuccess] (state, action) {
+    [combineActions(
+      accountActions.logoutSuccess,
+      accountActions.updateUserSuccess,
+      accountActions.deleteUserSuccess,
+      )] (state, action) {
       return defaultState
     },
     [accountActions.refreshTokensSuccess] (state, action) {

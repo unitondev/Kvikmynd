@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MovieSite.Domain.Models;
 
-namespace MovieSite.Application.ViewModels
+namespace MovieSite.Application.Models
 {
     public class MovieWithGenresModel
     {

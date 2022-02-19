@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.Common.Enums;
-using MovieSite.Application.Models;
+using MovieSite.Application.Common.Models;
 
 namespace MovieSite.Controllers
 {

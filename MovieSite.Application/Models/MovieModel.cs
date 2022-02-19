@@ -2,7 +2,7 @@
 
 namespace MovieSite.Application.Models
 {
-    public class MovieRequest
+    public class MovieModel
     {
         public string Title { get; set; }
         public string Description { get; set; }

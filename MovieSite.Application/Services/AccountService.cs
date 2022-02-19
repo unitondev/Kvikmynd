@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using MovieSite.Application.Authentication;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Common.Services;
 using MovieSite.Application.Interfaces.Repositories;
@@ -171,20 +170,20 @@ namespace MovieSite.Application.Services
             return new ServiceResult();
         }
 
-        public async Task<ServiceResult<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser)
+        public async Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel requestedUser)
         {
             var user = await _userManager.FindByEmailAsync(requestedUser.Email);
             if (user == null)
             {
-                return new ServiceResult<EditUserResponse>(ErrorCode.UserNotFound);
+                return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotFound);
             }
 
-            _mapper.Map<EditUserRequest, User>(requestedUser, user);
+            _mapper.Map<UpdateUserModel, User>(requestedUser, user);
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                return new ServiceResult<EditUserResponse>(ErrorCode.UserNotUpdated);
+                return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotUpdated);
             }
 
             if (!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
@@ -192,13 +191,13 @@ namespace MovieSite.Application.Services
                 var changePasswordResult = await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
                 if (!changePasswordResult.Succeeded)
                 {
-                    return new ServiceResult<EditUserResponse>(ErrorCode.UserNotUpdated);
+                    return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotUpdated);
                 }
             }
 
-            var responseUser = _mapper.Map<User, EditUserResponse>(user);
+            var responseUser = _mapper.Map<User, UpdatedUserViewModel>(user);
             
-            return new ServiceResult<EditUserResponse>(responseUser);
+            return new ServiceResult<UpdatedUserViewModel>(responseUser);
         }
 
         public async Task<ServiceResult<RefreshAndJwtTokenModel>> RefreshTokenAsync(string refreshedTokenPlainText)

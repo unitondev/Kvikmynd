@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using MovieSite.Application.Common.Enums;
 
-namespace MovieSite.Application.Models
+namespace MovieSite.Application.Common.Models
 {
     public class Error
     {

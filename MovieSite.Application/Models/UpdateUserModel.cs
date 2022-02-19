@@ -2,7 +2,7 @@
 
 namespace MovieSite.Application.Models
 {
-    public class EditUserRequest
+    public class UpdateUserModel
     {
         [Required]
         [MaxLength(30)]

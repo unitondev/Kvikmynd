@@ -56,7 +56,7 @@ namespace MovieSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MovieRequest model)
+        public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
             var result = await _movieService.CreateMovieAsync(model);
             if (!result.IsSucceeded)
@@ -68,7 +68,7 @@ namespace MovieSite.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] EditMovieRequest model)
+        public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
             var result = await _movieService.UpdateMovieAsync(model);
             if (!result.IsSucceeded)

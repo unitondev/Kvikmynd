@@ -1,6 +1,6 @@
 ﻿namespace MovieSite.Application.ViewModels
 {
-    public class EditUserResponse
+    public class UpdatedUserViewModel
     {
         public string Email { get; set; }
         public string Username { get; set; }

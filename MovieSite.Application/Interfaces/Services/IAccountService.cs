@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using MovieSite.Application.Authentication;
 using MovieSite.Application.Common.Services;
 using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
@@ -19,7 +18,7 @@ namespace MovieSite.Application.Interfaces.Services
         Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken token);
         Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText);
         Task<ServiceResult> LogOut(string jwtTokenPlainText);
-        Task<ServiceResult<EditUserResponse>> UpdateUserAsync(EditUserRequest requestedUser);
+        Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel requestedUser);
         Task<ServiceResult<User>> GetCurrentUserAsync(string jwtPlainText);
         Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId);
     }

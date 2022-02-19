@@ -12,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Application.Mapper;
 using MovieSite.Application.Services;
 using MovieSite.Authentication;
 using MovieSite.Domain.Models;
@@ -105,7 +104,7 @@ namespace MovieSite
             services.AddScoped<IRatingService, RatingService>();
             services.AddSingleton<ITokenService, TokenService>();
             
-            services.AddAutoMapper(typeof(DTOsToEntityProfile));;
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
             
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }

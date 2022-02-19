@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using MovieSite.Domain.Models;
 using MovieSite.Infrastructure.Covers;
 
@@ -20,7 +18,9 @@ namespace MovieSite.Infrastructure
         { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        { }
+        {
+            // optionsBuilder.LogTo(System.Console.WriteLine);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

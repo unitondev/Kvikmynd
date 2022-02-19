@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MovieSite.Application.Extensions;
 using MovieSite.Application.Interfaces.Repositories;
+using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
 using MovieSite.Domain.Models;
 
@@ -30,12 +30,12 @@ namespace MovieSite.Infrastructure.Repositories
             };;
         }
 
-        public async Task<List<MovieCommentsResponse>> GetMovieCommentsAsync(int id)
+        public async Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id)
         {
             return await DbContext.Set<Comment>()
                 .AsNoTracking()
                 .Where(c => c.MovieId == id)
-                .Select(c => new MovieCommentsResponse
+                .Select(c => new MovieCommentsViewModel
                 {
                     CommentId = c.Id,
                     CommentText = c.Text,

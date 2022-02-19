@@ -72,7 +72,7 @@ namespace MovieSite.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] EditUserRequest user)
+        public async Task<IActionResult> Put([FromBody] UpdateUserModel user)
         {
             var result = await _accountService.UpdateUserAsync(user);
             if (!result.IsSucceeded)

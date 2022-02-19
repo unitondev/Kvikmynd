@@ -1,6 +1,6 @@
 ﻿namespace MovieSite.Application.ViewModels
 {
-    public class MovieCommentsResponse
+    public class MovieCommentsViewModel
     {
         public int CommentId { get; set; }
         public string CommentText { get; set; }

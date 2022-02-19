@@ -1,7 +1,7 @@
 import { handleActions, combineActions } from 'redux-actions'
 import * as accountActions from '../actions'
 
-const defaultState = null
+const defaultState = {}
 
 export default handleActions(
   {

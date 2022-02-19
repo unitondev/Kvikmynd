@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 import { CircularProgress } from '@mui/material'
+import _ from 'lodash'
 
 import routes from '@movie/routes'
 import { getJwt, getIsLoginSucceeded } from '@movie/modules/account/selectors'
@@ -15,7 +16,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     : <Route
       {...rest}
       render={
-        (props) => (!!jwtToken
+        (props) => (!_.isEmpty(jwtToken)
           ? <Component {...props} />
           : <Redirect to={routes.login} />
         )

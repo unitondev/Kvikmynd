@@ -1,6 +1,6 @@
 ﻿namespace MovieSite.Application.ViewModels
 {
-    public class MovieResponse
+    public class MovieViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; }
