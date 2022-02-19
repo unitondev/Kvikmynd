@@ -1,45 +1,73 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Helper;
+using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Controllers
 {
+    [Authorize]
     [ApiController]
-    public class RatingController : ControllerBase
+    [Route("api/[controller]")]
+    public class RatingController : BaseApiController
     {
         private readonly IRatingService _ratingService;
         private readonly IMovieService _movieService;
+        private readonly IMapper _mapper;
 
-        public RatingController(IRatingService ratingService, IMovieService movieService)
+        public RatingController(IRatingService ratingService, IMovieService movieService, IMapper mapper)
         {
             _ratingService = ratingService;
             _movieService = movieService;
+            _mapper = mapper;
         }
 
-        [HttpPost("create_rating")]
-        public async Task<IActionResult> CreateRatings([FromBody] CreateRatingRequest ratingRequest)
+        [HttpPost("get")]
+        public async Task<IActionResult> GetRating([FromBody] RatingModel model)
         {
-            var response = await _ratingService.CreateRatingAsync(ratingRequest);
-            await _movieService.RecalculateMovieRatingAsync(ratingRequest.MovieId);
-            return ResponseHandler.HandleResponseCode(response);
-        }
-
-        [HttpPost("get_rating")]
-        public async Task<IActionResult> GetRating([FromBody] RatingRequest ratingRequest)
-        {
-            var response = await _ratingService.GetRatingByUserAndMovieIdAsync(ratingRequest);
-            return ResponseHandler.HandleResponseCode(response);
+            var result = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
+            if (!result.IsSucceeded)
+            {
+                if (result.Error != ErrorCode.UserRatingNotFound) return CustomBadRequest(result.Error);
+                return NoContent();
+            }
+            
+            var viewModel = _mapper.Map<MovieRating, MovieRatingViewModel>(result.Result);
+            
+            return Ok(viewModel);
         }
         
-        [HttpPost("delete_rating")]
-        public async Task<IActionResult> DeleteRating([FromBody] RatingRequest ratingRequest)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] MovieRatingViewModel model)
         {
-            await _ratingService.DeleteRatingByUserAndMovieIdAsync(ratingRequest);
-            await _movieService.RecalculateMovieRatingAsync(ratingRequest.MovieId);
-            return Ok();
+            var entity = _mapper.Map<MovieRatingViewModel, MovieRating>(model);
+            
+            var result = await _ratingService.CreateAsync(entity);
+            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
+            
+            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
+            return Ok(result.Result);
         }
 
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] RatingModel model)
+        {
+            var getRatingResult = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
+            if (!getRatingResult.IsSucceeded)
+            {
+                if (getRatingResult.Error == ErrorCode.UserRatingNotFound) return CustomNotFound(getRatingResult.Error);
+                return CustomBadRequest(getRatingResult.Error);
+            }
+
+            var result = await _ratingService.DeleteAsync(getRatingResult.Result);
+            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
+            
+            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
+            return Ok();
+        }
     }
 }

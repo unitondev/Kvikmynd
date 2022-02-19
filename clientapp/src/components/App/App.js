@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import PrivateRoute from '../../PrivateRoute'
 import { LoginPage, ProfilePage, RegisterPage } from '@movie/modules/account'
@@ -12,22 +12,20 @@ import routes from '@movie/routes'
 const App = () => (
   <>
     <Notifications />
-    <Router>
-      <NavBar />
-      <Switch>
-        <Route exact path={routes.root}>
-          <MovieListPage />
-        </Route>
-        <Route path={routes.login}>
-          <LoginPage />
-        </Route>
-        <Route path={routes.register}>
-          <RegisterPage />
-        </Route>
-        <PrivateRoute path={routes.profile} component={() => <ProfilePage />} />
-        <PrivateRoute path={routes.movieWithId} component={() => <MoviePage />} />
-      </Switch>
-    </Router>
+    <NavBar />
+    <Switch>
+      <Route exact path={routes.root}>
+        <MovieListPage />
+      </Route>
+      <Route path={routes.login}>
+        <LoginPage />
+      </Route>
+      <Route path={routes.register}>
+        <RegisterPage />
+      </Route>
+      <PrivateRoute path={routes.profile} component={() => <ProfilePage />} />
+      <PrivateRoute path={routes.movieWithId} component={() => <MoviePage />} />
+    </Switch>
   </>
 )
 

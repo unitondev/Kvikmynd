@@ -1,16 +1,19 @@
 ﻿using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieSite.Domain.Models
 {
     public class MovieRating
     {
         public int Value { get; set; }
+        [Required]
         public int MovieId { get; set; }
         [JsonIgnore]
-        public Movie Movie { get; set; }
+        public virtual Movie Movie { get; set; }
         
+        [Required]
         public int UserId { get; set; }
         [JsonIgnore]
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

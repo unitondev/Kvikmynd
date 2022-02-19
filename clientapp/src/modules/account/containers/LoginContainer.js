@@ -30,7 +30,7 @@ const LoginContainer = () => {
         .required('Required'),
     }),
     onSubmit: (values) => {
-      dispatch(rawActions.loginRequest(values))
+      dispatch(rawActions.onLogin(values))
     },
   })
   const touchedEmail = formik.touched.email

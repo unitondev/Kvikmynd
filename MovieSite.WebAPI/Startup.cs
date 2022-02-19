@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,14 +12,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieSite.Application.Interfaces.Repositories;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Application.Jwt;
-using MovieSite.Application.Mapper;
 using MovieSite.Application.Services;
+using MovieSite.Authentication;
 using MovieSite.Domain.Models;
 using MovieSite.Hubs;
 using MovieSite.Infrastructure;
 using MovieSite.Infrastructure.Repositories;
-using MovieSite.Jwt;
+using Newtonsoft.Json;
 
 namespace MovieSite
 {
@@ -30,7 +30,6 @@ namespace MovieSite
         }
 
         public IConfiguration Configuration { get; }
-        private string _authSecret;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -51,26 +50,62 @@ namespace MovieSite
             {
                 config.LoginPath = "/login";
             });
-            
-            AddAuthentication(services);
+
+            #region Authentication
+
+            services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
+            var jwtSettings = Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtSettings.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             services.AddDbContext<MovieSiteDbContext>(builder => 
                 builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
-            _authSecret = Configuration["Secrets:SecretKey"];
+            #endregion
             
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MovieSite.WebAPI", Version = "v1"});
             });
-            services.AddTransient<DbContext, MovieSiteDbContext>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<IMovieService, MovieService>();
-            services.AddTransient<IRatingService, RatingService>();
-            services.AddAutoMapper(typeof(DTOsToEntityProfile));;
+            
+            services.AddScoped<DbContext, MovieSiteDbContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            
+            services.AddScoped(typeof(IService<>), typeof(GenericService<>));
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddSingleton<ITokenService, TokenService>();
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
+            
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }
 
@@ -110,34 +145,6 @@ namespace MovieSite
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:3000/");
                 }
             });
-        }
-
-        private void AddAuthentication(IServiceCollection services)
-        {
-            services.AddSingleton<IJwtSigningEncodingKey>(provider => new SigningSymetricKey(_authSecret));
-            services.AddSingleton<IJwtSigningDecodingKey>(provider => new SigningSymetricKey(_authSecret));
-
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                {
-                    options.SaveToken = true;
-                    IJwtSigningDecodingKey signingDecodingKey = new SigningSymetricKey(_authSecret);
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidateAudience = true,
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = signingDecodingKey.GetKey(),
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
         }
     }
 }

@@ -40,7 +40,7 @@ const RegisterContainer = () => {
     }),
     onSubmit: async (values) => {
       if (!!values.avatar) values.avatar = await toBase64(values.avatar)
-      dispatch(rawActions.registerRequest(values))
+      dispatch(rawActions.onRegister(values))
     },
   })
 

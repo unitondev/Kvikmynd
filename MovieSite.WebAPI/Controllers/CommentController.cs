@@ -1,35 +1,49 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieSite.Application.DTO.Requests;
+using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
-using MovieSite.Helper;
+using MovieSite.Application.Models;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [ApiController]
-    public class CommentController : ControllerBase
+    [Route("api/[controller]")]
+    public class CommentController : BaseApiController
     {
-        private readonly ICommentService _commentService;
+        private readonly IService<Comment> _commentService;
+        private readonly IMapper _mapper;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(IService<Comment> commentService, IMapper mapper)
         {
             _commentService = commentService;
+            _mapper = mapper;
         }
         
-        [HttpPost("add_comment")]
-        public async Task<IActionResult> CreateComment([FromBody] CommentRequest commentRequest)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CommentModel model)
         {
-            var response = await _commentService.CreateCommentAsync(commentRequest);
-            return ResponseHandler.HandleResponseCode(response);
+            var entity = _mapper.Map<CommentModel, Comment>(model);
+            
+            var result = await _commentService.CreateAsync(entity);
+            if (!result.IsSucceeded) return CustomBadRequest(ErrorCode.CommentNotCreated);
+
+            return Ok();
         }
 
-        [HttpGet("delete_comment{commentId}")]
-        public async Task<IActionResult> DeleteCommentById(int commentId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            await _commentService.DeleteCommentByIdAsync(commentId);
+            var entity = await _commentService.GetByKeyAsync(id);
+            if (entity == null) return CustomNotFound(ErrorCode.CommentNotFound);
+
+            var result = await _commentService.DeleteAsync(entity);
+            if (!result.IsSucceeded) return CustomBadRequest(ErrorCode.CommentNotDeleted);
+            
+            
             return Ok();
         }
     }

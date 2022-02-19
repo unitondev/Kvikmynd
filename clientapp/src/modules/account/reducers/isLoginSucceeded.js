@@ -5,7 +5,7 @@ const defaultState = null
 
 export default handleActions(
   {
-    [accountActions.loginSuccess](state, action) {
+    [accountActions.getTokenSuccess](state, action) {
       return true
     },
     [accountActions.logoutSuccess](state, action) {

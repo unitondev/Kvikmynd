@@ -11,7 +11,7 @@ function * stopLoadingUser(action) {
   yield put(accountActions.stopLoadingUser())
 }
 
-function * loginFailure(action) {
+function * getTokenFailure(action) {
   const message = 'Login failure'
   yield put(notificationActions.enqueueSnackbarError({ message }))
 }
@@ -20,24 +20,19 @@ function * userLoadingSaga() {
   yield all([
     takeLatest(
       [
-        accountActions.loginRequest,
-        accountActions.registerRequest,
+        accountActions.getMeRequest,
         accountActions.logoutRequest,
-        accountActions.refreshTokensRequest,
         accountActions.updateUserRequest,
         accountActions.deleteUserRequest,
       ],
       startLoadingUser
     ),
-    takeLatest([
-        accountActions.loginSuccess,
-        accountActions.loginFailure,
-        accountActions.registerSuccess,
-        accountActions.registerFailure,
+    takeLatest(
+      [
+        accountActions.getMeSuccess,
+        accountActions.getMeFailure,
         accountActions.logoutSuccess,
         accountActions.logoutFailure,
-        accountActions.refreshTokensSuccess,
-        accountActions.refreshTokensFailure,
         accountActions.updateUserSuccess,
         accountActions.updateUserFailure,
         accountActions.deleteUserSuccess,
@@ -45,7 +40,7 @@ function * userLoadingSaga() {
       ],
       stopLoadingUser
     ),
-    takeLatest(accountActions.loginFailure, loginFailure),
+    takeLatest(accountActions.getTokenFailure, getTokenFailure),
   ])
 }
 
