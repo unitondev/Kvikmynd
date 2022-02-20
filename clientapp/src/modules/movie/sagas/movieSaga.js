@@ -16,6 +16,7 @@ function * onDeletedComment (action) {
 function * onChangedRating (action) {
   const { movieId } = action.payload
   yield put (movieActions.movieRatingsRequest(movieId))
+  yield put (movieActions.selectedMovieRequest(movieId))
 }
 
 function * movieSaga() {
