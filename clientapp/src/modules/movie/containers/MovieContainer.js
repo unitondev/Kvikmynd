@@ -18,7 +18,8 @@ const MovieContainer = () => {
   const userRating = useSelector(getUserRating)
   const user = useSelector(getUser)
   const avatar = useSelector(getUserAvatar)
-  const updateMovieNeed = useSelector(getNeedToUpdateMovie)
+  // TODO signalr temporarily disabled
+  // const updateMovieNeed = useSelector(getNeedToUpdateMovie)
 
   useEffect(() => {
     dispatch(rawActions.selectedMovieRequest(id))
@@ -53,13 +54,13 @@ const MovieContainer = () => {
     signalrConnectionRef.current = signalrConnection
   })
 
-  useEffect(() => {
-    if (updateMovieNeed === true) {
-      changeCommentSignalR(user.userName, id)
-      changeRatingSignalR(user.userName, id)
-      dispatch(rawActions.noNeedToUpdateMovie())
-    }
-  }, [updateMovieNeed])
+  // useEffect(() => {
+  //   if (updateMovieNeed === true) {
+  //     changeCommentSignalR(user.userName, id)
+  //     changeRatingSignalR(user.userName, id)
+  //     dispatch(rawActions.noNeedToUpdateMovie())
+  //   }
+  // }, [updateMovieNeed])
 
   const onRatingChange = (event, value) => {
     setSettedRating(value)

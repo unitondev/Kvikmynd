@@ -9,9 +9,10 @@ function * needToUpdateSaga() {
   yield all([
     takeLatest(
       [
-        movieActions.setUserRatingRequest,
-        movieActions.userCommentRequest,
-        movieActions.deleteCommentRequest,
+        // TODO signalr temporarily disabled
+        // movieActions.setUserRatingSuccess,
+        // movieActions.userCommentSuccess,
+        // movieActions.deleteCommentSuccess
       ],
       needToUpdateMovie
     ),

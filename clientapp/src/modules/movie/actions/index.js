@@ -18,8 +18,8 @@ export const userRatingFailure = createAction('USER_RATING_FAILURE')
 
 export const cleanMovieStore = createAction('CLEAN_MOVIE_STORE')
 
-export const noNeedToUpdateMovie = createAction('NO_NEED_TO_UPDATE_COMMENTS')
-export const needToUpdateMovie = createAction('NEED_TO_UPDATE_COMMENTS')
+export const noNeedToUpdateMovie = createAction('NO_NEED_TO_UPDATE_MOVIE')
+export const needToUpdateMovie = createAction('NEED_TO_UPDATE_MOVIE')
 
 export const setUserRatingRequest = createAction('SET_USER_RATING_REQUEST')
 export const setUserRatingSuccess = createAction('SET_USER_RATING_SUCCESS')
