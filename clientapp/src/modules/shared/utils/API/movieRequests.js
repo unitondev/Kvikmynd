@@ -21,6 +21,11 @@ const movieRequests = {
     method: 'post',
     data,
   }),
+  deleteUserRatingRequest: (data) => ({
+    url: 'api/rating',
+    method: 'delete',
+    data,
+  }),
   userCommentRequest: (data) => ({
     url: 'api/comment',
     method: 'post',

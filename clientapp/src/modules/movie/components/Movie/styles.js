@@ -40,15 +40,6 @@ const styles = {
   },
   ratingBlock: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  ratingSlider: {
-    width: '200px',
-    margin: '0 20px',
-  },
-  descriptionRatingBlock: {
-    display: 'flex',
     margin: '30px 0',
     minWidth: '100%',
     justifyContent: 'center',
@@ -56,12 +47,6 @@ const styles = {
   setRatingBlock: {
     display: 'flex',
     marginLeft: '20px',
-  },
-  secondPriorityText: {
-    fontSize: 18,
-  },
-  selectedMovieCardTitle: {
-    fontSize: 40,
   },
 }
 

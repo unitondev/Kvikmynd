@@ -8,6 +8,7 @@ import {
   CardContent,
   CardMedia,
   CircularProgress,
+  Rating,
   Slider,
   Typography,
 } from '@mui/material'
@@ -19,18 +20,15 @@ const Movie = ({
   classes,
   movie,
   comments,
-  avatar,
+  currentUserAvatar,
   ratings,
   genres,
   youtubeOpts,
-  userRating,
   settedRating,
   onRatingChange,
   handleRatingSet,
-  writtenComment,
-  onCommentChange,
   handleCommentSet,
-  currentUserUserName,
+  currentUser,
   handleDeleteCommentClick,
 }) => (
   <div className={classes.selectedMovieBlock}>
@@ -49,9 +47,9 @@ const Movie = ({
               )
           }
           <div className={classes.selectedMovieCardDescriptionBlock}>
-            <Typography className={classes.selectedMovieCardTitle}>{movie.title}</Typography>
+            <Typography variant='h3'>{movie.title}</Typography>
             <Typography className={classes.selectedMovieRating}>
-              Rating:{' '}
+              Rating:
               {
                 movie.rating === 0
                 ? 'No one has rated yet'
@@ -70,54 +68,25 @@ const Movie = ({
       </CardContent>
     </Card>
     <div className={classes.trailerBlock}>
-      <Typography className={classes.selectedMovieCardTitle}>Trailer</Typography>
+      <Typography variant='h3'>Trailer</Typography>
       <YouTube videoId={movie.youtubeLink} className={classes.youtubePlayer} opts={youtubeOpts} />
     </div>
-    <div className={classes.ratingBlock}>
-      <Typography className={classes.selectedMovieCardTitle}>
-        Movie Rating: {movie.rating === 0 ? 'No one has rated yet' : (+movie.rating).toFixed(2)}
-      </Typography>
-      <div className={classes.descriptionRatingBlock}>
-        <Typography className={classes.secondPriorityText}>My rating:</Typography>{' '}
-        {
-          userRating === 0
-            ? (
-            <div className={classes.setRatingBlock}>
-              <Typography>You did not rate.</Typography>
-              <Slider
-                className={classes.ratingSlider}
-                defaultValue={0}
-                value={settedRating}
-                onChange={onRatingChange}
-                step={1}
-                min={0}
-                max={10}
-                marks
-                aria-labelledby='discrete-slider'
-                valueLabelDisplay='auto'
-                valueLabelDisplay='on'
-              />
-              <Button size='small' color='primary' onClick={handleRatingSet}>
-                Rate
-              </Button>
-            </div>
-            )
-            : (
-              <Typography>{userRating}</Typography>
-            )
-        }
+      <div className={classes.ratingBlock}>
+        <Typography className={classes.secondPriorityText}>My rating:</Typography>
+        <Rating 
+          max={10}
+          value={settedRating ?? 0}
+          onChange={onRatingChange}
+        />
+        <Button size='small' color='primary' onClick={handleRatingSet}>
+          Rate
+        </Button>
       </div>
-      <Typography className={classes.secondPriorityText}>
-        Total ratings: {ratings.length}
-      </Typography>
-    </div>
     <CommentsList
-      avatar={avatar}
-      writtenComment={writtenComment}
-      onCommentChange={onCommentChange}
+      currentUserAvatar={currentUserAvatar}
       handleCommentSet={handleCommentSet}
       comments={comments}
-      currentUserUserName={currentUserUserName}
+      currentUser={currentUser}
       handleDeleteCommentClick={handleDeleteCommentClick}
     />
   </div>
@@ -127,18 +96,15 @@ Movie.propTypes = {
   classes: PropTypes.object.isRequired,
   movie: PropTypes.object.isRequired,
   comments: PropTypes.array.isRequired,
-  avatar: PropTypes.string.isRequired,
+  currentUserAvatar: PropTypes.string.isRequired,
   ratings: PropTypes.array.isRequired,
   genres: PropTypes.array,
   youtubeOpts: PropTypes.object.isRequired,
-  userRating: PropTypes.number.isRequired,
-  settedRating: PropTypes.number.isRequired,
+  settedRating: PropTypes.number,
   onRatingChange: PropTypes.func.isRequired,
   handleRatingSet: PropTypes.func.isRequired,
-  writtenComment: PropTypes.string.isRequired,
-  onCommentChange: PropTypes.func.isRequired,
   handleCommentSet: PropTypes.func.isRequired,
-  currentUserUserName: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
 }
 

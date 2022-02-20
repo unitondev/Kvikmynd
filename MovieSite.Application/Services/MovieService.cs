@@ -137,7 +137,9 @@ namespace MovieSite.Application.Services
 
         public async Task<ServiceResult<MovieRatingValueModel>> RecalculateMovieRatingAsync(int id)
         {
-            var movie = await _work.MovieRepository.FindByKeyAsync(id);
+            var movie = await _work.MovieRepository
+                .Filter(m => m.Id == id, m => m.MovieRatings)
+                .FirstOrDefaultAsync();
             if (movie == null)
             {
                 return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieNotFound);

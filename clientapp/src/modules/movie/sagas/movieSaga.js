@@ -23,7 +23,7 @@ function * movieSaga() {
   yield all([
     takeLatest(movieActions.userCommentSuccess, onPostedComment),
     takeLatest(movieActions.deleteCommentSuccess, onDeletedComment),
-    takeLatest(movieActions.setUserRatingSuccess, onChangedRating),
+    takeLatest([movieActions.setUserRatingSuccess, movieActions.deleteUserRatingSuccess], onChangedRating),
   ])
 }
 

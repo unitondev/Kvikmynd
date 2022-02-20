@@ -46,6 +46,11 @@ const MovieContainer = () => {
       controls: 2,
     },
   }
+
+  useEffect(() => {
+    setSettedRating(userRating)
+  }, [userRating])
+
   const [settedRating, setSettedRating] = useState(0)
   const [signalrConnection, setSignalrConnection] = useState()
   const signalrConnectionRef = useRef(signalrConnection)
@@ -65,35 +70,36 @@ const MovieContainer = () => {
   const onRatingChange = (event, value) => {
     setSettedRating(value)
   }
+  
   const handleRatingSet = () => {
-    dispatch(
-      rawActions.setUserRatingRequest({
-        value: settedRating,
-        userId: user.id,
-        movieId: movie.id,
-      })
+    settedRating === null 
+    ? dispatch(rawActions.deleteUserRatingRequest({
+      userId: user.id,
+      movieId: movie.id,
+    }))
+    : dispatch(rawActions.setUserRatingRequest({
+      value: settedRating,
+      userId: user.id,
+      movieId: movie.id,
+    })
     )
   }
-  const [writtenComment, setWrittenComment] = useState('')
-  const onCommentChange = (event) => {
-    setWrittenComment(event.target.value)
-  }
-  const handleCommentSet = () => {
+
+  const handleCommentSet = (values) => {
+    const { WrittenCommentText } = values
+    const data = {
+      text: WrittenCommentText,
+      userId: user.id,
+      movieId: movie.id,
+    }
+
     dispatch(
-      rawActions.userCommentRequest({
-        text: writtenComment,
-        userId: user.id,
-        movieId: movie.id,
-      })
+      rawActions.userCommentRequest(data)
     )
-    setWrittenComment('')
   }
 
   const handleDeleteCommentClick = (id) => {
-    dispatch(
-      rawActions.deleteCommentRequest({
-        id,
-      })
+    dispatch(rawActions.deleteCommentRequest({ id })
     )
   }
 
@@ -155,16 +161,13 @@ const MovieContainer = () => {
       comments={comments}
       ratings={ratings}
       genres={genres}
-      avatar={avatar}
+      currentUserAvatar={avatar}
       youtubeOpts={youtubeOpts}
-      userRating={userRating}
       settedRating={settedRating}
       onRatingChange={onRatingChange}
       handleRatingSet={handleRatingSet}
-      writtenComment={writtenComment}
-      onCommentChange={onCommentChange}
       handleCommentSet={handleCommentSet}
-      currentUserUserName={user.userName}
+      currentUser={user}
       handleDeleteCommentClick={handleDeleteCommentClick}
     />
   )
