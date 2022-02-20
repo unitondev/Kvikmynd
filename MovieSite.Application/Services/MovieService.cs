@@ -135,35 +135,6 @@ namespace MovieSite.Application.Services
             return new ServiceResult<IEnumerable<MovieRating>>(movieRatings);
         }
 
-        public async Task<ServiceResult<MovieRatingValueModel>> RecalculateMovieRatingAsync(int id)
-        {
-            var movie = await _work.MovieRepository
-                .Filter(m => m.Id == id, m => m.MovieRatings)
-                .FirstOrDefaultAsync();
-            if (movie == null)
-            {
-                return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieNotFound);
-            }
-
-            if (movie.MovieRatings.Count == 0)
-            {
-                return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieRatingNotFound);
-            }
-
-            var ratingsSum = movie.MovieRatings.Sum(movieRating => movieRating.Value);
-            movie.Rating = (double)ratingsSum / movie.MovieRatings.Count;
-            
-            await _work.MovieRepository.UpdateAsync(movie);
-            await _work.CommitAsync();
-
-            var result = new MovieRatingValueModel
-            {
-                Value = movie.Rating
-            };
-            
-            return new ServiceResult<MovieRatingValueModel>(result);
-        }
-        
         public async Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id)
         {
             if (!await ExistsAsync(id))

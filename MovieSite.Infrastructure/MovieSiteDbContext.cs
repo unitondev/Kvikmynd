@@ -53,7 +53,6 @@ namespace MovieSite.Infrastructure
                     Description = "An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/fightClub.jpg")),
                     YoutubeLink = "SUXWAEX2jlg",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()
@@ -65,7 +64,6 @@ namespace MovieSite.Infrastructure
                     Description = "A wealthy New York City investment banking executive, Patrick Bateman, hides his alternate psychopathic ego from his co-workers and friends as he delves deeper into his violent, hedonistic fantasies.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/americanPsycho.jpg")),
                     YoutubeLink = "5YnGhW4UEhc",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()
@@ -77,7 +75,6 @@ namespace MovieSite.Infrastructure
                     Description = "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/PulpFiction.jpg")),
                     YoutubeLink = "s7EdQ4FqbhY",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()
@@ -89,7 +86,6 @@ namespace MovieSite.Infrastructure
                     Description = "A man with short-term memory loss attempts to track down his wife's murderer.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/memento.jpg")),
                     YoutubeLink = "HDWylEQSwFo",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()
@@ -101,7 +97,6 @@ namespace MovieSite.Infrastructure
                     Description = "After discovering a mysterious artifact buried beneath the Lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer H.A.L. 9000.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/2001.jpg")),
                     YoutubeLink = "oR_e9y-bka0",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()
@@ -113,7 +108,6 @@ namespace MovieSite.Infrastructure
                     Description = "Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande.",
                     Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(@"../MovieSite.Infrastructure/Covers/NoCountryForOldMen.jpg")),
                     YoutubeLink = "38A__WT3-o0",
-                    Rating = 0,
                     GenreMovies = new List<GenreMovie>(),
                     MovieRatings = new List<MovieRating>(),
                     Comments = new List<Comment>()

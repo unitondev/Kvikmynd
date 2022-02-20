@@ -7,6 +7,7 @@ import Movie from '../components/Movie'
 import * as rawActions from '../actions'
 import { getUser, getUserAvatar } from '../../account/selectors'
 import { getComments, getMovie, getMovieGenres, getNeedToUpdateMovie, getRatings, getUserRating } from '../selectors'
+import { calculateMovieRating } from '../helpers'
 
 const MovieContainer = () => {
   const dispatch = useDispatch()
@@ -66,6 +67,11 @@ const MovieContainer = () => {
   //     dispatch(rawActions.noNeedToUpdateMovie())
   //   }
   // }, [updateMovieNeed])
+
+  const [movieRating, setMovieRating] = useState(0)
+  useEffect(() => {
+    setMovieRating(calculateMovieRating(ratings))
+  }, [ratings])
 
   const onRatingChange = (event, value) => {
     setSettedRating(value)
@@ -158,6 +164,7 @@ const MovieContainer = () => {
   return (
     <Movie
       movie={movie}
+      movieRating={movieRating}
       comments={comments}
       ratings={ratings}
       genres={genres}

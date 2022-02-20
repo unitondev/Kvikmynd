@@ -19,6 +19,7 @@ import styles from './styles'
 const Movie = ({
   classes,
   movie,
+  movieRating,
   comments,
   currentUserAvatar,
   ratings,
@@ -51,9 +52,9 @@ const Movie = ({
             <Typography className={classes.selectedMovieRating}>
               Rating:
               {
-                movie.rating === 0
+                movieRating === 0
                 ? 'No one has rated yet'
-                : `${(+movie.rating).toFixed(2)} / 10 (${ratings.length})`
+                : `${movieRating.toFixed(2)} / 10 (${ratings.length})`
               }
             </Typography>
             <Typography className={classes.secondPriorityText}>
@@ -95,6 +96,7 @@ const Movie = ({
 Movie.propTypes = {
   classes: PropTypes.object.isRequired,
   movie: PropTypes.object.isRequired,
+  movieRating: PropTypes.number.isRequired,
   comments: PropTypes.array.isRequired,
   currentUserAvatar: PropTypes.string.isRequired,
   ratings: PropTypes.array.isRequired,

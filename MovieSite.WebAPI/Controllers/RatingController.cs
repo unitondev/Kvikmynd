@@ -56,7 +56,6 @@ namespace MovieSite.Controllers
             var result = await _ratingService.CreateAsync(entity);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
             
-            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
             return Ok(result.Result);
         }
 
@@ -72,9 +71,7 @@ namespace MovieSite.Controllers
 
             var result = await _ratingService.DeleteAsync(getRatingResult.Result);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
-            
-            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
-            return Ok();
+            return NoContent();
         }
     }
 }
