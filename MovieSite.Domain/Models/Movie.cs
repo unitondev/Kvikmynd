@@ -9,9 +9,12 @@ namespace MovieSite.Domain.Models
     {
         [Key]
         public int Id { get; set; }
+        [MaxLength((256))]
         public string Title { get; set; }
+        [MaxLength(1024)]
         public string Description { get; set; }
         public byte[] Cover { get; set; } = Encoding.UTF8.GetBytes(BaseCover);
+        [MaxLength(128)]
         public string YoutubeLink { get; set; }
         public double Rating { get; set; }
         [JsonIgnore]

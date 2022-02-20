@@ -10,6 +10,7 @@ namespace MovieSite.Domain.Models
         [Key]
         public int Id { get; set; }
         
+        [MaxLength(128)]
         public string Token { get; set; }
         public DateTime Expires { get; set; }
         public DateTime Created { get; set; }

@@ -8,6 +8,7 @@ namespace MovieSite.Domain.Models
     {
         [Key]
         public int Id { get; set; }
+        [MaxLength(64)]
         public string Name { get; set; }
         [JsonIgnore]
         public virtual IList<GenreMovie> GenreMovies { get; set; }
