@@ -11,6 +11,7 @@ import {
   Rating,
   Slider,
   Typography,
+  Box,
 } from '@mui/material'
 
 import CommentsList from '../CommentList'
@@ -31,6 +32,8 @@ const Movie = ({
   handleCommentSet,
   currentUser,
   handleDeleteCommentClick,
+  ratingHover,
+  setRatingHover,
 }) => (
   <div className={classes.selectedMovieBlock}>
     <Card className={classes.selectedMovieCardBlock}>
@@ -78,7 +81,15 @@ const Movie = ({
           max={10}
           value={settedRating ?? 0}
           onChange={onRatingChange}
+          onChangeActive={(event, newHover) => {
+            setRatingHover(newHover)
+          }}
         />
+        { settedRating !== null && (
+          <Box className={classes.ratingBox}>
+            <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
+          </Box>
+        )}
         <Button size='small' color='primary' onClick={handleRatingSet}>
           Rate
         </Button>
@@ -108,6 +119,8 @@ Movie.propTypes = {
   handleCommentSet: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
+  ratingHover: PropTypes.number.isRequired,
+  setRatingHover: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Movie)

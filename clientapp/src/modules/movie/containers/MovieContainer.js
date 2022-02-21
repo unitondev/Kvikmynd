@@ -53,6 +53,7 @@ const MovieContainer = () => {
   }, [userRating])
 
   const [settedRating, setSettedRating] = useState(0)
+  const [ratingHover, setRatingHover] = useState(-1)
   const [signalrConnection, setSignalrConnection] = useState()
   const signalrConnectionRef = useRef(signalrConnection)
 
@@ -176,6 +177,8 @@ const MovieContainer = () => {
       handleCommentSet={handleCommentSet}
       currentUser={user}
       handleDeleteCommentClick={handleDeleteCommentClick}
+      ratingHover={ratingHover}
+      setRatingHover={setRatingHover}
     />
   )
 }
