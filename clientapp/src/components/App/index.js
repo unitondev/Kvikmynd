@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { Container } from '@mui/material'
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles'
 import { Provider } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
@@ -29,13 +28,11 @@ const App = () => {
               }}
               autoHideDuration={1500}
             >
-              <Container maxWidth='lg'>
-                <div className='App'>
-                  <ConnectedRouter history={history}>
-                    <UI />
-                  </ConnectedRouter>
-                </div>
-              </Container>
+              <div className='App'>
+                <ConnectedRouter history={history}>
+                  <UI />
+                </ConnectedRouter>
+              </div>
             </SnackbarProvider>
           </ThemeProvider>
         </StyledEngineProvider>

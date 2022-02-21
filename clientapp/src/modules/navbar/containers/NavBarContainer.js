@@ -1,11 +1,13 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Container  } from '@mui/material'
 
 import NavBar from '../components/NavBar'
 import { logoutRequest } from '../../account/actions'
 import { getFullName, getUserAvatar, getIsLoginSucceeded } from '../../account/selectors'
 import routes from '@movie/routes'
+import MuiNavbar from '../components/muiNavbar'
 
 const NavBarContainer = () => {
   const dispatch = useDispatch()
@@ -20,12 +22,22 @@ const NavBarContainer = () => {
   }
 
   return (
-    <NavBar
-      isLogined={isLogined}
-      fullName={fullName}
-      avatar={avatar}
-      onClickLogout={onClickLogout}
-    />
+    <>
+      <Container maxWidth="lg">
+        <NavBar
+          isLogined={isLogined}
+          fullName={fullName}
+          avatar={avatar}
+          onClickLogout={onClickLogout}
+        />
+      </Container>
+      <MuiNavbar 
+        isLogined={isLogined}
+        fullName={fullName}
+        avatar={avatar}
+        onClickLogout={onClickLogout}
+      />
+    </>
   )
 }
 
