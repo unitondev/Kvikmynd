@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Container  } from '@mui/material'
@@ -21,6 +21,14 @@ const NavBarContainer = () => {
     history.push(routes.root)
   }
 
+  const [anchorUser, setAnchorUser] = useState(null)
+  const handleOpenUserMenu = (event) => {
+    setAnchorUser(event.currentTarget)
+  }
+  const handleCloseUserMenu = () => {
+    setAnchorUser(null)
+  }
+
   return (
     <>
       <Container maxWidth="lg">
@@ -36,6 +44,9 @@ const NavBarContainer = () => {
         fullName={fullName}
         avatar={avatar}
         onClickLogout={onClickLogout}
+        anchorUser={anchorUser}
+        handleOpenUserMenu={handleOpenUserMenu}
+        handleCloseUserMenu={handleCloseUserMenu}
       />
     </>
   )

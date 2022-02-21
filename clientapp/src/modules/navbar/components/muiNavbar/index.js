@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import {
   Avatar,
-  List,
-  ListItem,
   ListItemText,
   AppBar,
   Toolbar,
@@ -13,99 +11,80 @@ import {
   Container,
   Box,
   Button,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material'
 
 import styles from './styles'
 import routes from '@movie/routes'
+import NavbarTabs from '../NavbarTabs'
 
-const MuiNavbar = ({ classes, isLogined, onClickLogout, fullName, avatar }) => (
+const settings = [
+  {
+    route: routes.profile,
+    label: 'Profile',
+  },
+  {
+    route: routes.root,
+    label: 'Logout',
+  }, 
+]
+
+const MuiNavbar = ({ 
+  classes,
+  isLogined,
+  onClickLogout,
+  fullName,
+  avatar,
+  anchorUser,
+  handleOpenUserMenu,
+  handleCloseUserMenu,
+}) => (
   <AppBar position='static'>
     <Container maxWidth='lg'>
       <Toolbar disableGutters>
-        <Typography
-          variant='h6'
-          noWrap
-          component='div'
-          sx={{ mr: 2, display: 'flex' }}
-        >
-          LOGO
-        </Typography>
         <Box sx={{ flexGrow: 1, display: 'flex' }}>
-          <NavLink
-            to={routes.root}
-            className={classes.navBarLink}
-            hover='true'
-            activeClassName={classes.activeNavBarLink}
-            exact
-          >
-            <ListItem>
-              <ListItemText className={classes.listItemText} primary='Home' />
-            </ListItem>
-          </NavLink>
-          {/* {
-            isLogined
-              ? null
-              : (
-              <NavLink
-                to={routes.login}
-                className={classes.navBarLink}
-                hover='true'
-                activeClassName={classes.activeNavBarLink}
-              >
-                <ListItem>
-                  <ListItemText className={classes.listItemText} primary='Login' />
-                </ListItem>
-              </NavLink>
-              )
-          }
+          <NavbarTabs />
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
           {
             isLogined
-              ? null
-              : (
-              <NavLink
-                to={routes.register}
-                className={classes.navBarLink}
-                hover='true'
-                activeClassName={classes.activeNavBarLink}
+            ?
+            <>
+              <IconButton onClick={handleOpenUserMenu}>
+                <Avatar src={avatar} className={classes.avatarBlock} />
+              </IconButton>
+              <Menu 
+                sx={{ mt: '45px'}}
+                anchorEl={anchorUser}
+                open={Boolean(anchorUser)}
+                onClose={handleCloseUserMenu}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
               >
-                <ListItem>
-                  <ListItemText className={classes.listItemText} primary='Register' />
-                </ListItem>
-              </NavLink>
-              )
-          } */}
-          {/* {
-            !isLogined
-              ? null
-              : (
-              <NavLink
-                to={routes.profile}
-                className={classes.navBarLink}
-                hover='true'
-                activeClassName={classes.activeNavBarLink}
-              >
-                <ListItem>
-                  <Avatar src={avatar} className={classes.avatarBlock} />
-                  <ListItemText className={classes.listItemText} primary={fullName} />
-                </ListItem>
-              </NavLink>
-              )
+              {
+                settings.map(setting => (
+                  <MenuItem key={setting.label} component={Link} to={setting.route}>
+                    <Typography textAlign='center'>{setting.label}</Typography>
+                  </MenuItem>
+                ))
+              }
+              </Menu>
+            </>
+            : 
+            <Button component={Link} to={routes.login} sx={{ color: 'white' }}>
+              Login
+            </Button>
           }
-          {
-            !isLogined
-              ? null
-              : (
-              <ListItem>
-                <Button 
-                  className={classes.navBarButton}
-                  onClick={onClickLogout}
-                  sx={{color: 'white'}}
-                >
-                  Logout
-                </Button>
-              </ListItem>
-              )
-          } */}
+          
         </Box>
       </Toolbar>
     </Container>
@@ -118,6 +97,9 @@ MuiNavbar.propTypes = {
   onClickLogout: PropTypes.func.isRequired,
   fullName: PropTypes.string,
   avatar: PropTypes.string,
+  anchorUser: PropTypes.object,
+  handleOpenUserMenu: PropTypes.func.isRequired,
+  handleCloseUserMenu: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(MuiNavbar)
