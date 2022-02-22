@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, TextField, Typography } from '@mui/material'
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material'
 import * as Yup from 'yup'
+import { TextField as TextFieldFormik } from 'formik-mui'
 
 import Comment from '../Comment'
 import styles from './styles'
-import { Field, Formik, Form } from 'formik';
-import { TextFieldFormik } from '@movie/modules/shared/forms';
+import { Field, Formik, Form } from 'formik'
 
 const writtenCommentSchema = Yup.object().shape({
   WrittenCommentText: Yup.string()
