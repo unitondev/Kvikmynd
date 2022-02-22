@@ -14,7 +14,7 @@ const tabs = [
   },
 ]
 
-const NavbarTabs = ({ classes, isLogined, onClickLogout, fullName, avatar }) => {
+const NavbarTabs = ({ classes }) => {
   return (
     <>
       {tabs.map((tab) => (
@@ -28,10 +28,6 @@ const NavbarTabs = ({ classes, isLogined, onClickLogout, fullName, avatar }) => 
 
 NavbarTabs.propTypes = {
   classes: PropTypes.object.isRequired,
-  isLogined: PropTypes.bool,
-  onClickLogout: PropTypes.func,
-  fullName: PropTypes.string,
-  avatar: PropTypes.string,
 }
 
 export default withStyles(styles)(NavbarTabs)
