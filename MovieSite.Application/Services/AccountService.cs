@@ -186,15 +186,6 @@ namespace MovieSite.Application.Services
                 return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotUpdated);
             }
 
-            if (!string.IsNullOrEmpty(requestedUser.NewPassword) && !string.IsNullOrEmpty(requestedUser.OldPassword))
-            {
-                var changePasswordResult = await _userManager.ChangePasswordAsync(user, requestedUser.OldPassword, requestedUser.NewPassword);
-                if (!changePasswordResult.Succeeded)
-                {
-                    return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotUpdated);
-                }
-            }
-
             var responseUser = _mapper.Map<User, UpdatedUserViewModel>(user);
             
             return new ServiceResult<UpdatedUserViewModel>(responseUser);
