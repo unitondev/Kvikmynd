@@ -7,34 +7,39 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardHeader,
   CardMedia,
   CircularProgress,
+  Grid,
   InputAdornment,
+  Rating,
   TextField,
   Typography,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 import styles from './styles'
+import { calculateMovieRating } from '@movie/modules/movie/helpers'
 
 const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) => (
-  <div className={classes.movieListBlock}>
-    <TextField
-      id='outlined-basic'
-      variant='outlined'
-      className={classes.searchBar}
-      size='small'
-      placeholder='Search'
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position='start'>
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-      value={searchRequest}
-      onChange={handleSearchBarChange}
-    />
+  <Grid container direction='column' spacing={2} sx={{ marginTop: '15px'}}>
+    <Grid item>
+      <TextField
+        id='outlined-basic'
+        variant='outlined'
+        size='small'
+        placeholder='Search'
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position='start'>
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+        value={searchRequest}
+        onChange={handleSearchBarChange}
+      />
+    </Grid>
     {
       movies.length > 0
         ? (
@@ -44,35 +49,52 @@ const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) =>
             })
               .map((movie) => {
                 return (
-                  <Card className={classes.movieCardBlock} key={movie.id}>
-                    <CardContent className={classes.movieCardContent}>
-                      <div className={classes.movieCardHeader}>
-                        <Typography className={classes.movieCardTitle}>{movie.title}</Typography>
-                      </div>
-                      <div className={classes.movieCardMovieContent}>
-                        {
-                          movie.cover
-                            ? (
-                              <>
-                                <CardMedia className={classes.movieCardCover} image={movie.cover} />
-                              </>
-                            )
-                            : (
-                              <CircularProgress />
-                            )}
-                        <Typography className={classes.movieCardDescription}>
-                          {movie.description}
-                        </Typography>
-                      </div>
-                    </CardContent>
-                    <CardActions>
-                      <Link to={`/movie${movie.id}`} className={classes.movieLink}>
-                        <Button size='small' color='primary'>
-                          More details
+                  <Grid item key={movie.id}>
+                    <Card>
+                      <CardHeader 
+                        title={movie.title}
+                      />
+                      <CardContent>
+                        <Grid container direction='row' spacing={2}>
+                          <Grid item xs={3}>
+                            <CardMedia 
+                              component='img'
+                              height='400'
+                              image={movie.cover}
+                              alt={movie.title}
+                            />
+                          </Grid>
+                          <Grid item xs={9}>
+                            <Grid container direction='column'>
+                              <Grid item>
+                                <Rating
+                                  value={calculateMovieRating(movie.ratings) ?? 0}
+                                  readOnly
+                                  max={10}
+                                  precision={0.5}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Typography>
+                                  Genres: {movie.genres?.length > 0 ? movie.genres.map((g) => ` ${g.name}, `) : ''}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography>
+                                  {movie.description}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                      <CardActions>
+                        <Button component={Link} to={`/movie${movie.id}`} size='small' color='primary' variant='contained'>
+                          More details...
                         </Button>
-                      </Link>
-                    </CardActions>
-                  </Card>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                 )
               })
         )
@@ -80,7 +102,7 @@ const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) =>
           <CircularProgress className={classes.spinner} />
         )
     }
-  </div>
+  </Grid>
 )
 
 MovieList.propTypes = {

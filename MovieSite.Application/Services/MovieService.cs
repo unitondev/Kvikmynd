@@ -26,11 +26,14 @@ namespace MovieSite.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<MovieViewModel>> GetAllMoviesAsync()
+        public async Task<IEnumerable<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync()
         {
-            var movies = await _work.MovieRepository.All().ToListAsync();
+            var movies = await _work.MovieRepository.GetMovieWithGenresAndRatingsAsync();
 
-            return _mapper.Map<List<Movie>, List<MovieViewModel>>(movies);
+            var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
+                List<MovieWithGenresAndRatingsViewModel>>(movies);
+
+            return moviesViewModels;
         }
         
         public async Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int id)

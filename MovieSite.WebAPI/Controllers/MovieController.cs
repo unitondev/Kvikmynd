@@ -102,8 +102,7 @@ namespace MovieSite.Controllers
             
             return Ok(result.Result);
         }
-
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {

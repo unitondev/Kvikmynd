@@ -9,7 +9,6 @@ import {
   CardMedia,
   CircularProgress,
   Rating,
-  Slider,
   Typography,
   Box,
 } from '@mui/material'

@@ -10,7 +10,7 @@ namespace MovieSite.Application.Interfaces.Services
 {
     public interface IMovieService : IService<Movie>
     {
-        Task<IEnumerable<MovieViewModel>> GetAllMoviesAsync();
+        Task<IEnumerable<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync();
         Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int movieId);
         Task<ServiceResult<Movie>> CreateMovieAsync(MovieModel model);
         Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieModel model);
