@@ -33,7 +33,7 @@ const Navbar = ({
 }) => (
   <ElevationScroll>
     <>
-      <AppBar>
+      <AppBar color='primary'>
         <Container maxWidth='lg'>
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: 'flex' }}>

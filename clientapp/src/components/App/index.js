@@ -11,6 +11,15 @@ import * as appActions from '../../state/actions'
 const theme = createTheme()
 const store = createStore()
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+})
+
 const App = () => {
   useEffect(() => {
     store.dispatch(appActions.onAppMounted())
