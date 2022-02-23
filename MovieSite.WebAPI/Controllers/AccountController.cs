@@ -143,7 +143,7 @@ namespace MovieSite.Controllers
             if (!userResult.IsSucceeded) return CustomBadRequest(userResult.Error);
 
             if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
-                model.OldPassword) == PasswordVerificationResult.Failed)
+                model.CurrentPassword) == PasswordVerificationResult.Failed)
             {
                 return CustomBadRequest(ErrorCode.CurrentPasswordIncorrect);
             }
@@ -154,7 +154,7 @@ namespace MovieSite.Controllers
                 return CustomBadRequest(ErrorCode.NewPasswordCanNotMatсhCurrentPassword);
             }
 
-            var result = await _userManager.ChangePasswordAsync(userResult.Result, model.OldPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(userResult.Result, model.CurrentPassword, model.NewPassword);
             if (!result.Succeeded)
             {
                 return CustomBadRequest(ErrorCode.PasswordNotChanged);
