@@ -15,6 +15,7 @@ import {
 
 import CommentsList from '../CommentList'
 import styles from './styles'
+import ScrollTop from '@movie/modules/navbar/components/ScrollTop';
 
 const Movie = ({
   classes,
@@ -100,6 +101,7 @@ const Movie = ({
       currentUser={currentUser}
       handleDeleteCommentClick={handleDeleteCommentClick}
     />
+    <ScrollTop />
   </div>
 )
 

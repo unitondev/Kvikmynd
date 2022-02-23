@@ -14,7 +14,7 @@ const App = () => (
   <>
     <Notifications />
     <NavBar />
-    <Container maxWidth='lg'>
+    <Container maxWidth='lg' sx={{ marginTop: '64px'}}>
       <Switch>
         <Route exact path={routes.root}>
           <MovieListPage />
