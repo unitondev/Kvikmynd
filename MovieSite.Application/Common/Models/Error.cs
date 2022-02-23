@@ -47,6 +47,9 @@ namespace MovieSite.Application.Common.Models
                 ErrorCode.RefreshTokenNotFound => "Refresh token not found.",
                 ErrorCode.ErrorWhileSettingRefreshToken => "An error occurred while refresh token setting.",
                 ErrorCode.CredentialsInvalid => "User credentials are invalid.",
+                ErrorCode.CurrentPasswordIncorrect => "Current password incorrect.",
+                ErrorCode.NewPasswordCanNotMatсhCurrentPassword => "New password can't matсh current password.",
+                ErrorCode.PasswordNotChanged => "Password wasn't changed.",
                 
                 #endregion
                 

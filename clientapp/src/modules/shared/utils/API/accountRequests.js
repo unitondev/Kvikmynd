@@ -30,7 +30,12 @@ const accountRequests = {
   getMeRequest: () => ({
     url: 'api/account/me',
     method: 'get',
-  })
+  }),
+  changePasswordRequest: (data) => ({
+    url: 'api/account/changePassword',
+    method: 'post',
+    data,
+  }),
 }
 
 export default accountRequests

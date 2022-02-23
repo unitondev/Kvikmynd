@@ -29,6 +29,9 @@
         RefreshTokenNotFound = 1109,
         ErrorWhileSettingRefreshToken = 1110,
         CredentialsInvalid = 1111,
+        CurrentPasswordIncorrect = 1112,
+        NewPasswordCanNotMatсhCurrentPassword = 1113,
+        PasswordNotChanged = 1114,
 
         #endregion
 

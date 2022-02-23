@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
+import { Button } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 import styles from './styles'
 import routes from '@movie/routes'
-import { Button } from '@mui/material'
 
 const tabs = [
   {
     route: routes.root,
-    label: 'LOGO',
+    label: 'MOVIESITE',
   },
 ]
 

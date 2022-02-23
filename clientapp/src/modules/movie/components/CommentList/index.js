@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material'
 import * as Yup from 'yup'
-import { TextField as TextFieldFormik } from 'formik-mui'
+import { TextField } from 'formik-mui'
 
 import Comment from '../Comment'
 import styles from './styles'
@@ -52,7 +52,7 @@ const CommentList = ({
                 placeholder='Write your comment here'
                 variant='outlined'
                 name='WrittenCommentText'
-                component={TextFieldFormik}
+                component={TextField}
                 className={classes.writingCommentTextArea}
               />
             </CardContent>

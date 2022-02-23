@@ -13,20 +13,15 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  ListItemIcon,
 } from '@mui/material'
+import { Logout } from '@mui/icons-material'
 
 import styles from './styles'
 import routes from '@movie/routes'
 import NavbarTabs from '../NavbarTabs'
 
-const settings = [
-  {
-    route: routes.profile,
-    label: 'Profile',
-  },
-]
-
-const MuiNavbar = ({ 
+const Navbar = ({ 
   classes,
   isLogined,
   onClickLogout,
@@ -64,19 +59,21 @@ const MuiNavbar = ({
                   horizontal: 'right',
                 }}
               >
-              {
-                settings.map(setting => (
-                  <MenuItem key={setting.label} component={Link} to={setting.route} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting.label}</Typography>
-                  </MenuItem>
-                ))
-              }
-                <MenuItem onClick={() => {
-                  onClickLogout()
-                  handleCloseUserMenu()
-                  }}>
-                  <Typography textAlign='center'>Logout</Typography>
-                </MenuItem>
+              <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
+                <ListItemIcon>
+                  <Avatar src={avatar} sx={{ width: 24, height: 24 }}/>
+                </ListItemIcon>
+                <Typography textAlign='center'>Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => {
+                onClickLogout()
+                handleCloseUserMenu()
+                }}>
+                <ListItemIcon>
+                  <Logout />
+                </ListItemIcon>
+                <Typography textAlign='center'>Logout</Typography>
+              </MenuItem>
               </Menu>
             </>
             : 
@@ -91,7 +88,7 @@ const MuiNavbar = ({
   </AppBar>
 )
 
-MuiNavbar.propTypes = {
+Navbar.propTypes = {
   classes: PropTypes.object.isRequired,
   isLogined: PropTypes.bool,
   avatar: PropTypes.string,
@@ -101,4 +98,4 @@ MuiNavbar.propTypes = {
   handleCloseUserMenu: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(MuiNavbar)
+export default withStyles(styles)(Navbar)
