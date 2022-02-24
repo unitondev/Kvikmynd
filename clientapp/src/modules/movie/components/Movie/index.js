@@ -7,15 +7,16 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CircularProgress,
   Rating,
   Typography,
   Box,
+  Paper,
+  Grid,
 } from '@mui/material'
 
 import CommentsList from '../CommentList'
 import styles from './styles'
-import ScrollTop from '@movie/modules/navbar/components/ScrollTop';
+import ScrollTop from '@movie/modules/navbar/components/ScrollTop'
 
 const Movie = ({
   classes,
@@ -35,74 +36,98 @@ const Movie = ({
   ratingHover,
   setRatingHover,
 }) => (
-  <div className={classes.selectedMovieBlock}>
-    <Card className={classes.selectedMovieCardBlock}>
-      <CardContent className={classes.selectedMovieCardContent}>
-        <div className={classes.selectedMovieBody}>
-          {
-            movie.cover
-              ? (
-              <>
-                <CardMedia className={classes.movieCardCover} image={movie.cover} />
-              </>
-              )
-              : (
-              <CircularProgress />
-              )
-          }
-          <div className={classes.selectedMovieCardDescriptionBlock}>
-            <Typography variant='h3'>{movie.title}</Typography>
-            <Typography className={classes.selectedMovieRating}>
-              Rating:
-              {
-                movieRating === 0
-                ? 'No one has rated yet'
-                : `${movieRating.toFixed(2)} / 10 (${ratings.length})`
-              }
-            </Typography>
-            <Typography className={classes.secondPriorityText}>
-              Genres:
-              {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
-            </Typography>
-            <Typography className={classes.selectedMovieCardDescriptionText}>
-              {movie.description}
-            </Typography>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-    <div className={classes.trailerBlock}>
-      <Typography variant='h3'>Trailer</Typography>
-      <YouTube videoId={movie.youtubeLink} className={classes.youtubePlayer} opts={youtubeOpts} />
-    </div>
-      <div className={classes.ratingBlock}>
-        <Typography className={classes.secondPriorityText}>My rating:</Typography>
-        <Rating 
-          max={10}
-          value={settedRating ?? 0}
-          onChange={onRatingChange}
-          onChangeActive={(event, newHover) => {
-            setRatingHover(newHover)
-          }}
-        />
-        { settedRating !== null && (
-          <Box className={classes.ratingBox}>
-            <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
-          </Box>
-        )}
-        <Button size='small' color='primary' onClick={handleRatingSet}>
-          Rate
-        </Button>
-      </div>
-    <CommentsList
-      currentUserAvatar={currentUserAvatar}
-      handleCommentSet={handleCommentSet}
-      comments={comments}
-      currentUser={currentUser}
-      handleDeleteCommentClick={handleDeleteCommentClick}
-    />
-    <ScrollTop />
-  </div>
+  <Paper>
+    <Grid container direction='column' spacing={2}>
+      <Grid item>
+        <Card>
+          <CardContent>
+            <Grid container direction='column' spacing={2}>
+              <Grid item>
+                <Typography variant='h2' align='center'>{movie.title}</Typography>
+              </Grid>
+              <Grid item container direction='row' spacing={2}>
+                <Grid item xs={3}>
+                  <CardMedia 
+                    component='img'
+                    height='400'
+                    image={movie.cover}
+                    alt={movie.title}
+                  />
+                </Grid>
+                <Grid item xs={9}>
+                  <Grid container direction='column'>
+                    <Grid item>
+                      <Typography>
+                        Rating:
+                        {
+                          movieRating === 0
+                          ? 'No one has rated yet'
+                          : `${movieRating.toFixed(2)} / 10 (${ratings.length})`
+                        }
+                      </Typography>
+                    </Grid>
+                    <Grid item container direction='row'>
+                      <Grid item xs={1.2}>
+                        <Typography>My rating:</Typography>
+                      </Grid>
+                      <Grid item xs={3.5}>
+                        <Rating 
+                          max={10}
+                          value={settedRating ?? 0}
+                          onChange={onRatingChange}
+                          onChangeActive={(event, newHover) => {
+                            setRatingHover(newHover)
+                          }}
+                        />
+                      </Grid>
+                      { settedRating !== null && (
+                        <Grid item xs={0.5}>
+                          <Box className={classes.ratingBox}>
+                            <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
+                          </Box>
+                        </Grid>
+                      )}
+                      <Grid item xs={1}>
+                        <Button size='small' color='primary' onClick={handleRatingSet}>
+                          Rate
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Typography>
+                        Genres: {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>
+                        {movie.description}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item container direction='column' spacing={3}>
+        <Grid item>
+          <Typography variant='h3' align='center'>Trailer</Typography>
+        </Grid>
+        <Grid item className={classes.youtubeGrid}>
+          <YouTube videoId={movie.youtubeLink} className={classes.youtubePlayer} opts={youtubeOpts} />
+        </Grid>
+      </Grid>
+      <CommentsList
+        currentUserAvatar={currentUserAvatar}
+        handleCommentSet={handleCommentSet}
+        comments={comments}
+        currentUser={currentUser}
+        handleDeleteCommentClick={handleDeleteCommentClick}
+      />
+      <ScrollTop />
+    </Grid>
+  </Paper>
 )
 
 Movie.propTypes = {

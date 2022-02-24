@@ -38,7 +38,6 @@ const ScrollTop = () => {
 }
 
 ScrollTop.propTypes = {
-  children: PropTypes.element.isRequired,
 }
 
 export default ScrollTop
