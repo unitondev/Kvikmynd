@@ -8,6 +8,7 @@ import * as Yup from 'yup'
 
 import { AvatarPreview } from '../../helpers'
 import styles from './styles'
+import { passwordRegex } from '@movie/modules/shared/forms/helpers/regex';
 
 const initial = {
   email: '',
@@ -26,7 +27,9 @@ const registerSchema = Yup.object().shape({
     .required('Required')
     .min(6, 'Minimum length is 6 characters')
     .max(128, 'Maximum length is 128 characters')
-    .trim('There should be no spaces at the beginning and at the end of the password'),
+    .trim('There should be no spaces at the beginning and at the end of the password')
+    .strict(true)
+    .matches(passwordRegex, 'Password must contain at least one upper case letter, one lower case letter, one digit and one special character'),
   fullName: Yup.string()
     .max(25, 'Maximum length is 25 characters')
     .required('Required'),

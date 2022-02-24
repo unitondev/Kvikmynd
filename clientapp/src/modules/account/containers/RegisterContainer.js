@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import RegisterView from '../components/Register'
+import Register from '../components/Register'
 import * as rawActions from '../actions'
 import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
@@ -26,7 +26,7 @@ const RegisterContainer = () => {
   }
 
   return (
-    <RegisterView
+    <Register
       handleRegister={handleRegister}
     />
   )
