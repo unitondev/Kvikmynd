@@ -8,6 +8,7 @@ import routes from '@movie/routes'
 function * onLogin(action) {
   yield put(accountActions.getTokenRequest(action.payload))
   const result = yield take([accountActions.getTokenSuccess, accountActions.getTokenFailure])
+
   if (result.type === accountActions.getTokenFailure().type) {
     const location = yield select(state => state.router.location.pathname)
     if (!location.startsWith(routes.login)) {
