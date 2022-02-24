@@ -11,7 +11,7 @@ export const toBase64 = (file) =>
     reader.onerror = (error) => reject(error)
   })
 
-export const AvatarPreview = ({ file, classes }) => {
+export const AvatarPreview = ({ file, className }) => {
   const [previewString, setPreviewString] = useState(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const AvatarPreview = ({ file, classes }) => {
     }
   }, [file])
 
-  return <div>{!!previewString ? <Avatar src={previewString} className={classes} /> : null}</div>
+  return <div>{!!previewString ? <Avatar src={previewString} className={className} /> : null}</div>
 }
 
 export const getUserSettingsTabs = () => [

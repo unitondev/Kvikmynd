@@ -79,10 +79,15 @@ const Navbar = ({
                   </MenuItem>
                   </Menu>
                 </>
-                : 
-                <Button component={Link} to={routes.login} sx={{ color: 'white' }}>
-                  Login
-                </Button>
+                :
+                <>
+                  <Button component={Link} to={routes.login} sx={{ color: 'white' }}>
+                    Login
+                  </Button>
+                  <Button component={Link} to={routes.register} sx={{ color: 'white' }}>
+                    Register
+                  </Button>
+                </>
               }
               
             </Box>
