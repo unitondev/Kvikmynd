@@ -31,6 +31,7 @@ const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) =>
           variant='outlined'
           size='small'
           placeholder='Search'
+          color='primary'
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -91,7 +92,7 @@ const MovieList = ({ classes, movies, searchRequest, handleSearchBarChange }) =>
                           </Grid>
                         </CardContent>
                         <CardActions>
-                          <Button component={Link} to={`/movie${movie.id}`} size='small' color='primary' variant='contained'>
+                          <Button component={Link} to={`/movie${movie.id}`} size='small' color='primary'>
                             More details...
                           </Button>
                         </CardActions>

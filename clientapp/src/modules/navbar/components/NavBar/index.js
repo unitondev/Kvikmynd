@@ -16,6 +16,8 @@ import {
   ListItemIcon,
 } from '@mui/material'
 import { Logout } from '@mui/icons-material'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
 import styles from './styles'
 import routes from '@movie/routes'
@@ -30,6 +32,8 @@ const Navbar = ({
   anchorUser,
   handleOpenUserMenu,
   handleCloseUserMenu,
+  theme,
+  toggleColorMode,
 }) => (
   <ElevationScroll>
     <>
@@ -91,6 +95,15 @@ const Navbar = ({
               }
               
             </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
+                {
+                  theme.palette.mode === 'dark'
+                  ? <Brightness7Icon />
+                  : <Brightness4Icon />
+                }
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
@@ -107,6 +120,8 @@ Navbar.propTypes = {
   anchorUser: PropTypes.object,
   handleOpenUserMenu: PropTypes.func.isRequired,
   handleCloseUserMenu: PropTypes.func.isRequired,
+  theme: PropTypes.object.isRequired,
+  toggleColorMode: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Navbar)
