@@ -7,9 +7,14 @@ const styles = {
     justifyContent: 'center'
   },
   avatarBig: {
-    minWidth: '200px',
-    minHeight: '200px',
+    minWidth: '100px',
+    minHeight: '100px',
   },
+  cardHeader: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 }
 
 export default styles

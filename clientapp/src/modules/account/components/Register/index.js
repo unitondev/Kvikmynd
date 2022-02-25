@@ -1,14 +1,20 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
-import { Avatar, Button, Container, Grid, Paper, Typography } from '@mui/material'
+import { Avatar, Button, Container, Grid, IconButton, InputAdornment, Paper, Typography } from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import { TextField } from 'formik-mui'
 import * as Yup from 'yup'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { Link } from 'react-router-dom'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 import { AvatarPreview } from '../../helpers'
 import styles from './styles'
-import { passwordRegex } from '@movie/modules/shared/forms/helpers/regex';
+import { passwordRegex } from '@movie/modules/shared/forms/helpers/regex'
+import Copyright from '@movie/modules/shared/footers/components/Copyright'
+import routes from '@movie/routes'
 
 const initial = {
   email: '',
@@ -16,6 +22,7 @@ const initial = {
   fullName: '',
   userName: '',
   avatar: null,
+  showPassword: false,
 }
 
 const registerSchema = Yup.object().shape({
@@ -40,11 +47,11 @@ const registerSchema = Yup.object().shape({
 
 const Register = ({
   classes,
-  handleRegister
+  handleRegister,
 }) => {
   const uploadInputRef = useRef(null)
   return (
-    <Container maxWidth='xs'>
+    <Container maxWidth='sm'>
       <Paper className={classes.rootPaper}>
         <Formik
             initialValues={initial}
@@ -57,8 +64,11 @@ const Register = ({
           {({ dirty, isValid, values, setFieldValue }) => (
             <Form autoComplete='off'>
               <Grid container direction='column' spacing={2}>
-                <Grid item>
-                  <Typography variant='h2' component='h2' align='center'>
+                <Grid item className={classes.cardHeader}>
+                  <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <LockOutlinedIcon />
+                  </Avatar>
+                  <Typography component='h1' variant='h5' align='center'>
                     Register
                   </Typography>
                 </Grid>
@@ -81,7 +91,6 @@ const Register = ({
                     ref={uploadInputRef}
                   />
                   <Button
-                    size='large'
                     fullWidth
                     color='primary'
                     variant='contained'
@@ -89,6 +98,29 @@ const Register = ({
                   >
                     Upload photo
                   </Button>
+                </Grid>
+                <Grid item container direction='row' spacing={2}>
+                  <Grid item xs={6}>
+                    <Field
+                      name='fullName'
+                      label='Full name'
+                      color='primary'
+                      required
+                      component={TextField}
+                      fullWidth
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Field
+                      name='userName'
+                      label='User name'
+                      color='primary'
+                      required
+                      component={TextField}
+                      fullWidth
+                    />
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <Field
@@ -104,50 +136,52 @@ const Register = ({
                   <Field
                     name='password'
                     label='Password'
-                    type='password'
+                    type={values.showPassword ? 'text' : 'password'}
                     color='primary'
                     required
                     component={TextField}
                     fullWidth
+                    InputProps={{
+                      endAdornment: <InputAdornment position='end'>
+                        <IconButton
+                          onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                          edge='end'
+                        >
+                          {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }}
                   />
                 </Grid>
-                <Grid item>
-                  <Field
-                    name='fullName'
-                    label='Full name'
-                    color='primary'
-                    required
-                    component={TextField}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item>
-                  <Field
-                    name='userName'
-                    label='User name'
-                    color='primary'
-                    required
-                    component={TextField}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item>
-                  <Button
-                    disabled={!(isValid && dirty)}
-                    size='large'
-                    fullWidth
-                    color='primary'
-                    variant='contained'
-                    type='submit'
-                  >
-                    Register
-                  </Button>
+                <Grid item container direction='row' spacing={4}>
+                  <Grid item xs={6}>
+                    <Button
+                      color='primary'
+                      variant='text'
+                      component={Link}
+                      to={routes.login}
+                    >
+                      Log in
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      disabled={!(isValid && dirty)}
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                      type='submit'
+                    >
+                      Register
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Form>
           )}
         </Formik>
       </Paper>
+      <Copyright sx={{ mt: 5 }} />
     </Container>
   )
 }

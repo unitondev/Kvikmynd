@@ -37,7 +37,7 @@ const Navbar = ({
 }) => (
   <ElevationScroll>
     <>
-      <AppBar color='primary'>
+      <AppBar color='transparent' sx={{backdropFilter:'blur(20px)'}}>
         <Container maxWidth='lg'>
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -85,10 +85,10 @@ const Navbar = ({
                 </>
                 :
                 <>
-                  <Button component={Link} to={routes.login} sx={{ color: 'white' }}>
+                  <Button component={Link} to={routes.login} color='primary'>
                     Login
                   </Button>
-                  <Button component={Link} to={routes.register} sx={{ color: 'white' }}>
+                  <Button component={Link} to={routes.register} color='primary'>
                     Register
                   </Button>
                 </>

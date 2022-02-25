@@ -1,16 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import withStyles from '@mui/styles/withStyles';
-import { Button, Container, Grid, Paper, Typography } from '@mui/material'
+import withStyles from '@mui/styles/withStyles'
+import { Avatar, Button, Container, Grid, IconButton, InputAdornment, Paper, Typography } from '@mui/material'
 import { TextField } from 'formik-mui'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { Link } from 'react-router-dom'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 import styles from './styles'
+import routes from '@movie/routes'
+import Copyright from '@movie/modules/shared/footers/components/Copyright'
 
 const initial = {
   email: '',
   password: '',
+  showPassword: false,
 }
 
 const loginSchema = Yup.object().shape({
@@ -39,11 +46,14 @@ const Login = ({
           formikBag.resetForm()
       }}
       >
-        {({ dirty, isValid }) => (
+        {({ dirty, isValid, values, setFieldValue }) => (
           <Form autoComplete='off'>
             <Grid container direction='column' spacing={2}>
-              <Grid item>
-                <Typography variant='h2' component='h2' align='center'>
+              <Grid item className={classes.cardHeader}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography component='h1' variant='h5' align='center'>
                   Login
                 </Typography>
               </Grid>
@@ -55,36 +65,59 @@ const Login = ({
                   required
                   component={TextField}
                   fullWidth
+                  autoFocus
                 />
               </Grid>
               <Grid item>
                 <Field
                   name='password'
                   label='Password'
-                  type='password'
+                  type={values.showPassword ? 'text' : 'password'}
                   color='primary'
                   required
                   component={TextField}
                   fullWidth
+                  InputProps={{
+                    endAdornment: <InputAdornment position='end'>
+                      <IconButton
+                        onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                        edge='end'
+                      >
+                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }}
                 />
               </Grid>
-              <Grid item>
-                <Button
-                  disabled={!(isValid && dirty)}
-                  size='large'
-                  fullWidth
-                  color='primary'
-                  variant='contained'
-                  type='submit'
-                >
-                  Login
-                </Button>
+              <Grid item container direction='row' spacing={4}>
+                <Grid item xs={6}>
+                  <Button
+                    color='primary'
+                    variant='text'
+                    component={Link}
+                    to={routes.register}
+                  >
+                    Create account
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    disabled={!(isValid && dirty)}
+                    fullWidth
+                    color='primary'
+                    variant='contained'
+                    type='submit'
+                  >
+                    Login
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Form>
         )}
       </Formik>
     </Paper>
+    <Copyright sx={{ mt: 5 }} />
   </Container>
 )
 
