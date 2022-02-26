@@ -62,7 +62,7 @@ const Register = ({
           }}
         >
           {({ dirty, isValid, values, setFieldValue }) => (
-            <Form autoComplete='off'>
+            <Form>
               <Grid container direction='column' spacing={2}>
                 <Grid item className={classes.cardHeader}>
                   <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -77,7 +77,7 @@ const Register = ({
                     !!values.avatar
                     ?
                       <AvatarPreview file={values.avatar} className={classes.avatarBig}/>
-                    : 
+                    :
                       <Avatar className={classes.avatarBig}/>
                   }
                 </Grid>
