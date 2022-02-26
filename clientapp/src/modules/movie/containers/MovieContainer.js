@@ -11,6 +11,7 @@ import { calculateMovieRating } from '../helpers'
 
 const MovieContainer = () => {
   const dispatch = useDispatch()
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   let { id } = useParams()
   const movie = useSelector(getMovie)
   const comments = useSelector(getComments)
@@ -54,6 +55,7 @@ const MovieContainer = () => {
 
   const [settedRating, setSettedRating] = useState(0)
   const [ratingHover, setRatingHover] = useState(-1)
+  const [deletedComment, setDeletedComment] = useState(null)
   const [signalrConnection, setSignalrConnection] = useState()
   const signalrConnectionRef = useRef(signalrConnection)
 
@@ -77,9 +79,9 @@ const MovieContainer = () => {
   const onRatingChange = (event, value) => {
     setSettedRating(value)
   }
-  
+
   const handleRatingSet = () => {
-    settedRating === null 
+    settedRating === null
     ? dispatch(rawActions.deleteUserRatingRequest({
       userId: user.id,
       movieId: movie.id,
@@ -105,9 +107,27 @@ const MovieContainer = () => {
     )
   }
 
+  const handleDeleteCommentCancel = () => {
+    setOpenDeleteDialog(false)
+  }
+
+  const handleDeleteCommentSubmit = () => {
+    dispatch(rawActions.deleteCommentRequest({id: deletedComment}))
+    setDeletedComment(null)
+    handleDeleteCommentCancel()
+  }
+
   const handleDeleteCommentClick = (id) => {
-    dispatch(rawActions.deleteCommentRequest({ id })
-    )
+    setDeletedComment(id)
+    setOpenDeleteDialog(true)
+  }
+
+  const dialogProps = {
+    onSubmit: handleDeleteCommentSubmit,
+    onClose: handleDeleteCommentCancel,
+    open: openDeleteDialog,
+    title: 'Delete comment',
+    message: 'Are you sure want to delete your comment?',
   }
 
   const joinMoviePage = async (userName, movieId) => {
@@ -179,6 +199,7 @@ const MovieContainer = () => {
       handleDeleteCommentClick={handleDeleteCommentClick}
       ratingHover={ratingHover}
       setRatingHover={setRatingHover}
+      dialogProps={dialogProps}
     />
   )
 }

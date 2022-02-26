@@ -7,13 +7,15 @@ import { getUserSettingsTabs } from '../../helpers'
 import { Avatar, Container, Fade, Grid, List, ListItemButton, ListItemIcon, Paper, Typography } from '@mui/material'
 import AccountInfo from '../AccountInfo'
 import ChangePassword from '../ChangePassword'
+import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 
 const UserSettings = ({
   classes,
   user,
   handleUpdateAccount,
-  handleDeleteAccount,
   handleChangePassword,
+  handleClickDeleteAccount,
+  dialogProps,
 }) => {
   const [selectedTab, setSelectedTab] = useState(0)
 
@@ -58,7 +60,7 @@ const UserSettings = ({
                 <AccountInfo
                   user={user}
                   handleUpdateAccount={handleUpdateAccount}
-                  handleDeleteAccount={handleDeleteAccount}
+                  handleDeleteAccount={handleClickDeleteAccount}
                 />
               </Grid>
             </Fade>
@@ -73,6 +75,9 @@ const UserSettings = ({
           }
         </Grid>
       </Paper>
+      <ConfirmationDialog
+        {...dialogProps}
+      />
     </Container>
   )
 }
@@ -81,8 +86,9 @@ UserSettings.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   handleUpdateAccount: PropTypes.func.isRequired,
-  handleDeleteAccount: PropTypes.func.isRequired,
   handleChangePassword: PropTypes.func.isRequired,
+  handleClickDeleteAccount: PropTypes.func.isRequired,
+  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(UserSettings)

@@ -22,6 +22,7 @@ const CommentList = ({
   comments,
   currentUser,
   handleDeleteCommentClick,
+  dialogProps,
 }) => (
   <div className={classes.commentsBlock}>
     <Typography variant='h3'>Comments</Typography>
@@ -57,7 +58,7 @@ const CommentList = ({
               />
             </CardContent>
             <CardActions>
-              <Button 
+              <Button
                 disabled={!(isValid && dirty)}
                 color='primary'
                 size='large'
@@ -81,6 +82,7 @@ const CommentList = ({
                 comment={comment}
                 currentUserUserName={currentUser.userName}
                 handleDeleteCommentClick={handleDeleteCommentClick}
+                dialogProps={dialogProps}
               />
             ))
         )
@@ -98,6 +100,7 @@ CommentList.propTypes = {
   comments: PropTypes.array.isRequired,
   currentUser: PropTypes.object.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
+  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(CommentList)

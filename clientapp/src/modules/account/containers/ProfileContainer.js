@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import * as rawActions from '../actions'
@@ -7,6 +7,7 @@ import { toBase64 } from '../helpers'
 import UserSettings from '../components/UserSettings'
 
 const ProfileContainer = () => {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const user = useSelector(getUser)
   const dispatch = useDispatch()
 
@@ -27,16 +28,33 @@ const ProfileContainer = () => {
     dispatch(rawActions.changePasswordRequest(data))
   }
 
-  const handleDeleteAccount = () => {
+  const handleClickDeleteAccount = () => {
+    setOpenDeleteDialog(true)
+  }
+
+  const handleDeleteAccountSubmit = () => {
     dispatch(rawActions.deleteUserRequest())
+  }
+
+  const handleDeleteAccountCancel = () => {
+    setOpenDeleteDialog(false)
+  }
+
+  const dialogProps = {
+    onSubmit: handleDeleteAccountSubmit,
+    onClose: handleDeleteAccountCancel,
+    open: openDeleteDialog,
+    title: 'Delete account',
+    message: 'Are you sure want to delete your account?',
   }
 
   return (
     <UserSettings
       user={user}
       handleUpdateAccount={handleUpdateAccount}
-      handleDeleteAccount={handleDeleteAccount}
       handleChangePassword={handleChangePassword}
+      handleClickDeleteAccount={handleClickDeleteAccount}
+      dialogProps={dialogProps}
     />
   )
 }

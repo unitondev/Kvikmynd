@@ -35,6 +35,7 @@ const Movie = ({
   handleDeleteCommentClick,
   ratingHover,
   setRatingHover,
+  dialogProps,
 }) => (
   <Paper>
     <Grid container direction='column' spacing={2}>
@@ -47,7 +48,7 @@ const Movie = ({
               </Grid>
               <Grid item container direction='row' spacing={2}>
                 <Grid item xs={3}>
-                  <CardMedia 
+                  <CardMedia
                     component='img'
                     height='400'
                     image={movie.cover}
@@ -71,7 +72,7 @@ const Movie = ({
                         <Typography>My rating:</Typography>
                       </Grid>
                       <Grid item xs={3.5}>
-                        <Rating 
+                        <Rating
                           max={10}
                           value={settedRating ?? 0}
                           onChange={onRatingChange}
@@ -124,6 +125,7 @@ const Movie = ({
         comments={comments}
         currentUser={currentUser}
         handleDeleteCommentClick={handleDeleteCommentClick}
+        dialogProps={dialogProps}
       />
       <ScrollTop />
     </Grid>
@@ -147,6 +149,7 @@ Movie.propTypes = {
   handleDeleteCommentClick: PropTypes.func.isRequired,
   ratingHover: PropTypes.number.isRequired,
   setRatingHover: PropTypes.func.isRequired,
+  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Movie)

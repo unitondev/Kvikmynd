@@ -5,12 +5,14 @@ import { Avatar, Card, CardContent, CardHeader, IconButton, TextField, Typograph
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import styles from './styles'
+import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 
 const Comment = ({
   classes,
   comment,
   currentUserUserName,
   handleDeleteCommentClick,
+  dialogProps,
 }) => (
   <div className={classes.commentBlock}>
     <Card>
@@ -21,7 +23,7 @@ const Comment = ({
         title={comment.userName}
         subheader={`#${comment.commentId}`}
         action={
-          comment.userName === currentUserUserName 
+          comment.userName === currentUserUserName
           ?
           <IconButton
             aria-label='delete'
@@ -44,6 +46,7 @@ const Comment = ({
         />
       </CardContent>
     </Card>
+    <ConfirmationDialog {...dialogProps}/>
   </div>
 )
 
@@ -52,6 +55,7 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   currentUserUserName: PropTypes.string.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
+  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Comment)
