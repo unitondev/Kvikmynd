@@ -24,7 +24,7 @@ import routes from '@movie/routes'
 import NavbarTabs from '../NavbarTabs'
 import ElevationScroll from '../ElevationScroll'
 
-const Navbar = ({ 
+const Navbar = ({
   classes,
   isLogined,
   onClickLogout,
@@ -37,7 +37,11 @@ const Navbar = ({
 }) => (
   <ElevationScroll>
     <>
-      <AppBar color='transparent' sx={{backdropFilter:'blur(20px)'}}>
+      <AppBar color='transparent' sx={{
+        backdropFilter:'saturate(180%) blur(20px)',
+        backgroundColor: (theme) => theme.palette.mode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(0,0,0,0.72)'
+      }}
+      >
         <Container maxWidth='lg'>
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -51,7 +55,7 @@ const Navbar = ({
                   <IconButton onClick={handleOpenUserMenu}>
                     <Avatar src={avatar} className={classes.avatarBlock} />
                   </IconButton>
-                  <Menu 
+                  <Menu
                     sx={{ mt: '45px'}}
                     anchorEl={anchorUser}
                     open={Boolean(anchorUser)}
@@ -68,7 +72,7 @@ const Navbar = ({
                   >
                   <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
                     <ListItemIcon>
-                      <Avatar src={avatar} sx={{ width: 24, height: 24 }}/>
+                      <Avatar src={avatar} className={classes.menuAvatar}/>
                     </ListItemIcon>
                     <Typography textAlign='center'>Profile</Typography>
                   </MenuItem>
@@ -93,7 +97,6 @@ const Navbar = ({
                   </Button>
                 </>
               }
-              
             </Box>
             <Box sx={{ flexGrow: 0 }}>
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
