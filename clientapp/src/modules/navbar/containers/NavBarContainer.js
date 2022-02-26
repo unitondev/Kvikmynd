@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 
 import { logoutRequest } from '../../account/actions'
 import { getUserAvatar, getIsLoginSucceeded } from '../../account/selectors'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/NavBar'
 import { ColorModeContext } from '../../../components/App/Theme'
 
 const NavBarContainer = () => {
