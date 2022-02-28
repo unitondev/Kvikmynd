@@ -24,7 +24,7 @@ const styles = (theme) => ({
     '&:focus': {
       width: '20ch !important',
     },
-  }
+  },
 })
 
 export default styles

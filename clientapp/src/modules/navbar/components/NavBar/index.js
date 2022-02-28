@@ -53,7 +53,7 @@ const Navbar = ({
               <Autocomplete
                 freeSolo
                 options={movieSearchList}
-                getOptionLabel={option => `${option.title} fuck`}
+                getOptionLabel={option => option.title}
                 onClose={handleCloseSearch}
                 classes={{
                   input: classes.input,
@@ -66,13 +66,14 @@ const Navbar = ({
                     size='small'
                     placeholder='Search...'
                     color='primary'
-                    // InputProps={{
-                    //   startAdornment: (
-                    //     <InputAdornment position='start'>
-                    //       <SearchIcon />
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={searchQuery}
                     onChange={(e) => handleChangeSearchValue(e.target.value)}
                   />
