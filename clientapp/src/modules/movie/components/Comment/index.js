@@ -38,7 +38,6 @@ const Comment = ({
       <CardContent>
         <TextField
           multiline
-          rows={2}
           variant='outlined'
           value={comment.commentText}
           className={classes.writingCommentTextArea}

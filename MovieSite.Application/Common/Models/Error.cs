@@ -30,6 +30,7 @@ namespace MovieSite.Application.Common.Models
                 ErrorCode.EntityNotCreated => "Entity wasn't created.",
                 ErrorCode.EntityNotUpdated => "Entity wasn't updated.",
                 ErrorCode.EntityNotDeleted => "Entity wasn't deleted.",
+                ErrorCode.SearchQueryIsEmpty => "Search query is empty.",
                 
                 #endregion
                 

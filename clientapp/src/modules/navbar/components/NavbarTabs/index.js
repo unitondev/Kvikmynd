@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 import styles from './styles'
@@ -19,7 +19,9 @@ const NavbarTabs = ({ classes }) => {
     <>
       {tabs.map((tab) => (
         <Button key={tab.label} component={Link} to={tab.route} color='primary'>
-          {tab.label}
+          <Typography variant='h6'>
+            {tab.label}
+          </Typography>
         </Button>
       ))}
     </>

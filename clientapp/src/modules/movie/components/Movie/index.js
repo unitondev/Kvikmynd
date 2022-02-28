@@ -37,7 +37,7 @@ const Movie = ({
   setRatingHover,
   dialogProps,
 }) => (
-  <Paper>
+  <Paper className={classes.rootPaper}>
     <Grid container direction='column' spacing={2}>
       <Grid item>
         <Card>

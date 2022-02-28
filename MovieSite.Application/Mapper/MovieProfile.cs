@@ -59,6 +59,20 @@ namespace MovieSite.Application.Mapper
                     opt.MapFrom(src => src.Movie))
                 .ForMember(dest => dest.GenreNames, opt =>
                     opt.MapFrom(src => src.Genres));
+            
+            CreateMap<MovieWithRatingsModel, MovieWithRatingsViewModel>()
+                .ForMember(dest => dest.Id, opt =>
+                    opt.MapFrom(src => src.Movie.Id))
+                .ForMember(dest => dest.Title, opt =>
+                    opt.MapFrom(src => src.Movie.Title))
+                .ForMember(dest => dest.Description, opt =>
+                    opt.MapFrom(src => src.Movie.Description))
+                .ForMember(dest => dest.Cover, opt =>
+                    opt.MapFrom(src => Encoding.UTF8.GetString(src.Movie.Cover)))
+                .ForMember(dest => dest.YoutubeLink, opt =>
+                    opt.MapFrom(src => src.Movie.YoutubeLink))
+                .ForMember(dest => dest.Ratings, opt =>
+                    opt.MapFrom(src => src.Ratings));
         }
     }
 }

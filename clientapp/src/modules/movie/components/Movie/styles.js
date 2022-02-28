@@ -1,4 +1,7 @@
 const styles = {
+  rootPaper: {
+    marginBottom: 100,
+  },
   youtubeGrid: {
     display: 'flex',
     justifyContent: 'center',

@@ -12,6 +12,7 @@
         EntityNotCreated = 1005,
         EntityNotUpdated = 1006,
         EntityNotDeleted = 1007,
+        SearchQueryIsEmpty = 1008,
 
         #endregion
 

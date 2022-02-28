@@ -1,3 +1,5 @@
+import { getMovieBySearchRequest } from '@movie/modules/account/actions'
+
 const accountRequests = {
   logoutRequest: (data) => ({
     url: 'api/account/logout',

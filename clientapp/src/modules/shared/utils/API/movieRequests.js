@@ -35,6 +35,11 @@ const movieRequests = {
     url: `api/comment/${id}`,
     method: 'delete',
   }),
+  getMovieBySearchRequest: (data) => ({
+    url: 'api/movie/getBySearch',
+    method: 'post',
+    data,
+  }),
 }
 
 export default movieRequests

@@ -49,7 +49,6 @@ const CommentList = ({
             <CardContent>
               <Field
                 multiline
-                rows={4}
                 placeholder='Write your comment here'
                 variant='outlined'
                 name='WrittenCommentText'

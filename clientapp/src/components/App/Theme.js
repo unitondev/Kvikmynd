@@ -16,8 +16,11 @@ const Theme = ({ children }) => {
   const theme = useMemo(() => createTheme({
     palette: {
       mode
+    },
+    shape: {
+      borderRadius: 10,
     }
-  }), [mode]) 
+  }), [mode])
 
   return (
     <StyledEngineProvider injectFirst>

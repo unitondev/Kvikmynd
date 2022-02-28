@@ -39,3 +39,4 @@ export const getMeFailure = createAction('GET_ME_FAILURE')
 export const changePasswordRequest = createAction('CHANGE_PASSWORD_REQUEST')
 export const changePasswordSuccess = createAction('CHANGE_PASSWORD_SUCCESS')
 export const changePasswordFailure = createAction('CHANGE_PASSWORD_FAILURE')
+

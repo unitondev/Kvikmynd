@@ -13,11 +13,12 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  ListItemIcon,
+  ListItemIcon, TextField, InputAdornment, Autocomplete,
 } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
+import SearchIcon from '@mui/icons-material/Search'
 
 import styles from './styles'
 import routes from '@movie/routes'
@@ -34,13 +35,14 @@ const Navbar = ({
   handleCloseUserMenu,
   theme,
   toggleColorMode,
+  searchQuery,
+  handleChangeSearchValue,
+  movieSearchList,
+  handleCloseSearch,
 }) => (
   <ElevationScroll>
     <>
-      <AppBar color='transparent' sx={{
-        backdropFilter:'saturate(180%) blur(20px)',
-        backgroundColor: (theme) => theme.palette.mode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(0,0,0,0.72)'
-      }}
+      <AppBar color='transparent' className={classes.appbar}
       >
         <Container maxWidth='lg'>
           <Toolbar disableGutters>
@@ -48,62 +50,90 @@ const Navbar = ({
               <NavbarTabs />
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              {
-                isLogined
-                ?
-                <>
-                  <IconButton onClick={handleOpenUserMenu}>
-                    <Avatar src={avatar} className={classes.avatarBlock} />
-                  </IconButton>
-                  <Menu
-                    sx={{ mt: '45px'}}
-                    anchorEl={anchorUser}
-                    open={Boolean(anchorUser)}
-                    onClose={handleCloseUserMenu}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                  >
-                  <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
-                    <ListItemIcon>
-                      <Avatar src={avatar} className={classes.menuAvatar}/>
-                    </ListItemIcon>
-                    <Typography textAlign='center'>Profile</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={() => {
-                    onClickLogout()
-                    handleCloseUserMenu()
-                    }}>
-                    <ListItemIcon>
-                      <Logout />
-                    </ListItemIcon>
-                    <Typography textAlign='center'>Logout</Typography>
-                  </MenuItem>
-                  </Menu>
-                </>
-                :
-                <>
-                  <Button component={Link} to={routes.login} color='primary'>
-                    Login
-                  </Button>
-                  <Button component={Link} to={routes.register} color='primary'>
-                    Register
-                  </Button>
-                </>
-              }
+              <Autocomplete
+                freeSolo
+                options={movieSearchList}
+                getOptionLabel={option => `${option.title} fuck`}
+                onClose={handleCloseSearch}
+                classes={{
+                  input: classes.input,
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    className={classes.search}
+                    variant='outlined'
+                    size='small'
+                    placeholder='Search...'
+                    color='primary'
+                    // InputProps={{
+                    //   startAdornment: (
+                    //     <InputAdornment position='start'>
+                    //       <SearchIcon />
+                    //     </InputAdornment>
+                    //   ),
+                    // }}
+                    value={searchQuery}
+                    onChange={(e) => handleChangeSearchValue(e.target.value)}
+                  />
+                )}
+              />
             </Box>
             <Box sx={{ flexGrow: 0 }}>
+              {
+                isLogined
+                  ?
+                  <>
+                    <IconButton onClick={handleOpenUserMenu}>
+                      <Avatar src={avatar} className={classes.avatarBlock} />
+                    </IconButton>
+                    <Menu
+                      sx={{ mt: '45px' }}
+                      anchorEl={anchorUser}
+                      open={Boolean(anchorUser)}
+                      onClose={handleCloseUserMenu}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                    >
+                      <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
+                        <ListItemIcon>
+                          <Avatar src={avatar} className={classes.menuAvatar} />
+                        </ListItemIcon>
+                        <Typography textAlign='center'>Profile</Typography>
+                      </MenuItem>
+                      <MenuItem onClick={() => {
+                        onClickLogout()
+                        handleCloseUserMenu()
+                      }}>
+                        <ListItemIcon>
+                          <Logout />
+                        </ListItemIcon>
+                        <Typography textAlign='center'>Logout</Typography>
+                      </MenuItem>
+                    </Menu>
+                  </>
+                  :
+                  <>
+                    <Button component={Link} to={routes.login} color='primary'>
+                      Login
+                    </Button>
+                    <Button component={Link} to={routes.register} color='primary'>
+                      Register
+                    </Button>
+                  </>
+              }
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
                 {
                   theme.palette.mode === 'dark'
-                  ? <Brightness7Icon />
-                  : <Brightness4Icon />
+                    ? <Brightness7Icon />
+                    : <Brightness4Icon />
                 }
               </IconButton>
             </Box>
@@ -125,6 +155,10 @@ Navbar.propTypes = {
   handleCloseUserMenu: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
   toggleColorMode: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string,
+  handleChangeSearchValue: PropTypes.func.isRequired,
+  movieSearchList: PropTypes.array,
+  handleCloseSearch: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Navbar)
