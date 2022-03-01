@@ -13,7 +13,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  ListItemIcon, TextField, InputAdornment, Autocomplete,
+  ListItemIcon, TextField, InputAdornment, Autocomplete, ListItem, ListItemAvatar, ListItemText,
 } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
@@ -21,9 +21,11 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import SearchIcon from '@mui/icons-material/Search'
 
 import styles from './styles'
-import routes from '@movie/routes'
+import routes, { movie } from '@movie/routes'
 import NavbarTabs from '../NavbarTabs'
 import ElevationScroll from '../ElevationScroll'
+import { calculateMovieRating } from '@movie/modules/movie/helpers'
+import { setColorBasedOnRating } from '@movie/modules/navbar/helpers'
 
 const Navbar = ({
   classes,
@@ -55,9 +57,35 @@ const Navbar = ({
                 options={movieSearchList}
                 getOptionLabel={option => option.title}
                 onClose={handleCloseSearch}
+                blurOnSelect
+                clearOnBlur
+                clearOnEscape
                 classes={{
                   input: classes.input,
                 }}
+                renderOption={(props, option) => {
+                  const movieRating = calculateMovieRating(option.ratings)
+                  return (
+                    <ListItem key={option.id} alignItems='flex-start' component={Link} to={routes.movie(option.id)}>
+                      <ListItemAvatar>
+                        <Avatar alr={option.title} src={option.cover} variant='square' style={{
+                          width: 36,
+                          height: 64,
+                        }} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={option.title}
+                        primaryTypographyProps={{
+                          variant: 'body2',
+                        }}
+                        secondary={movieRating !== 0 ? movieRating : 'No rating'}
+                        secondaryTypographyProps={{
+                          fontWeight: 600,
+                          color: setColorBasedOnRating(movieRating),
+                        }}
+                      />
+                    </ListItem>
+                )}}
                 renderInput={(params) => (
                   <TextField
                     {...params}
