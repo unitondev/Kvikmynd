@@ -99,7 +99,7 @@ namespace Kvikmynd
             
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v1"});
+                c.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
             });
             
             services.AddScoped<DbContext, KvikmyndDbContext>();
@@ -123,7 +123,7 @@ namespace Kvikmynd
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kvikmynd.WebAPI v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Kvikmynd.WebAPI v2"));
             }
             else
             {
