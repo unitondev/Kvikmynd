@@ -41,6 +41,7 @@ const Navbar = ({
   handleChangeSearchValue,
   movieSearchList,
   handleCloseSearch,
+  inputRef,
 }) => (
   <ElevationScroll>
     <>
@@ -66,7 +67,7 @@ const Navbar = ({
                 renderOption={(props, option) => {
                   const movieRating = calculateMovieRating(option.ratings)
                   return (
-                    <ListItem key={option.id} alignItems='flex-start' component={Link} to={routes.movie(option.id)}>
+                    <ListItem key={option.id} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
                       <ListItemAvatar>
                         <Avatar alr={option.title} src={option.cover} variant='square' style={{
                           width: 36,
@@ -86,6 +87,8 @@ const Navbar = ({
                       />
                     </ListItem>
                 )}}
+                inputValue={searchQuery}
+                onInputChange={(event, value) => handleChangeSearchValue(value)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -102,8 +105,7 @@ const Navbar = ({
                         </InputAdornment>
                       ),
                     }}
-                    value={searchQuery}
-                    onChange={(e) => handleChangeSearchValue(e.target.value)}
+                    inputRef={inputRef}
                   />
                 )}
               />
@@ -188,6 +190,7 @@ Navbar.propTypes = {
   handleChangeSearchValue: PropTypes.func.isRequired,
   movieSearchList: PropTypes.array,
   handleCloseSearch: PropTypes.func.isRequired,
+  inputRef: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Navbar)

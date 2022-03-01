@@ -31,6 +31,7 @@ const NavBarContainer = () => {
   }
 
   const [searchQuery, setSearchQuery] = useState('')
+  const inputRef = useRef(null)
 
   const handleChangeSearchValue = (searchText) => {
     setSearchQuery(searchText)
@@ -49,6 +50,7 @@ const NavBarContainer = () => {
   const handleCloseSearch = () => {
     dispatch(movieListActions.resetMovieBySearch())
     setSearchQuery('')
+    inputRef.current.blur()
   }
 
   return (
@@ -65,6 +67,7 @@ const NavBarContainer = () => {
       handleChangeSearchValue={handleChangeSearchValue}
       movieSearchList={movieSearchList}
       handleCloseSearch={handleCloseSearch}
+      inputRef={inputRef}
     />
   )
 }
