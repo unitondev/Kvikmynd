@@ -10,7 +10,7 @@ import routes from '@movie/routes'
 const tabs = [
   {
     route: routes.root,
-    label: 'MOVIESITE',
+    label: 'KVIKMYND',
   },
 ]
 
