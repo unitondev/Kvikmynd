@@ -18,7 +18,7 @@ const StickyFooter = ({ classes, hideFooter, children }) => (
     >
       <Container maxWidth='sm'>
         <Typography variant='body1' align='center'>
-          View source code on <Link color='inherit' href='https://github.com/unitondev/MovieSite'>Github</Link>
+          View source code on <Link color='inherit' href='https://github.com/unitondev/Kvikmynd'>Github</Link>
         </Typography>
         <Copyright />
       </Container>

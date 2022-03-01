@@ -1,4 +1,4 @@
-# MovieSite
+# Kvikmynd
 
 A SPA with movies, ratings and comments
 
