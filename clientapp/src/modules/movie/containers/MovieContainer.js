@@ -38,7 +38,7 @@ const MovieContainer = () => {
       closeSignalRConnection()
       dispatch(rawActions.cleanMovieStore())
     }
-  }, [])
+  }, [dispatch, id, user.id, user.userName])
 
   const youtubeOpts = {
     height: '576',
