@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
+using MovieSite.Application.ViewModels;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Controllers
 {
@@ -102,8 +107,7 @@ namespace MovieSite.Controllers
             
             return Ok(result.Result);
         }
-
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
@@ -120,6 +124,29 @@ namespace MovieSite.Controllers
             }
             
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("getBySearch")]
+        public async Task<IActionResult> GetMoviesBySearchQuery([FromBody] SearchQueryModel model)
+        {
+            if (string.IsNullOrEmpty(model.SearchQuery))
+            {
+                return CustomBadRequest(ErrorCode.SearchQueryIsEmpty);
+            }
+            
+            var movies = await _movieService.Filter(i => i.Title.Contains(model.SearchQuery))
+                .Include(m => m.MovieRatings)
+                .Select(m => new MovieWithRatingsModel
+                {
+                    Movie = m,
+                    Ratings = m.MovieRatings
+                })
+                .ToListAsync();
+
+            var moviesViewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(movies);
+
+            return Ok(moviesViewModels);
         }
     }
 }

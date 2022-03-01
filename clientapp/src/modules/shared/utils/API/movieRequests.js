@@ -21,6 +21,11 @@ const movieRequests = {
     method: 'post',
     data,
   }),
+  deleteUserRatingRequest: (data) => ({
+    url: 'api/rating',
+    method: 'delete',
+    data,
+  }),
   userCommentRequest: (data) => ({
     url: 'api/comment',
     method: 'post',
@@ -29,6 +34,11 @@ const movieRequests = {
   deleteCommentRequest: ({ id }) => ({
     url: `api/comment/${id}`,
     method: 'delete',
+  }),
+  getMovieBySearchRequest: (data) => ({
+    url: 'api/movie/getBySearch',
+    method: 'post',
+    data,
   }),
 }
 

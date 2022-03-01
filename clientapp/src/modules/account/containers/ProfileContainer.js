@@ -1,61 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
 
 import * as rawActions from '../actions'
-import ProfileRouter from '../components/Profile/ProfileRouter'
-import { getUser, getUserAvatar } from '../selectors'
+import { getUser } from '../selectors'
 import { toBase64 } from '../helpers'
+import UserSettings from '../components/UserSettings'
 
 const ProfileContainer = () => {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const user = useSelector(getUser)
-  const currentAvatar = useSelector(getUserAvatar)
   const dispatch = useDispatch()
-  const requiredMessage = 'This field is required'
-  const handleSelectingFile = (event) => {
-    formik.setFieldValue('avatar', event.currentTarget.files[0])
+
+  const handleUpdateAccount = async (values) => {
+    if (values.avatar !== user.avatar && values.avatar != null) {
+      values.avatar = await toBase64(values.avatar)
+    }
+
+    dispatch(rawActions.updateUserRequest(values))
   }
 
-  const formik = useFormik({
-    initialValues: {
-      email: `${user.email}`,
-      userName: `${user.userName}`,
-      fullName: `${user.fullName}`,
-      oldPassword: '',
-      newPassword: '',
-      avatar: null,
-    },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email('Invalid email')
-        .max(30, 'Must be less than 30 characters')
-        .required(requiredMessage),
-      oldPassword: Yup.string().max(50, 'Must be less than 50 characters'),
-      newPassword: Yup.string().max(50, 'Must be less than 50 characters'),
-      userName: Yup.string().max(25, 'Must be less than 25 characters'),
-      fullName: Yup.string().max(25, 'Must be less than 25 characters'),
-    }),
-    onSubmit: async (values) => {
-      if (values.avatar != null) values.avatar = await toBase64(values.avatar)
-      else values.avatar = currentAvatar
-      dispatch(rawActions.updateUserRequest(values))
-    },
-  })
+  const handleChangePassword = (values) => {
+    const data = {
+      CurrentPassword: values.currentPassword,
+      NewPassword: values.newPassword,
+    }
 
-  const deleteAccount = () => {
+    dispatch(rawActions.changePasswordRequest(data))
+  }
+
+  const handleClickDeleteAccount = () => {
+    setOpenDeleteDialog(true)
+  }
+
+  const handleDeleteAccountSubmit = () => {
     dispatch(rawActions.deleteUserRequest())
   }
 
+  const handleDeleteAccountCancel = () => {
+    setOpenDeleteDialog(false)
+  }
+
+  const dialogProps = {
+    onSubmit: handleDeleteAccountSubmit,
+    onClose: handleDeleteAccountCancel,
+    open: openDeleteDialog,
+    title: 'Delete account',
+    message: 'Are you sure want to delete your account?',
+  }
+
   return (
-    <ProfileRouter
-      onSubmitForm={formik.handleSubmit}
-      formik={formik}
+    <UserSettings
       user={user}
-      toBase64={toBase64}
-      currentAvatar={currentAvatar}
-      handleSelectingFile={handleSelectingFile}
-      deleteAccount={deleteAccount}
+      handleUpdateAccount={handleUpdateAccount}
+      handleChangePassword={handleChangePassword}
+      handleClickDeleteAccount={handleClickDeleteAccount}
+      dialogProps={dialogProps}
     />
   )
 }

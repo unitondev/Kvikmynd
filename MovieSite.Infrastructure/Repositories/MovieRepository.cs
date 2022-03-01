@@ -30,6 +30,22 @@ namespace MovieSite.Infrastructure.Repositories
             };;
         }
 
+        public async Task<List<MovieWithGenresAndRatingsModel>> GetMovieWithGenresAndRatingsAsync()
+        {
+            var movies = await DbSet
+                .Include(m => m.GenreMovies)
+                .ThenInclude(gm => gm.Genre)
+                .Include(m => m.MovieRatings)
+                .ToListAsync();
+
+            return movies.Select(movie => new MovieWithGenresAndRatingsModel 
+                {
+                    Movie = movie,
+                    GenreMovies = movie.GenreMovies,
+                    Ratings = movie.MovieRatings
+                }).ToList();
+        }
+
         public async Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id)
         {
             return await DbContext.Set<Comment>()

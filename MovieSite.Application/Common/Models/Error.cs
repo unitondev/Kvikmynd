@@ -30,6 +30,7 @@ namespace MovieSite.Application.Common.Models
                 ErrorCode.EntityNotCreated => "Entity wasn't created.",
                 ErrorCode.EntityNotUpdated => "Entity wasn't updated.",
                 ErrorCode.EntityNotDeleted => "Entity wasn't deleted.",
+                ErrorCode.SearchQueryIsEmpty => "Search query is empty.",
                 
                 #endregion
                 
@@ -47,6 +48,9 @@ namespace MovieSite.Application.Common.Models
                 ErrorCode.RefreshTokenNotFound => "Refresh token not found.",
                 ErrorCode.ErrorWhileSettingRefreshToken => "An error occurred while refresh token setting.",
                 ErrorCode.CredentialsInvalid => "User credentials are invalid.",
+                ErrorCode.CurrentPasswordIncorrect => "Current password incorrect.",
+                ErrorCode.NewPasswordCanNotMatсhCurrentPassword => "New password can't matсh current password.",
+                ErrorCode.PasswordNotChanged => "Password wasn't changed.",
                 
                 #endregion
                 

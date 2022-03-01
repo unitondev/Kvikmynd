@@ -2,11 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieSite.Application.Common.Enums;
 using MovieSite.Application.Interfaces.Services;
 using MovieSite.Application.Models;
 using MovieSite.Application.ViewModels;
+using MovieSite.Domain.Models;
 
 namespace MovieSite.Controllers
 {
@@ -16,10 +18,12 @@ namespace MovieSite.Controllers
     public class AccountController : BaseApiController
     {
         private readonly IAccountService _accountService;
+        private readonly UserManager<User> _userManager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, UserManager<User> userManager)
         {
             _accountService = accountService;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -123,6 +127,40 @@ namespace MovieSite.Controllers
             var userViewModel = new UserViewModel(result.Result, "");
 
             return Ok(userViewModel);
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPasswordModel model)
+        {
+            if (model.NewPassword.Trim().Length != model.NewPassword.Length)
+            {
+                return CustomBadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
+            }
+            
+            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            
+            var userResult = await _accountService.GetCurrentUserAsync(jwtToken);
+            if (!userResult.IsSucceeded) return CustomBadRequest(userResult.Error);
+
+            if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
+                model.CurrentPassword) == PasswordVerificationResult.Failed)
+            {
+                return CustomBadRequest(ErrorCode.CurrentPasswordIncorrect);
+            }
+            
+            if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
+                model.NewPassword) == PasswordVerificationResult.Success)
+            {
+                return CustomBadRequest(ErrorCode.NewPasswordCanNotMatсhCurrentPassword);
+            }
+
+            var result = await _userManager.ChangePasswordAsync(userResult.Result, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                return CustomBadRequest(ErrorCode.PasswordNotChanged);
+            }
+
+            return NoContent();
         }
 
         private bool SetRefreshTokenCookie(string refreshToken)

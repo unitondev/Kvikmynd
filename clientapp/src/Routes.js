@@ -3,6 +3,7 @@ export const login = `/login`
 export const register = `/register`
 export const profile = `/profile`
 export const movieWithId = `/movie:id`
+export const movie = (id) => `/movie${id}`
 
 export default {
   root,
@@ -10,4 +11,5 @@ export default {
   register,
   profile,
   movieWithId,
+  movie,
 }

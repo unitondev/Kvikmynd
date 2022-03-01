@@ -25,6 +25,10 @@ export const setUserRatingRequest = createAction('SET_USER_RATING_REQUEST')
 export const setUserRatingSuccess = createAction('SET_USER_RATING_SUCCESS')
 export const setUserRatingFailure = createAction('SET_USER_RATING_FAILURE')
 
+export const deleteUserRatingRequest = createAction('DELETE_USER_RATING_REQUEST')
+export const deleteUserRatingSuccess = createAction('DELETE_USER_RATING_SUCCESS')
+export const deleteUserRatingFailure = createAction('DELETE_USER_RATING_FAILURE')
+
 export const userCommentRequest = createAction('USER_COMMENT_REQUEST')
 export const userCommentSuccess = createAction('USER_COMMENT_SUCCESS')
 export const userCommentFailure = createAction('USER_COMMENT_FAILURE')

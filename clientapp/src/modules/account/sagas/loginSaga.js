@@ -8,6 +8,7 @@ import routes from '@movie/routes'
 function * onLogin(action) {
   yield put(accountActions.getTokenRequest(action.payload))
   const result = yield take([accountActions.getTokenSuccess, accountActions.getTokenFailure])
+
   if (result.type === accountActions.getTokenFailure().type) {
     const location = yield select(state => state.router.location.pathname)
     if (!location.startsWith(routes.login)) {
@@ -40,11 +41,29 @@ function * onRegister(action) {
   yield put(accountActions.getMeRequest())
 }
 
+function * logoutSuccess (action) {
+  yield put(push(routes.root))
+}
+
+function * changePasswordSuccess (action) {
+  const message = 'Password was successfully changed'
+  yield put(notificationActions.enqueueSnackbarSuccess({ message }))
+  yield put(push(routes.login))
+}
+
+function * changePasswordFailure (action) {
+  const message = 'Password was not changed'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
 function * loginSaga() {
   yield all([
     takeLatest(accountActions.onLogin, onLogin),
     takeLatest(accountActions.onRefreshToken, onRefreshToken),
     takeLatest(accountActions.onRegister, onRegister),
+    takeLatest(accountActions.logoutSuccess, logoutSuccess),
+    takeLatest(accountActions.changePasswordSuccess, changePasswordSuccess),
+    takeLatest(accountActions.changePasswordFailure, changePasswordFailure),
   ])
 }
 

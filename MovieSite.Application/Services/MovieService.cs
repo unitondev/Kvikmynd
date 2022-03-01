@@ -26,11 +26,14 @@ namespace MovieSite.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<MovieViewModel>> GetAllMoviesAsync()
+        public async Task<IEnumerable<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync()
         {
-            var movies = await _work.MovieRepository.All().ToListAsync();
+            var movies = await _work.MovieRepository.GetMovieWithGenresAndRatingsAsync();
 
-            return _mapper.Map<List<Movie>, List<MovieViewModel>>(movies);
+            var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
+                List<MovieWithGenresAndRatingsViewModel>>(movies);
+
+            return moviesViewModels;
         }
         
         public async Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int id)
@@ -135,33 +138,6 @@ namespace MovieSite.Application.Services
             return new ServiceResult<IEnumerable<MovieRating>>(movieRatings);
         }
 
-        public async Task<ServiceResult<MovieRatingValueModel>> RecalculateMovieRatingAsync(int id)
-        {
-            var movie = await _work.MovieRepository.FindByKeyAsync(id);
-            if (movie == null)
-            {
-                return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieNotFound);
-            }
-
-            if (movie.MovieRatings.Count == 0)
-            {
-                return new ServiceResult<MovieRatingValueModel>(ErrorCode.MovieRatingNotFound);
-            }
-
-            var ratingsSum = movie.MovieRatings.Sum(movieRating => movieRating.Value);
-            movie.Rating = (double)ratingsSum / movie.MovieRatings.Count;
-            
-            await _work.MovieRepository.UpdateAsync(movie);
-            await _work.CommitAsync();
-
-            var result = new MovieRatingValueModel
-            {
-                Value = movie.Rating
-            };
-            
-            return new ServiceResult<MovieRatingValueModel>(result);
-        }
-        
         public async Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id)
         {
             if (!await ExistsAsync(id))

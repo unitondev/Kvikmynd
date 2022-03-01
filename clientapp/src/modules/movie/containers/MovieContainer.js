@@ -7,9 +7,11 @@ import Movie from '../components/Movie'
 import * as rawActions from '../actions'
 import { getUser, getUserAvatar } from '../../account/selectors'
 import { getComments, getMovie, getMovieGenres, getNeedToUpdateMovie, getRatings, getUserRating } from '../selectors'
+import { calculateMovieRating } from '../helpers'
 
 const MovieContainer = () => {
   const dispatch = useDispatch()
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   let { id } = useParams()
   const movie = useSelector(getMovie)
   const comments = useSelector(getComments)
@@ -36,7 +38,7 @@ const MovieContainer = () => {
       closeSignalRConnection()
       dispatch(rawActions.cleanMovieStore())
     }
-  }, [])
+  }, [dispatch, id, user.id, user.userName])
 
   const youtubeOpts = {
     height: '576',
@@ -46,7 +48,14 @@ const MovieContainer = () => {
       controls: 2,
     },
   }
+
+  useEffect(() => {
+    setSettedRating(userRating)
+  }, [userRating])
+
   const [settedRating, setSettedRating] = useState(0)
+  const [ratingHover, setRatingHover] = useState(-1)
+  const [deletedComment, setDeletedComment] = useState(null)
   const [signalrConnection, setSignalrConnection] = useState()
   const signalrConnectionRef = useRef(signalrConnection)
 
@@ -62,39 +71,63 @@ const MovieContainer = () => {
   //   }
   // }, [updateMovieNeed])
 
+  const [movieRating, setMovieRating] = useState(0)
+  useEffect(() => {
+    setMovieRating(calculateMovieRating(ratings))
+  }, [ratings])
+
   const onRatingChange = (event, value) => {
     setSettedRating(value)
   }
+
   const handleRatingSet = () => {
-    dispatch(
-      rawActions.setUserRatingRequest({
-        value: settedRating,
-        userId: user.id,
-        movieId: movie.id,
-      })
+    settedRating === null
+    ? dispatch(rawActions.deleteUserRatingRequest({
+      userId: user.id,
+      movieId: movie.id,
+    }))
+    : dispatch(rawActions.setUserRatingRequest({
+      value: settedRating,
+      userId: user.id,
+      movieId: movie.id,
+    })
     )
   }
-  const [writtenComment, setWrittenComment] = useState('')
-  const onCommentChange = (event) => {
-    setWrittenComment(event.target.value)
-  }
-  const handleCommentSet = () => {
+
+  const handleCommentSet = (values) => {
+    const { WrittenCommentText } = values
+    const data = {
+      text: WrittenCommentText,
+      userId: user.id,
+      movieId: movie.id,
+    }
+
     dispatch(
-      rawActions.userCommentRequest({
-        text: writtenComment,
-        userId: user.id,
-        movieId: movie.id,
-      })
+      rawActions.userCommentRequest(data)
     )
-    setWrittenComment('')
+  }
+
+  const handleDeleteCommentCancel = () => {
+    setOpenDeleteDialog(false)
+  }
+
+  const handleDeleteCommentSubmit = () => {
+    dispatch(rawActions.deleteCommentRequest({id: deletedComment}))
+    setDeletedComment(null)
+    handleDeleteCommentCancel()
   }
 
   const handleDeleteCommentClick = (id) => {
-    dispatch(
-      rawActions.deleteCommentRequest({
-        id,
-      })
-    )
+    setDeletedComment(id)
+    setOpenDeleteDialog(true)
+  }
+
+  const dialogProps = {
+    onSubmit: handleDeleteCommentSubmit,
+    onClose: handleDeleteCommentCancel,
+    open: openDeleteDialog,
+    title: 'Delete comment',
+    message: 'Are you sure want to delete your comment?',
   }
 
   const joinMoviePage = async (userName, movieId) => {
@@ -152,20 +185,21 @@ const MovieContainer = () => {
   return (
     <Movie
       movie={movie}
+      movieRating={movieRating}
       comments={comments}
       ratings={ratings}
       genres={genres}
-      avatar={avatar}
+      currentUserAvatar={avatar}
       youtubeOpts={youtubeOpts}
-      userRating={userRating}
       settedRating={settedRating}
       onRatingChange={onRatingChange}
       handleRatingSet={handleRatingSet}
-      writtenComment={writtenComment}
-      onCommentChange={onCommentChange}
       handleCommentSet={handleCommentSet}
-      currentUserUserName={user.userName}
+      currentUser={user}
       handleDeleteCommentClick={handleDeleteCommentClick}
+      ratingHover={ratingHover}
+      setRatingHover={setRatingHover}
+      dialogProps={dialogProps}
     />
   )
 }

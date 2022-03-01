@@ -1,4 +1,7 @@
 const styles = {
+  form: {
+    flexGrow: 1
+  },
   commentsBlock: {
     marginTop: '20px',
     display: 'flex',
@@ -6,31 +9,12 @@ const styles = {
     alignItems: 'center',
     width: '100%',
   },
-  selectedMovieCardTitle: {
-    fontSize: 40,
-  },
-  CommentBlock: {
+  commentBlock: {
     width: '60%',
-  },
-  writingCommentCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px 0',
-  },
-  commentHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  avatarBlock: {
-    margin: '0px 10px',
-  },
-  writingCommentContent: {
-    display: 'flex',
-    justifyContent: 'center',
+    margin: '15px 0px',
   },
   writingCommentTextArea: {
-    minWidth: '90%',
+    minWidth: '100%',
   },
   emptyCommentsBlock: {
     margin: '30px 0',

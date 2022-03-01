@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Avatar } from '@mui/material'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import PasswordIcon from '@mui/icons-material/Password'
 
 export const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -9,7 +11,7 @@ export const toBase64 = (file) =>
     reader.onerror = (error) => reject(error)
   })
 
-export const AvatarPreview = ({ file, classes }) => {
+export const AvatarPreview = ({ file, className }) => {
   const [previewString, setPreviewString] = useState(null)
 
   useEffect(() => {
@@ -22,5 +24,10 @@ export const AvatarPreview = ({ file, classes }) => {
     }
   }, [file])
 
-  return <div>{!!previewString ? <Avatar src={previewString} className={classes} /> : null}</div>
+  return <div>{!!previewString ? <Avatar src={previewString} className={className} /> : null}</div>
 }
+
+export const getUserSettingsTabs = () => [
+  { id: 0, label: 'Account', icon: <ManageAccountsIcon /> },
+  { id: 1, label: 'Password', icon: <PasswordIcon /> },
+]

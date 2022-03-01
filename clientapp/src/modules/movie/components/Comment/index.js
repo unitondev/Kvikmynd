@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles';
-import { Avatar, Card, CardContent, IconButton, TextField, Typography } from '@mui/material'
+import { Avatar, Card, CardContent, CardHeader, IconButton, TextField } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import styles from './styles'
@@ -11,40 +11,33 @@ const Comment = ({
   comment,
   currentUserUserName,
   handleDeleteCommentClick,
-  onCommentChange,
 }) => (
-  <div className={classes.CommentBlock}>
-    <Card className={classes.writingCommentCard}>
-      <div className={classes.commentHeader}>
-        <div className={classes.writingCommentUserData}>
-          <Avatar src={comment.userAvatar} className={classes.avatarBlock} />
-          <Typography>{comment.userName}</Typography>
-        </div>
-        <Typography>#{comment.commentId}</Typography>
-        {
-          comment.userName === currentUserUserName
-            ? (
-              <div>
-                <IconButton
-                  aria-label='delete'
-                  onClick={() => handleDeleteCommentClick(comment.commentId)}
-                  size="large">
-                  <DeleteIcon />
-                </IconButton>
-              </div>
-            )
-            : null
+  <div className={classes.commentBlock}>
+    <Card>
+      <CardHeader
+        avatar={
+          <Avatar src={comment.userAvatar} />
         }
-      </div>
-      <CardContent className={classes.writingCommentContent}>
+        title={comment.userName}
+        subheader={`#${comment.commentId}`}
+        action={
+          comment.userName === currentUserUserName
+          ?
+          <IconButton
+            aria-label='delete'
+            onClick={() => handleDeleteCommentClick(comment.commentId)}
+            size="large">
+            <DeleteIcon />
+          </IconButton>
+          : <></>
+        }
+        titleTypographyProps={{ fontSize: 18 }}
+      />
+      <CardContent>
         <TextField
-          id='outlined-multiline-static'
           multiline
-          rows={2}
-          placeholder='Write your comment here'
           variant='outlined'
           value={comment.commentText}
-          onChange={onCommentChange}
           className={classes.writingCommentTextArea}
           disabled
         />
@@ -58,7 +51,6 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   currentUserUserName: PropTypes.string.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
-  onCommentChange: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Comment)

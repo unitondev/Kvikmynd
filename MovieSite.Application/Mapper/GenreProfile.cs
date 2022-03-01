@@ -9,6 +9,8 @@ namespace MovieSite.Application.Mapper
         public GenreProfile()
         {
             CreateMap<Genre, GenreViewModel>();
+
+            CreateMap<GenreMovie, GenreViewModel>().IncludeMembers(src => src.Genre);
         }
     }
 }

@@ -1,60 +1,30 @@
-const styles = {
-  navBarLink: {
-    textDecoration: 'none',
-    padding: '0 20px',
-    color: 'black',
-    height: '100%',
-    display: 'block',
-    '&:hover': {
-      backgroundColor: 'rgba(145, 145, 120, 0.16)',
-      transition: '500ms ease',
-    },
-    '&:focus': {
-      backgroundColor: 'rgba(145, 145, 120, 0.16)',
-      transition: '500ms ease',
-    },
-  },
-  navBarButton: {
-    backgroundColor: 'white',
-    border: '0px',
-    textTransform: 'none',
-    fontFamily: 'Roboto',
-    color: 'black',
-    fontSize: '16px',
-    fontWeight: '400',
-    '&:hover': {
-      backgroundColor: 'rgba(145, 145, 120, 0.16)',
-      borderRadius: '0px',
-    },
-    '&:focus': {
-      backgroundColor: 'rgba(145, 145, 120, 0.16)',
-      borderRadius: '0px',
-    },
-  },
-  activeNavBarLink: {
-    backgroundColor: 'rgba(145, 145, 120, 0.16)',
+const styles = (theme) => ({
+  appbar: {
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(0,0,0,0.72)',
+    backdropFilter:'saturate(180%) blur(20px)'
   },
   avatarBlock: {
-    marginRight: '10px',
-    maxWidth: '30px',
-    maxHeight: '30px',
+    width: 24,
+    height: 24,
   },
-  navbarBlock: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'stretch',
-    minHeight: '50px',
+  menuAvatar: {
+    width: 24,
+    height: 24,
   },
-  profileSectionsBlock: {
-    display: 'flex',
-    alignItems: 'center',
+  search: {
+    marginRight: 15,
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+      backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.1)'
+    },
   },
-  listItemText: {
-    textAlign: 'center',
+  input: {
+    transition: theme.transitions.create('width'),
+    width: '12ch !important',
+    '&:focus': {
+      width: '20ch !important',
+    },
   },
-  profileNavBlock: {
-    display: 'flex',
-  },
-}
+})
 
 export default styles

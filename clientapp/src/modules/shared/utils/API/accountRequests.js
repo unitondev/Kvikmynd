@@ -1,3 +1,5 @@
+import { getMovieBySearchRequest } from '@movie/modules/account/actions'
+
 const accountRequests = {
   logoutRequest: (data) => ({
     url: 'api/account/logout',
@@ -30,7 +32,12 @@ const accountRequests = {
   getMeRequest: () => ({
     url: 'api/account/me',
     method: 'get',
-  })
+  }),
+  changePasswordRequest: (data) => ({
+    url: 'api/account/changePassword',
+    method: 'post',
+    data,
+  }),
 }
 
 export default accountRequests

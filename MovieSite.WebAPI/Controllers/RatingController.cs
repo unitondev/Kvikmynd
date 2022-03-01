@@ -44,16 +44,22 @@ namespace MovieSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieRatingViewModel model)
         {
+            var movieRating = await _ratingService.FindAsync(r => r.MovieId == model.MovieId && r.UserId == model.UserId);
+            if (movieRating != null)
+            {
+                var deleteResult = await _ratingService.DeleteAsync(movieRating);
+                if (!deleteResult.IsSucceeded) return CustomBadRequest(deleteResult.Error);
+            }
+            
             var entity = _mapper.Map<MovieRatingViewModel, MovieRating>(model);
             
             var result = await _ratingService.CreateAsync(entity);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
             
-            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
             return Ok(result.Result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] RatingModel model)
         {
             var getRatingResult = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
@@ -65,9 +71,7 @@ namespace MovieSite.Controllers
 
             var result = await _ratingService.DeleteAsync(getRatingResult.Result);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
-            
-            await _movieService.RecalculateMovieRatingAsync(model.MovieId);
-            return Ok();
+            return NoContent();
         }
     }
 }

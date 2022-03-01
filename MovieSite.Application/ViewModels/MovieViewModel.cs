@@ -7,6 +7,5 @@
         public string Description { get; set; }
         public string Cover { get; set; } 
         public string YoutubeLink { get; set; }
-        public double Rating { get; set; }
     }
 }

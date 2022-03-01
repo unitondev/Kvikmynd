@@ -1,22 +1,12 @@
 const styles = {
-  loginFormBlock: {
+  rootPaper: {
+    padding: 30,
+  },
+  cardHeader: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '40px',
-  },
-  loginForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  textField: {
-    margin: '20px',
-  },
-  viewTitleBlock: {},
-  viewTitleText: {
-    textAlign: 'center',
-  },
+  }
 }
 
 export default styles
