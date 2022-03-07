@@ -10,6 +10,6 @@ namespace Kvikmynd.Application.Interfaces.Repositories
     {
         Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id);
         Task<MovieWithGenresModel> GetMovieWithGenresByIdAsync(int id);
-        Task<List<MovieWithGenresAndRatingsModel>> GetMovieWithGenresAndRatingsAsync();
+        Task<MoviesWithGenresAndRatingsModel> GetMovieWithGenresAndRatingsAsync(PaginationParametersModel paginationParameters);
     }
 }

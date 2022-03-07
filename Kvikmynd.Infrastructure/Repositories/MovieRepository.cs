@@ -30,20 +30,32 @@ namespace Kvikmynd.Infrastructure.Repositories
             };;
         }
 
-        public async Task<List<MovieWithGenresAndRatingsModel>> GetMovieWithGenresAndRatingsAsync()
+        public async Task<MoviesWithGenresAndRatingsModel> GetMovieWithGenresAndRatingsAsync(PaginationParametersModel paginationParameters)
         {
-            var movies = await DbSet
+            var query = DbSet
                 .Include(m => m.GenreMovies)
                 .ThenInclude(gm => gm.Genre)
-                .Include(m => m.MovieRatings)
+                .Include(m => m.MovieRatings); 
+                
+            var movies = await query
+                .OrderBy(m => m.Id)
+                .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
+                .Take(paginationParameters.PageSize)
+                .AsNoTracking()
                 .ToListAsync();
 
-            return movies.Select(movie => new MovieWithGenresAndRatingsModel 
+            var totalCount = await query.CountAsync();
+
+            return new MoviesWithGenresAndRatingsModel
+            {
+                TotalCount = totalCount,
+                Items = movies.Select(movie => new MovieWithGenresAndRatingsModel
                 {
                     Movie = movie,
                     GenreMovies = movie.GenreMovies,
                     Ratings = movie.MovieRatings
-                }).ToList();
+                }).ToList()
+            };
         }
 
         public async Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id)

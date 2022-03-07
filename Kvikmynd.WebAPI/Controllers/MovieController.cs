@@ -28,9 +28,9 @@ namespace Kvikmynd.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationParametersModel paginationParameters)
         {
-            var result = await _movieService.GetAllMoviesAsync();
+            var result = await _movieService.GetAllMoviesAsync(paginationParameters);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
             return Ok(result);

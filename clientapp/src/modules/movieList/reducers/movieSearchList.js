@@ -11,6 +11,9 @@ export default handleActions(
     [movieActions.resetMovieBySearch]: (state, action) => {
       return defaultState
     },
+    [movieActions.resetState]: (state, action) => {
+      return defaultState
+    },
   },
   defaultState
 )

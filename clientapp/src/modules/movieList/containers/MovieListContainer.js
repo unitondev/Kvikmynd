@@ -1,21 +1,37 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
-import { getMovieList } from '../selectors'
+import { getMovieList, getMovieListTotalCount } from '../selectors'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
   const movies = useSelector(getMovieList)
+  const moviesTotalCount = useSelector(getMovieListTotalCount)
+  const [pageNumber, setPageNumber] = useState(1)
+  const PageSize = 5
 
   useEffect(() => {
-    dispatch(rawActions.movieListRequest())
+    return () => {
+      dispatch(rawActions.resetState())
+    }
   }, [])
+
+  useEffect(() => {
+    dispatch(rawActions.movieListRequest({ PageNumber: pageNumber, PageSize }))
+  }, [pageNumber])
+
+  const handleClickPagination = (event, value) => {
+    setPageNumber(value)
+  }
 
   return (
     <MovieList
       movies={movies}
+      pageNumber={pageNumber}
+      handleClickPagination={handleClickPagination}
+      pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
     />
   )
 }
