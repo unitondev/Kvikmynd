@@ -167,7 +167,7 @@ namespace Kvikmynd.Application.Services
         
         #region Temp solution for movie covers
 
-        public async Task PopulateMoviesCovers()
+        public async Task PopulateMoviesCoversAsync()
         {
             var coversPaths = new[]
             {
@@ -199,7 +199,10 @@ namespace Kvikmynd.Application.Services
             for (var i = 0; i < coversPaths.Length; i++)
             {
                 var movie = await _work.MovieRepository.FindByKeyAsync(i + 1);
-                movie.Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(coversPaths[i]));
+                if (movie.Cover != null && movie.Cover.Length == 0)
+                {
+                    movie.Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(coversPaths[i]));
+                }
             }
             
             await _work.CommitAsync();

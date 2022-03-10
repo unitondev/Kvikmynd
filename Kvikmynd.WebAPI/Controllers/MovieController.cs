@@ -153,7 +153,7 @@ namespace Kvikmynd.Controllers
         [HttpGet("populateMoviesCovers")]
         public async Task<IActionResult> PopulateMoviesCovers()
         {
-            await _movieService.PopulateMoviesCovers();
+            await _movieService.PopulateMoviesCoversAsync();
             return Ok();
         }
     }
