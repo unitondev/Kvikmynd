@@ -141,11 +141,20 @@ namespace Kvikmynd.Controllers
                     Movie = m,
                     Ratings = m.MovieRatings
                 })
+                .Take(5)
                 .ToListAsync();
 
             var moviesViewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(movies);
 
             return Ok(moviesViewModels);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("populateMoviesCovers")]
+        public async Task<IActionResult> PopulateMoviesCovers()
+        {
+            await _movieService.PopulateMoviesCovers();
+            return Ok();
         }
     }
 }
