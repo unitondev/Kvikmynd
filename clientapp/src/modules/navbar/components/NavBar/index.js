@@ -13,15 +13,23 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  ListItemIcon, TextField, InputAdornment, Autocomplete, ListItem, ListItemAvatar, ListItemText,
+  ListItemIcon,
+  TextField,
+  InputAdornment,
+  Autocomplete,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemButton,
 } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import SearchIcon from '@mui/icons-material/Search'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 
 import styles from './styles'
-import routes, { movie } from '@movie/routes'
+import routes  from '@movie/routes'
 import NavbarTabs from '../NavbarTabs'
 import ElevationScroll from '../ElevationScroll'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
@@ -42,6 +50,7 @@ const Navbar = ({
   movieSearchList,
   handleCloseSearch,
   inputRef,
+  pageSize,
 }) => (
   <ElevationScroll>
     <>
@@ -55,7 +64,7 @@ const Navbar = ({
             <Box sx={{ flexGrow: 0 }}>
               <Autocomplete
                 freeSolo
-                options={movieSearchList}
+                options={movieSearchList.items}
                 getOptionLabel={option => option.title}
                 onClose={handleCloseSearch}
                 blurOnSelect
@@ -64,10 +73,29 @@ const Navbar = ({
                 classes={{
                   input: classes.input,
                 }}
+                filterOptions={((options, state) => {
+                  if (options.length > 0 && movieSearchList.totalCount > pageSize) {
+                    options.push({
+                      id: 0,
+                      title: '',
+                    })
+                  }
+                  return options
+                })}
                 renderOption={(props, option) => {
+                  if (option.id === 0) {
+                    return (
+                      <ListItemButton {...props} className={classes.centeredBlock} component={Link} to={routes.search(searchQuery)} onClick={handleCloseSearch}>
+                        <ListItemIcon className={classes.centeredBlock}>
+                          <MoreHorizIcon />
+                        </ListItemIcon>
+                      </ListItemButton>
+                    )
+                  }
+
                   const movieRating = calculateMovieRating(option.ratings)
                   return (
-                    <ListItem key={option.id} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
+                    <ListItem {...props} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
                       <ListItemAvatar>
                         <Avatar alr={option.title} src={option.cover} variant='square' style={{
                           width: 36,
@@ -89,16 +117,16 @@ const Navbar = ({
                 )}}
                 inputValue={searchQuery}
                 onInputChange={(event, value) => handleChangeSearchValue(value)}
-                renderInput={(params) => (
+                renderInput={(props) => (
                   <TextField
-                    {...params}
+                    {...props}
                     className={classes.search}
                     variant='outlined'
                     size='small'
                     placeholder='Search...'
                     color='primary'
                     InputProps={{
-                      ...params.InputProps,
+                      ...props.InputProps,
                       startAdornment: (
                         <InputAdornment position='start'>
                           <SearchIcon />
@@ -188,9 +216,13 @@ Navbar.propTypes = {
   toggleColorMode: PropTypes.func.isRequired,
   searchQuery: PropTypes.string,
   handleChangeSearchValue: PropTypes.func.isRequired,
-  movieSearchList: PropTypes.array,
+  movieSearchList: PropTypes.shape({
+    items: PropTypes.array,
+    totalCount: PropTypes.number.isRequired,
+  }),
   handleCloseSearch: PropTypes.func.isRequired,
   inputRef: PropTypes.object.isRequired,
+  pageSize: PropTypes.number.isRequired,
 }
 
 export default withStyles(styles)(Navbar)

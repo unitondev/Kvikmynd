@@ -1,10 +1,11 @@
 const movieListRequests = {
-  movieListRequest: ({ PageNumber = 1, PageSize = 5 }) => ({
+  movieListRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
     url: 'api/movie',
     method: 'get',
     params: {
       PageNumber,
       PageSize,
+      SearchQuery,
     }
   }),
 }

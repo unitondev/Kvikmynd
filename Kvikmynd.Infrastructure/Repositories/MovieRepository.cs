@@ -30,23 +30,37 @@ namespace Kvikmynd.Infrastructure.Repositories
             };;
         }
 
-        public async Task<MoviesWithGenresAndRatingsModel> GetMovieWithGenresAndRatingsAsync(PaginationParametersModel paginationParameters)
+        public async Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model)
         {
-            var query = DbSet
-                .Include(m => m.GenreMovies)
-                .ThenInclude(gm => gm.Genre)
-                .Include(m => m.MovieRatings); 
-                
+            var query = DbSet.AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchQuery))
+            {
+                query = query
+                    .Where(i => i.Title.Contains(model.SearchQuery))
+                    .Include(m => m.MovieRatings);
+            }
+            else
+            {
+                query = query
+                    .Include(m => m.MovieRatings)
+                    .Include(m => m.GenreMovies)
+                    .ThenInclude(gm => gm.Genre);
+            }
+
             var movies = await query
                 .OrderBy(m => m.Id)
-                .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
-                .Take(paginationParameters.PageSize)
+                .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
+                        ? ((model.PageNumber - 1) * model.PageSize) 
+                        : 0)
+                )
+                .Take(model.PageSize ?? int.MaxValue)
                 .AsNoTracking()
                 .ToListAsync();
 
             var totalCount = await query.CountAsync();
 
-            return new MoviesWithGenresAndRatingsModel
+            return new GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>
             {
                 TotalCount = totalCount,
                 Items = movies.Select(movie => new MovieWithGenresAndRatingsModel

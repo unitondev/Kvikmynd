@@ -17,6 +17,7 @@ const NavBarContainer = () => {
   const isLogined = useSelector(getIsLoginSucceeded)
   const avatar = useSelector(getUserAvatar)
   const movieSearchList = useSelector(getMovieSearchList)
+  const PageSize = 5
 
   const onClickLogout = () => {
     dispatch(logoutRequest())
@@ -39,7 +40,10 @@ const NavBarContainer = () => {
 
   const debouncedSearchQuery = useRef(
     _.debounce((searchQuery) => {
-      dispatch(movieListActions.getMovieBySearchRequest({SearchQuery: searchQuery}))
+      dispatch(movieListActions.getMovieBySearchRequest({
+        SearchQuery: searchQuery,
+        PageSize,
+      }))
     }, 1000)
   ).current
 
@@ -68,6 +72,7 @@ const NavBarContainer = () => {
       movieSearchList={movieSearchList}
       handleCloseSearch={handleCloseSearch}
       inputRef={inputRef}
+      pageSize={PageSize}
     />
   )
 }

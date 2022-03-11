@@ -1,7 +1,10 @@
 import { handleActions } from 'redux-actions'
 import * as movieActions from '../actions'
 
-const defaultState = []
+const defaultState = {
+  items: [],
+  totalCount: 0,
+}
 
 export default handleActions(
   {

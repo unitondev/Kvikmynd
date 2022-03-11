@@ -25,6 +25,9 @@ const styles = (theme) => ({
       width: '20ch !important',
     },
   },
+  centeredBlock: {
+    justifyContent: 'center'
+  }
 })
 
 export default styles

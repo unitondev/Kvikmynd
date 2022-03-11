@@ -35,10 +35,14 @@ const movieRequests = {
     url: `api/comment/${id}`,
     method: 'delete',
   }),
-  getMovieBySearchRequest: (data) => ({
-    url: 'api/movie/getBySearch',
-    method: 'post',
-    data,
+  getMovieBySearchRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
+    url: 'api/movie',
+    method: 'get',
+    params: {
+      PageNumber,
+      PageSize,
+      SearchQuery,
+    }
   }),
 }
 

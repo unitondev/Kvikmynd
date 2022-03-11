@@ -26,9 +26,16 @@ const MovieList = ({
   pageNumber,
   handleClickPagination,
   pagesTotalCount,
+  isSearchRoute,
+  locationQuery,
 }) => (
   <>
     <Grid container direction='column' spacing={5} sx={{ marginBottom: '100px' }}>
+      {isSearchRoute && (
+        <Grid item>
+          <Typography>Search: {locationQuery.query}</Typography>
+        </Grid>
+      )}
       {
         movies.length > 0
           ? (
@@ -105,6 +112,8 @@ MovieList.propTypes = {
   pageNumber: PropTypes.number.isRequired,
   handleClickPagination: PropTypes.func.isRequired,
   pagesTotalCount: PropTypes.number.isRequired,
+  isSearchRoute: PropTypes.bool.isRequired,
+  locationQuery: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

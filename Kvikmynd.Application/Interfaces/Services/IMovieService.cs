@@ -9,7 +9,7 @@ namespace Kvikmynd.Application.Interfaces.Services
 {
     public interface IMovieService : IService<Movie>
     {
-        Task<MoviesWithGenresAndRatingsViewModel> GetAllMoviesAsync(PaginationParametersModel paginationParameters);
+        Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model);
         Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int movieId);
         Task<ServiceResult<Movie>> CreateMovieAsync(MovieModel model);
         Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieModel model);
