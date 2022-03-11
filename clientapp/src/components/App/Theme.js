@@ -1,8 +1,12 @@
 import React, { useMemo, useState } from 'react'
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
+import { SnackbarProvider } from 'notistack'
 
-export const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
+export const ColorModeContext = React.createContext({
+  toggleColorMode: () => {
+  },
+})
 
 const Theme = ({ children }) => {
   const [mode, setMode] = useState('light')
@@ -15,11 +19,11 @@ const Theme = ({ children }) => {
 
   const theme = useMemo(() => createTheme({
     palette: {
-      mode
+      mode,
     },
     shape: {
       borderRadius: 10,
-    }
+    },
   }), [mode])
 
   return (
@@ -27,7 +31,15 @@ const Theme = ({ children }) => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-            { children }
+          <SnackbarProvider
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            autoHideDuration={1500}
+          >
+            {children}
+          </SnackbarProvider>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </StyledEngineProvider>
