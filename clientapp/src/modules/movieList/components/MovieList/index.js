@@ -9,13 +9,14 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
-  CircularProgress,
   Grid,
   Pagination,
   PaginationItem,
   Rating,
+  Skeleton,
   Typography,
 } from '@mui/material'
+import _ from 'lodash'
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
@@ -29,20 +30,61 @@ const MovieList = ({
   generateUrlWithPageQuery,
   pagesTotalCount,
   searchQuery,
+  isLoading,
 }) => (
   <>
-    <Grid container direction='column' spacing={5} sx={{ marginBottom: '100px' }}>
+    <Grid container direction='column' spacing={5}>
       {searchQuery?.length > 0 && (
         <Grid item>
           <Typography>Search: {searchQuery}</Typography>
         </Grid>
       )}
       {
-        movies.length > 0
-          ? (
+        isLoading
+          ? _.times(5, i => (
+            <Grid item key={i}>
+              <Card>
+                <CardHeader
+                  title={<Skeleton height={25} width='25%' animation='wave'/>}
+                />
+                <CardContent>
+                  <Grid container direction='row' spacing={2}>
+                    <Grid item xs={3}>
+                      <Skeleton
+                        variant='rectangular'
+                        height={400}
+                        animation='wave'
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Grid container direction='column'>
+                        <Grid item>
+                          <Skeleton height={25} width='50%' animation='wave'/>
+                        </Grid>
+                        <Grid item>
+                          <Skeleton height={20} width='40%' animation='wave'/>
+                        </Grid>
+                        <Grid item>
+                          {
+                            _.times(8, i => (
+                              <Skeleton key={i} height={20} width='100%' animation='wave'/>
+                            ))
+                          }
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <CardActions>
+                  <Skeleton height={25} width='10%' animation='wave'/>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+          : (
             <>
               {
-                movies.map((movie) => {
+                movies.length > 0 && movies.map((movie) => {
                   return (
                     <Grid item key={movie.id}>
                       <Card>
@@ -93,26 +135,27 @@ const MovieList = ({
                   )
                 })
               }
-              <Grid item className={classes.paginationBlock}>
-                <Pagination
-                  page={pageNumber}
-                  count={pagesTotalCount}
-                  color='primary'
-                  showFirstButton
-                  showLastButton
-                  renderItem={(item) => (
-                    <PaginationItem
-                      component={Link}
-                      to={generateUrlWithPageQuery(item.page)}
-                      {...item}
+              {
+                movies.length > 0 && (
+                  <Grid item className={classes.paginationBlock}>
+                    <Pagination
+                      page={pageNumber}
+                      count={pagesTotalCount}
+                      color='primary'
+                      showFirstButton
+                      showLastButton
+                      renderItem={(item) => (
+                        <PaginationItem
+                          component={Link}
+                          to={generateUrlWithPageQuery(item.page)}
+                          {...item}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
+                  </Grid>
+                )
+              }
             </>
-          )
-          : (
-            <CircularProgress className={classes.spinner} />
           )
       }
     </Grid>
@@ -127,6 +170,7 @@ MovieList.propTypes = {
   generateUrlWithPageQuery: PropTypes.func.isRequired,
   pagesTotalCount: PropTypes.number.isRequired,
   searchQuery: PropTypes.string,
+  isLoading: PropTypes.bool.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

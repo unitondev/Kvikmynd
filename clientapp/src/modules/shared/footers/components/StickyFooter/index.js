@@ -11,10 +11,6 @@ const StickyFooter = ({ classes, hideFooter, children }) => (
       hidden={hideFooter}
       className={classes.footerBlock}
       component='footer'
-      sx={{
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
-      }}
     >
       <Container maxWidth='sm'>
         <Typography variant='body1' align='center'>

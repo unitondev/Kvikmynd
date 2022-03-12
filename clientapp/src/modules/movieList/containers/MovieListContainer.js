@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
-import { getMovieList, getMovieListTotalCount } from '../selectors'
+import { getIsMovieListLoading, getMovieList, getMovieListTotalCount } from '../selectors'
 import { addQueryToUrl } from '@movie/modules/movieList/helpers'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
   const movies = useSelector(getMovieList)
   const moviesTotalCount = useSelector(getMovieListTotalCount)
+  const isLoading = useSelector(getIsMovieListLoading)
   const location = useSelector(state => state.router.location)
   const PageSize = 5
   const pageNumber = location.query.page
@@ -41,6 +42,7 @@ const MovieListContainer = () => {
       generateUrlWithPageQuery={generateUrlWithPageQuery}
       pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
       searchQuery={location.query.query}
+      isLoading={isLoading}
     />
   )
 }

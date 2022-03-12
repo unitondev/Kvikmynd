@@ -1,4 +1,4 @@
-const styles = {
+const styles = (theme) => ({
   rootBox: {
     display: 'flex',
     flexDirection: 'column',
@@ -10,7 +10,8 @@ const styles = {
     paddingLeft: 16,
     paddingRight: 16,
     marginTop: 'auto',
+    backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
   },
-}
+})
 
 export default styles

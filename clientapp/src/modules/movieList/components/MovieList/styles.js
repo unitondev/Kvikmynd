@@ -1,10 +1,8 @@
 const styles = {
-  spinner: {
-    margin: '40px',
-  },
   paginationBlock: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: '40px',
   }
 }
 
