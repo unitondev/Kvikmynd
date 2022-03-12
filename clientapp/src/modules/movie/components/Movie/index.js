@@ -16,7 +16,7 @@ import {
 
 import CommentsList from '../CommentList'
 import styles from './styles'
-import ScrollTop from '@movie/modules/navbar/components/ScrollTop'
+import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 
 const Movie = ({
   classes,
@@ -127,7 +127,7 @@ const Movie = ({
         handleDeleteCommentClick={handleDeleteCommentClick}
         dialogProps={dialogProps}
       />
-      <ScrollTop />
+      <ScrollTopFab />
     </Grid>
   </Paper>
 )

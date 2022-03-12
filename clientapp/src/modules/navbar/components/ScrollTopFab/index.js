@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 import { Fab, Zoom } from '@mui/material'
 import { Box } from '@mui/system'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
-const ScrollTop = () => {
+const ScrollTopFab = () => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 100,
@@ -37,7 +36,4 @@ const ScrollTop = () => {
   )
 }
 
-ScrollTop.propTypes = {
-}
-
-export default ScrollTop
+export default ScrollTopFab
