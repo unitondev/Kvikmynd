@@ -11,7 +11,7 @@ namespace Kvikmynd.Domain.Models
         public int Id { get; set; }
         [MaxLength((256))]
         public string Title { get; set; }
-        [MaxLength(1024)]
+        [MaxLength(2048)]
         public string Description { get; set; }
         public byte[] Cover { get; set; } = Encoding.UTF8.GetBytes(BaseCover);
         [MaxLength(128)]

@@ -1,6 +1,5 @@
 import React, { useEffect, } from 'react'
 import { Provider } from 'react-redux'
-import { SnackbarProvider } from 'notistack'
 import { ConnectedRouter } from 'connected-react-router'
 
 import UI from './App'
@@ -19,19 +18,11 @@ const App = () => {
     <Provider store={store}>
       <React.StrictMode>
         <MUI>
-          <SnackbarProvider
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
-            autoHideDuration={1500}
-          >
-            <div className='App'>
-              <ConnectedRouter history={history}>
-                <UI />
-              </ConnectedRouter>
-            </div>
-          </SnackbarProvider>
+          <div className='App'>
+            <ConnectedRouter history={history}>
+              <UI />
+            </ConnectedRouter>
+          </div>
         </MUI>
       </React.StrictMode>
     </Provider>

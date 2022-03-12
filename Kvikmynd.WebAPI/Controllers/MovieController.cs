@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
-using Kvikmynd.Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Kvikmynd.Controllers
 {
@@ -28,9 +24,9 @@ namespace Kvikmynd.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model)
         {
-            var result = await _movieService.GetAllMoviesAsync();
+            var result = await _movieService.GetAllMoviesAsync(model);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
             return Ok(result);
@@ -126,26 +122,11 @@ namespace Kvikmynd.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("getBySearch")]
-        public async Task<IActionResult> GetMoviesBySearchQuery([FromBody] SearchQueryModel model)
+        [HttpGet("populateMoviesCovers")]
+        public async Task<IActionResult> PopulateMoviesCovers()
         {
-            if (string.IsNullOrEmpty(model.SearchQuery))
-            {
-                return CustomBadRequest(ErrorCode.SearchQueryIsEmpty);
-            }
-            
-            var movies = await _movieService.Filter(i => i.Title.Contains(model.SearchQuery))
-                .Include(m => m.MovieRatings)
-                .Select(m => new MovieWithRatingsModel
-                {
-                    Movie = m,
-                    Ratings = m.MovieRatings
-                })
-                .ToListAsync();
-
-            var moviesViewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(movies);
-
-            return Ok(moviesViewModels);
+            await _movieService.PopulateMoviesCoversAsync();
+            return Ok();
         }
     }
 }

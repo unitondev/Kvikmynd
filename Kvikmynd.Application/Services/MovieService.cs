@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
+using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
@@ -25,14 +27,18 @@ namespace Kvikmynd.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync()
+        public async Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model)
         {
-            var movies = await _work.MovieRepository.GetMovieWithGenresAndRatingsAsync();
+            var movies = await _work.MovieRepository.GetMoviesWithGenresAndRatingsAsync(model);
 
             var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
-                List<MovieWithGenresAndRatingsViewModel>>(movies);
+                List<MovieWithGenresAndRatingsViewModel>>(movies.Items);
 
-            return moviesViewModels;
+            return new GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>()
+            {
+                Items = moviesViewModels,
+                TotalCount = movies.TotalCount
+            };
         }
         
         public async Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int id)
@@ -158,5 +164,50 @@ namespace Kvikmynd.Application.Services
         {
             await _work.DisposeAsync();
         }
+        
+        #region Temp solution for movie covers
+
+        public async Task PopulateMoviesCoversAsync()
+        {
+            var coversPaths = new[]
+            {
+                @"../Kvikmynd.Infrastructure/Covers/fightClub.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/americanPsycho.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/PulpFiction.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/memento.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/2001.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/NoCountryForOldMen.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/28DaysLater.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/TheGirlWithTheDragonTattoo.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/Dunkirk.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/Thursday.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/Scarface.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/TheMatrix.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/CatchMeIfYouCan.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/Se7en.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/TheShining.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/12AngryMen.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/AmericanHistoryX.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/OneFlewOvertheCuckoosNest.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/LockStockandTwoSmokingBarrels.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/WhoAmI.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/ThereWillBeBlood.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/TaxiDriver.jpg",
+                @"../Kvikmynd.Infrastructure/Covers/TheThing.jpg"
+            };
+
+            for (var i = 0; i < coversPaths.Length; i++)
+            {
+                var movie = await _work.MovieRepository.FindByKeyAsync(i + 1);
+                if (movie.Cover != null && movie.Cover.Length == 0)
+                {
+                    movie.Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(coversPaths[i]));
+                }
+            }
+            
+            await _work.CommitAsync();
+        }
+        
+        #endregion
     }
 }

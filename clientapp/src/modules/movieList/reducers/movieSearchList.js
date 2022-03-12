@@ -1,7 +1,10 @@
 import { handleActions } from 'redux-actions'
 import * as movieActions from '../actions'
 
-const defaultState = []
+const defaultState = {
+  items: [],
+  totalCount: 0,
+}
 
 export default handleActions(
   {
@@ -9,6 +12,9 @@ export default handleActions(
       return action.response.data
     },
     [movieActions.resetMovieBySearch]: (state, action) => {
+      return defaultState
+    },
+    [movieActions.resetState]: (state, action) => {
       return defaultState
     },
   },

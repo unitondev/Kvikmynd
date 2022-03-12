@@ -30,20 +30,46 @@ namespace Kvikmynd.Infrastructure.Repositories
             };;
         }
 
-        public async Task<List<MovieWithGenresAndRatingsModel>> GetMovieWithGenresAndRatingsAsync()
+        public async Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model)
         {
-            var movies = await DbSet
-                .Include(m => m.GenreMovies)
-                .ThenInclude(gm => gm.Genre)
-                .Include(m => m.MovieRatings)
+            var query = DbSet.AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchQuery))
+            {
+                query = query
+                    .Where(i => i.Title.Contains(model.SearchQuery))
+                    .Include(m => m.MovieRatings);
+            }
+            else
+            {
+                query = query
+                    .Include(m => m.MovieRatings)
+                    .Include(m => m.GenreMovies)
+                    .ThenInclude(gm => gm.Genre);
+            }
+
+            var movies = await query
+                .OrderBy(m => m.Id)
+                .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
+                        ? ((model.PageNumber - 1) * model.PageSize) 
+                        : 0)
+                )
+                .Take(model.PageSize ?? int.MaxValue)
+                .AsNoTracking()
                 .ToListAsync();
 
-            return movies.Select(movie => new MovieWithGenresAndRatingsModel 
+            var totalCount = await query.CountAsync();
+
+            return new GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>
+            {
+                TotalCount = totalCount,
+                Items = movies.Select(movie => new MovieWithGenresAndRatingsModel
                 {
                     Movie = movie,
                     GenreMovies = movie.GenreMovies,
                     Ratings = movie.MovieRatings
-                }).ToList();
+                }).ToList()
+            };
         }
 
         public async Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id)

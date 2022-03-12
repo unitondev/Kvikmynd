@@ -10,6 +10,7 @@ import { NavBar } from '@movie/modules/navbar'
 import { Notifications } from '@movie/modules/shared/snackBarNotification'
 import Footer from '@movie/modules/shared/footers/components/StickyFooter'
 import routes from '@movie/routes'
+import NotFoundPage from '@movie/shared/components/NotFound'
 
 const hideNavbarOn = []
 const hideFooterOn = [
@@ -39,6 +40,12 @@ const App = ({ location }) => {
             </Route>
             <PrivateRoute path={routes.profile} component={ProfilePage} />
             <PrivateRoute path={routes.movieWithId} component={MoviePage} />
+            <Route path={routes.search}>
+              <MovieListPage />
+            </Route>
+            <Route path="*">
+              <NotFoundPage />
+            </Route>
           </Switch>
         </Container>
       </Footer>
