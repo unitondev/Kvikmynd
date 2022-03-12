@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
 import { getMovieList, getMovieListTotalCount } from '../selectors'
+import { addQueryToUrl } from '@movie/modules/movieList/helpers'
 
-const MovieListContainer = ({
-  searchRoute,
-}) => {
+const MovieListContainer = () => {
   const dispatch = useDispatch()
   const movies = useSelector(getMovieList)
   const moviesTotalCount = useSelector(getMovieListTotalCount)
-  const locationQuery = useSelector(state => state.router.location.query)
-  const [pageNumber, setPageNumber] = useState(1)
+  const location = useSelector(state => state.router.location)
   const PageSize = 5
+  const pageNumber = location.query.page
+  const searchQuery = location.query.query
 
   useEffect(() => {
     return () => {
@@ -23,37 +23,24 @@ const MovieListContainer = ({
   }, [])
 
   useEffect(() => {
-    setPageNumber(1)
-
-    if (pageNumber === 1) {
-      dispatch(rawActions.movieListRequest({
-        PageNumber: pageNumber,
-        PageSize,
-        ...locationQuery.query && { SearchQuery: locationQuery.query },
-      }))
-    }
-  }, [searchRoute])
-
-  useEffect(() => {
     dispatch(rawActions.movieListRequest({
-      PageNumber: pageNumber,
+      PageNumber: pageNumber ?? 1,
       PageSize,
-      ...locationQuery.query && { SearchQuery: locationQuery.query },
+      ...searchQuery && { SearchQuery: searchQuery },
     }))
-  }, [dispatch, pageNumber])
+  }, [dispatch, pageNumber, searchQuery])
 
-  const handleClickPagination = (event, value) => {
-    setPageNumber(value)
-  }
+  const generateUrlWithPageQuery = useCallback((page) => {
+    return addQueryToUrl('page', page, location.pathName, location.search)
+  }, [location])
 
   return (
     <MovieList
       movies={movies}
-      pageNumber={pageNumber}
-      handleClickPagination={handleClickPagination}
+      pageNumber={pageNumber ? Number(pageNumber) : 1}
+      generateUrlWithPageQuery={generateUrlWithPageQuery}
       pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
-      isSearchRoute={Boolean(searchRoute)}
-      locationQuery={locationQuery}
+      searchQuery={location.query.query}
     />
   )
 }

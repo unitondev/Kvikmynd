@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTheme } from '@mui/material/styles'
 import _ from 'lodash'
@@ -9,6 +9,8 @@ import Navbar from '../components/NavBar'
 import { ColorModeContext } from '../../../components/App/Theme'
 import * as movieListActions from '@movie/modules/movieList/actions'
 import { getMovieSearchList } from '@movie/modules/movieList/selectors'
+import { addQueryToUrl } from '@movie/modules/movieList/helpers'
+import routes from '@movie/routes'
 
 const NavBarContainer = () => {
   const dispatch = useDispatch()
@@ -17,6 +19,7 @@ const NavBarContainer = () => {
   const isLogined = useSelector(getIsLoginSucceeded)
   const avatar = useSelector(getUserAvatar)
   const movieSearchList = useSelector(getMovieSearchList)
+  const location = useSelector(state => state.router.location)
   const PageSize = 5
 
   const onClickLogout = () => {
@@ -57,6 +60,10 @@ const NavBarContainer = () => {
     inputRef.current.blur()
   }
 
+  const generateUrlWithSearchQuery = useCallback((query) => {
+    return addQueryToUrl('query', query, routes.search, location.search, ['page'])
+  }, [location])
+
   return (
     <Navbar
       isLogined={isLogined}
@@ -73,6 +80,7 @@ const NavBarContainer = () => {
       handleCloseSearch={handleCloseSearch}
       inputRef={inputRef}
       pageSize={PageSize}
+      generateUrlWithSearchQuery={generateUrlWithSearchQuery}
     />
   )
 }

@@ -51,6 +51,7 @@ const Navbar = ({
   handleCloseSearch,
   inputRef,
   pageSize,
+  generateUrlWithSearchQuery,
 }) => (
   <ElevationScroll>
     <>
@@ -85,7 +86,7 @@ const Navbar = ({
                 renderOption={(props, option) => {
                   if (option.id === 0) {
                     return (
-                      <ListItemButton {...props} className={classes.centeredBlock} component={Link} to={routes.search(searchQuery)} onClick={handleCloseSearch}>
+                      <ListItemButton {...props} className={classes.centeredBlock} component={Link} to={generateUrlWithSearchQuery(searchQuery)} onClick={handleCloseSearch}>
                         <ListItemIcon className={classes.centeredBlock}>
                           <MoreHorizIcon />
                         </ListItemIcon>
@@ -223,6 +224,7 @@ Navbar.propTypes = {
   handleCloseSearch: PropTypes.func.isRequired,
   inputRef: PropTypes.object.isRequired,
   pageSize: PropTypes.number.isRequired,
+  generateUrlWithSearchQuery: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Navbar)

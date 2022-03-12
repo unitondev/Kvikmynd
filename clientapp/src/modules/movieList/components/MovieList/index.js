@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Grid,
   Pagination,
+  PaginationItem,
   Rating,
   Typography,
 } from '@mui/material'
@@ -19,21 +20,21 @@ import {
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import ScrollTop from '@movie/modules/navbar/components/ScrollTop'
+import routes from '@movie/routes'
 
 const MovieList = ({
   classes,
   movies,
   pageNumber,
-  handleClickPagination,
+  generateUrlWithPageQuery,
   pagesTotalCount,
-  isSearchRoute,
-  locationQuery,
+  searchQuery,
 }) => (
   <>
     <Grid container direction='column' spacing={5} sx={{ marginBottom: '100px' }}>
-      {isSearchRoute && (
+      {searchQuery?.length > 0 && (
         <Grid item>
-          <Typography>Search: {locationQuery.query}</Typography>
+          <Typography>Search: {searchQuery}</Typography>
         </Grid>
       )}
       {
@@ -83,7 +84,7 @@ const MovieList = ({
                           </Grid>
                         </CardContent>
                         <CardActions>
-                          <Button component={Link} to={`/movie${movie.id}`} size='small' color='primary'>
+                          <Button component={Link} to={routes.movie(movie.id)} size='small' color='primary'>
                             More details...
                           </Button>
                         </CardActions>
@@ -93,7 +94,20 @@ const MovieList = ({
                 })
               }
               <Grid item className={classes.paginationBlock}>
-                <Pagination page={pageNumber} count={pagesTotalCount} onChange={handleClickPagination} color='primary' showFirstButton showLastButton />
+                <Pagination
+                  page={pageNumber}
+                  count={pagesTotalCount}
+                  color='primary'
+                  showFirstButton
+                  showLastButton
+                  renderItem={(item) => (
+                    <PaginationItem
+                      component={Link}
+                      to={generateUrlWithPageQuery(item.page)}
+                      {...item}
+                    />
+                  )}
+                />
               </Grid>
             </>
           )
@@ -110,10 +124,9 @@ MovieList.propTypes = {
   classes: PropTypes.object.isRequired,
   movies: PropTypes.array.isRequired,
   pageNumber: PropTypes.number.isRequired,
-  handleClickPagination: PropTypes.func.isRequired,
+  generateUrlWithPageQuery: PropTypes.func.isRequired,
   pagesTotalCount: PropTypes.number.isRequired,
-  isSearchRoute: PropTypes.bool.isRequired,
-  locationQuery: PropTypes.object.isRequired,
+  searchQuery: PropTypes.string,
 }
 
 export default withStyles(styles)(MovieList)
