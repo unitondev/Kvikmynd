@@ -11,6 +11,7 @@ import { Notifications } from '@movie/modules/shared/snackBarNotification'
 import Footer from '@movie/modules/shared/footers/components/StickyFooter'
 import routes from '@movie/routes'
 import NotFoundPage from '@movie/shared/components/NotFound'
+import ScrollToTop from '@movie/services/ScrollToTop'
 
 const hideNavbarOn = []
 const hideFooterOn = [
@@ -24,6 +25,7 @@ const App = ({ location }) => {
 
   return (
     <>
+      <ScrollToTop />
       <Footer hideFooter={hideFooter}>
         <Notifications />
         { !hideNavbar && <NavBar /> }

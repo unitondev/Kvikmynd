@@ -19,7 +19,7 @@ import {
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
-import ScrollTop from '@movie/modules/navbar/components/ScrollTop'
+import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import routes from '@movie/routes'
 
 const MovieList = ({
@@ -116,7 +116,7 @@ const MovieList = ({
           )
       }
     </Grid>
-    <ScrollTop />
+    <ScrollTopFab />
   </>
 )
 
