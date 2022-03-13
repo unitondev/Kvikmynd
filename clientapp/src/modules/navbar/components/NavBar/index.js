@@ -52,6 +52,7 @@ const Navbar = ({
   inputRef,
   pageSize,
   generateUrlWithSearchQuery,
+  pathname,
 }) => (
   <ElevationScroll>
     <>
@@ -181,12 +182,20 @@ const Navbar = ({
                   </>
                   :
                   <>
-                    <Button component={Link} to={routes.login} color='primary'>
-                      Login
-                    </Button>
-                    <Button component={Link} to={routes.register} color='primary'>
-                      Register
-                    </Button>
+                    {
+                      !pathname.startsWith(routes.login) && (
+                        <Button component={Link} to={routes.login} color='primary'>
+                          Login
+                        </Button>
+                      )
+                    }
+                    {
+                      !pathname.startsWith(routes.register) && (
+                        <Button component={Link} to={routes.register} color='primary'>
+                          Register
+                        </Button>
+                      )
+                    }
                   </>
               }
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
@@ -225,6 +234,7 @@ Navbar.propTypes = {
   inputRef: PropTypes.object.isRequired,
   pageSize: PropTypes.number.isRequired,
   generateUrlWithSearchQuery: PropTypes.func.isRequired,
+  pathname: PropTypes.string.isRequired,
 }
 
 export default withStyles(styles)(Navbar)
