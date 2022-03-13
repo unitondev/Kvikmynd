@@ -23,7 +23,7 @@ namespace Kvikmynd.Application.Services
             {
                 From = new EmailAddress(_settings.FromAddress, "Kvikmynd"),
                 Subject = message.Subject,
-                HtmlContent = $"<html>{message.Body}</html>"
+                HtmlContent = $"<!DOCTYPE html><html>{message.Body}</html>"
             };
             
             email.AddTo(message.To.ToString());

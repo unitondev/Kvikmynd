@@ -4,150 +4,77 @@
     {
         public static string GetResetPasswordTemplate(string userName, string url)
         {
-            return $@"<body
-              marginheight=""0""
-              topmargin=""0""
-              marginwidth=""0""
-              style=""margin: 0px; background-color: rgb(242, 243, 248);""
-              leftmargin=""0""
-            >
-              <div
-                style=""
-                  min-width: 100%;
-                  @import url(
-                    https://fonts.googleapis.com/css?family=Roboto:300,
-                    400,
-                    500,
-                    700|Open + Sans:300,
-                    400,
-                    600,
-                    700
-                  );
-                  font-family: 'Open Sans', sans-serif;
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                ""
-              >
-                <div
-                  style=""
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    margin-top: 50px;
-                  ""
-                >
-                  <h2 style=""font-family: 'Roboto', sans-serif;"">
-                    KVIKMYND
-                  </h2>
-                </div>
-                <div
-                  style=""
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    max-width: 70%;
-                    margin: 50px auto 0;
-                    background-color: aquamarine;
-                    border-radius: 10px;
-                  ""
-                >
-                  <div
-                    style=""
-                      padding: 0 35px;
-                      display: flex;
-                      flex-direction: column;
-                      align-items: center;
-                    ""
-                  >
-                    <div style=""display: flex; flex-direction: column; align-items: center;"">
-                      <h1
-                        style=""
-                          font-family: 'Roboto', sans-serif;
-                          font-weight: 500;
-                          font-size: 32px;
-                          text-align: center;
-                        ""
-                      >
-                        You have requested to reset your password
-                      </h1>
-                      <span
-                        style=""
-                          display: inline-block;
-                          vertical-align: middle;
-                          border-bottom: 1px solid #fcd6d0;
-                          margin: 25px 0px;
-                          width: 100px;
-                        ""
-                      ></span>
-                    </div>
-                    <h3
-                      style=""
-                        font-family: 'Roboto', sans-serif;
-                        font-weight: 300;
-                        text-align: center;
-                      ""
-                    >
-                      Hello {userName},
-                    </h3>
-                    <p
-                      style=""
-                        font-family: 'Roboto', sans-serif;
-                        text-align: center;
-                        margin-top: 0px;
-                      ""
-                    >
-                      Just press the button below and follow the instructions.
-                    </p>
-                    <a
-                      style=""font-family: 'Roboto', sans-serif; text-align: center;""
-                      href=""{url}""
-                    >
-                      <button
-                        style=""
-                          font-family: 'Roboto', sans-serif;
-                          font-weight: 600;
-                          line-height: 1.75;
-                          text-transform: uppercase;
-                          padding: 6px 16px;
-                          border-radius: 10px;
-                          color: black;
-                          background-color: #fcd6d0;
-                          text-decoration: none;
-                          border: 0;
-                          box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
-                            0px 2px 2px 0px rgb(0 0 0 / 14%),
-                            0px 1px 5px 0px rgb(0 0 0 / 12%);
-                          margin-bottom: 15px;
-                        ""
-                      >
-                        Reset my password
-                      </button>
-                    </a>
-                    <p
-                      style=""
-                        font-family: 'Roboto', sans-serif;
-                        text-align: center;
-                        margin-top: 0px;
-                      ""
-                    >
-                      If you didn't request a password reset, you can ignore this email.
-                      Your password will not be changed.
-                    </p>
-                    <p
-                      style=""
-                        font-family: 'Roboto', sans-serif;
-                        font-weight: 600;
-                        text-align: center;
-                      ""
-                    >
-                      Thank you, The Kvikmynd Team
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </body>";
+            return @$"
+            <body background-color: #f2f3f8;>
+  <table cellspacing=""0"" border=""0"" cellpadding=""0"" width=""100%"" bgcolor=""#f2f3f8""
+    style=""@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;"">
+    <tr>
+      <td>
+        <table style=""background-color: #f2f3f8; max-width:670px;"" align=""center"">
+          <tr>
+            <td style=""height:80px;""></td>
+          </tr>
+          <tr>
+            <td style=""text-align:center;"">
+              <h2>
+                KVIKMYND
+              </h2>
+            </td>
+          </tr>
+          <tr>
+            <td style=""height:20px;""></td>
+          </tr>
+          <tr>
+            <td>
+              <table width=""95%"" border=""0"" align=""center"" cellpadding=""0"" cellspacing=""0""
+                style=""max-width:670px;background:aquamarine; border-radius:10px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);"">
+                <tr>
+                  <td style=""height:40px;""></td>
+                </tr>
+                <tr>
+                  <td style=""padding:0 35px;"">
+                      <h1 style=""color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;"">You have requested to reset your password</h1>
+                      <span style=""display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;""></span>
+                      <h3 style=""font-weight: 300;"">
+                        Hello {userName},
+                      </h3>
+                      <p style=""color:#455056; font-size:15px;line-height:24px; margin:0;"">
+                        To reset your password, click the button below and follow the instructions.
+                      </p>
+                      <a href=""{url}""
+                        style=""background:#fcd6d0;text-decoration:none !important; font-weight:500; margin-top:35px; margin-bottom:15px;color:black;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;"">Reset
+                        Password</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span style=""color:#455056; font-size:15px;line-height:24px; margin:0;"">
+                      If you didn't request a password reset, you can ignore this email. Your password will not be changed.
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style=""height:40px;""></td>
+                </tr>
+              </table>
+            </td>
+          <tr>
+            <td style=""height:20px;""></td>
+          </tr>
+          <tr>
+            <td style=""text-align:center;"">
+              <p style=""font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;""><strong>Thank you, The Kvikmynd Team</strong></p>
+            </td>
+        </tr>
+          <tr>
+            <td style=""height:80px;""></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+          ";
         }
     }
 }
