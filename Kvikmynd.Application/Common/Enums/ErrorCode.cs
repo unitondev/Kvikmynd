@@ -13,6 +13,7 @@
         EntityNotUpdated = 1006,
         EntityNotDeleted = 1007,
         SearchQueryIsEmpty = 1008,
+        EmailWasNotSent = 1009,
 
         #endregion
 
@@ -33,6 +34,7 @@
         CurrentPasswordIncorrect = 1112,
         NewPasswordCanNotMatсhCurrentPassword = 1113,
         PasswordNotChanged = 1114,
+        PasswordWasNotReseted = 1115,
 
         #endregion
 

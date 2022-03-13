@@ -1,4 +1,4 @@
-﻿namespace Kvikmynd.Application.Jwt
+﻿namespace Kvikmynd.Application.Common.Models
 {
     public class JwtSettings
     {

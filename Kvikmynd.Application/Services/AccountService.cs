@@ -5,10 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
+using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
-using Kvikmynd.Application.Jwt;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain.Models;
@@ -254,7 +254,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult();
         }
 
-        public async Task<ServiceResult<User>> GetCurrentUserAsync(string jwtPlainText)
+        public async Task<ServiceResult<User>> GetCurrentUserByJwtTokenAsync(string jwtPlainText)
         {
             var userId = GetIdFromFromJwtToken(jwtPlainText);
             var user = await _userManager.FindByIdAsync(userId);

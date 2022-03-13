@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
-import Login from '../components/Login'
+import LoginWrapper from '../components/LoginWrapper'
 import * as rawActions from '../actions'
 import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
 import routes from '@movie/routes'
@@ -10,20 +10,28 @@ import routes from '@movie/routes'
 const LoginContainer = () => {
   const dispatch = useDispatch()
   const isLogined = useSelector(getIsLoginSucceeded)
-  const idLoading = useSelector(getIsUserLoading)
+  const isLoading = useSelector(getIsUserLoading)
+
   const history = useHistory()
+  const { pathname } = useLocation()
 
   // TODO rewrite it
   useEffect(() => {
-    if (idLoading === false && isLogined === true) history.push(routes.root)
-  }, [idLoading, isLogined])
+    if (isLoading === false && isLogined === true) history.push(routes.root)
+  }, [isLoading, isLogined])
 
   const handleLogin = (values) => {
     dispatch(rawActions.onLogin(values))
   }
 
+  const handleForgotPassword = (values) => {
+    dispatch(rawActions.onForgotPassword(values))
+  }
+
   return (
-    <Login
+    <LoginWrapper
+      isForgotPasswordOpen={pathname.startsWith(routes.forgotPassword)}
+      handleForgotPassword={handleForgotPassword}
       handleLogin={handleLogin}
     />
   )

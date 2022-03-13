@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Mail;
 using System.Threading.Tasks;
+using Kvikmynd.Application.Common.EmailTemplates;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
@@ -9,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace Kvikmynd.Controllers
 {
@@ -19,11 +24,20 @@ namespace Kvikmynd.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly UserManager<User> _userManager;
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IAccountService accountService, UserManager<User> userManager)
+        public AccountController(
+            IAccountService accountService,
+            UserManager<User> userManager,
+            IEmailService emailService,
+            IConfiguration configuration
+            )
         {
             _accountService = accountService;
             _userManager = userManager;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         [HttpGet("{id}")]
@@ -121,7 +135,7 @@ namespace Kvikmynd.Controllers
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
             if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
 
-            var result = await _accountService.GetCurrentUserAsync(jwtToken);
+            var result = await _accountService.GetCurrentUserByJwtTokenAsync(jwtToken);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
 
             var userViewModel = new UserViewModel(result.Result, "");
@@ -139,7 +153,7 @@ namespace Kvikmynd.Controllers
             
             var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
             
-            var userResult = await _accountService.GetCurrentUserAsync(jwtToken);
+            var userResult = await _accountService.GetCurrentUserByJwtTokenAsync(jwtToken);
             if (!userResult.IsSucceeded) return CustomBadRequest(userResult.Error);
 
             if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
@@ -161,6 +175,50 @@ namespace Kvikmynd.Controllers
             }
 
             return NoContent();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var clientUrl = _configuration["ClientUrl"] + "/resetPassword";
+            var queryParams = new Dictionary<string, string>
+            {
+                {"token", passwordResetToken},
+                {"email", user.Email}
+            };
+
+            var url = new Uri(QueryHelpers.AddQueryString(clientUrl, queryParams));
+            var email = new MailMessage()
+            {
+                To = { new MailAddress(user.Email) },
+                Subject = "Reset password",
+                Body = EmailTemplates.GetResetPasswordTemplate(user.UserName, url.ToString())
+            };
+
+            var emailResult = await _emailService.SendMailAsync(email);
+            if (!emailResult) return CustomBadRequest(ErrorCode.EmailWasNotSent);
+            
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+
+            var token = Uri.UnescapeDataString(model.Token);
+            var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+            if (!result.Succeeded) return CustomBadRequest(ErrorCode.PasswordWasNotReseted);
+            
+            return Ok();
         }
 
         private bool SetRefreshTokenCookie(string refreshToken)

@@ -56,6 +56,23 @@ function * changePasswordFailure (action) {
   yield put(notificationActions.enqueueSnackbarError({ message }))
 }
 
+function * onForgotPassword (action) {
+  const { email } = action.payload
+  yield put(accountActions.forgotPasswordRequest({ Email: email }))
+  const result = yield take([accountActions.forgotPasswordSuccess, accountActions.forgotPasswordFailure])
+  if (result.type === accountActions.forgotPasswordFailure().type) {
+    const message = 'Reset password failed'
+    yield put(notificationActions.enqueueSnackbarError({ message }))
+    yield put(push(routes.login))
+    return
+  }
+}
+
+function * resetPasswordFailure (action) {
+  const message = 'Reset password failed'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
 function * loginSaga() {
   yield all([
     takeLatest(accountActions.onLogin, onLogin),
@@ -64,6 +81,8 @@ function * loginSaga() {
     takeLatest(accountActions.logoutSuccess, logoutSuccess),
     takeLatest(accountActions.changePasswordSuccess, changePasswordSuccess),
     takeLatest(accountActions.changePasswordFailure, changePasswordFailure),
+    takeLatest(accountActions.onForgotPassword, onForgotPassword),
+    takeLatest(accountActions.resetPasswordFailure, resetPasswordFailure),
   ])
 }
 

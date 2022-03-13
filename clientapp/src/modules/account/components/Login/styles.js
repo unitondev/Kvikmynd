@@ -1,12 +1,7 @@
 const styles = {
-  rootPaper: {
-    padding: 30,
+  forgotPasswordBlock: {
+    paddingTop: '5px !important',
   },
-  cardHeader: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  }
 }
 
 export default styles
