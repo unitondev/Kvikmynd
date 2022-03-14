@@ -6,6 +6,8 @@ import isLoading from './isUserLoading'
 import token from './token'
 import isForgotPasswordSucceeded from './isForgotPasswordSucceeded'
 import isResetPasswordSucceeded from './isResetPasswordSucceeded'
+import isRegisterSucceeded from './isRegisterSucceeded'
+import isConfirmEmailSucceeded from './isConfirmEmailSucceeded'
 
 export default combineReducers({
   me,
@@ -14,4 +16,6 @@ export default combineReducers({
   token,
   isForgotPasswordSucceeded,
   isResetPasswordSucceeded,
+  isRegisterSucceeded,
+  isConfirmEmailSucceeded,
 })

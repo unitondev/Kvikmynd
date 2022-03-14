@@ -20,6 +20,11 @@ export const registerRequest = createAction('REGISTER_REQUEST')
 export const registerSuccess = createAction('REGISTER_SUCCESS')
 export const registerFailure = createAction('REGISTER_FAILURE')
 
+export const confirmEmailRequest = createAction('CONFIRM_EMAIL_REQUEST')
+export const confirmEmailSuccess = createAction('CONFIRM_EMAIL_SUCCESS')
+export const confirmEmailFailure = createAction('CONFIRM_EMAIL_FAILURE')
+export const resetConfirmEmail = createAction('RESET_CONFIRM_EMAIL_STATE')
+
 export const startLoadingUser = createAction('START_LOADING_USER')
 export const stopLoadingUser = createAction('STOP_LOADING_USER')
 

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import Register from '../components/Register'
 import * as rawActions from '../actions'
-import { getIsUserLoading, getIsLoginSucceeded } from '../selectors'
+import { getIsUserLoading, getIsLoginSucceeded, getIsRegisterSucceeded } from '../selectors'
 import { toBase64 } from '../helpers'
 import routes from '@movie/routes'
 
@@ -13,6 +13,7 @@ const RegisterContainer = () => {
   const history = useHistory()
   const isLogined = useSelector(getIsLoginSucceeded)
   const idLoading = useSelector(getIsUserLoading)
+  const isRegisterSucceeded = useSelector(getIsRegisterSucceeded)
 
   useEffect(() => {
     if (idLoading === false && isLogined === true) {
@@ -28,6 +29,7 @@ const RegisterContainer = () => {
   return (
     <Register
       handleRegister={handleRegister}
+      isRegisterSucceeded={isRegisterSucceeded}
     />
   )
 }

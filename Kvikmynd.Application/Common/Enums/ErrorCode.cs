@@ -35,6 +35,8 @@
         NewPasswordCanNotMatсhCurrentPassword = 1113,
         PasswordNotChanged = 1114,
         PasswordWasNotReseted = 1115,
+        UserRegistrationAlreadyConfirmed = 1116,
+        RegisterConfirmationFailed = 1117,
 
         #endregion
 

@@ -46,6 +46,11 @@ const accountRequests = {
     method: 'post',
     data,
   }),
+  confirmEmailRequest: (data) => ({
+    url: 'api/account/confirmEmail',
+    method: 'post',
+    data,
+  })
 }
 
 export default accountRequests

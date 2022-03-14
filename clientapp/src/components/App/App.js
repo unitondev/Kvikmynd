@@ -13,6 +13,7 @@ import routes from '@movie/routes'
 import NotFoundPage from '@movie/shared/components/NotFound'
 import ScrollToTop from '@movie/services/ScrollToTop'
 import ResetPasswordPage from '@movie/modules/account/components/ResetPassword'
+import ConfirmEmailPage from '@movie/modules/account/components/ConfirmEmail'
 
 const hideNavbarOn = []
 const hideFooterOn = [
@@ -51,6 +52,9 @@ const App = ({ location }) => {
             </Route>
             <Route path={routes.resetPassword}>
               <ResetPasswordPage />
+            </Route>
+            <Route path={routes.confirmEmail}>
+              <ConfirmEmailPage />
             </Route>
             <Route path="*">
               <NotFoundPage />

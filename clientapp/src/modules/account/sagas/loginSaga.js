@@ -29,18 +29,6 @@ function * onRefreshToken(action) {
   }
 }
 
-function * onRegister(action) {
-  yield put(accountActions.registerRequest(action.payload))
-  const result = yield take([accountActions.registerSuccess, accountActions.registerFailure])
-  if (result.type === accountActions.registerFailure().type) {
-    const message = 'Register failure'
-    yield put(notificationActions.enqueueSnackbarError({ message }))
-    return
-  }
-
-  yield put(accountActions.getMeRequest())
-}
-
 function * logoutSuccess (action) {
   yield put(push(routes.root))
 }
@@ -77,7 +65,6 @@ function * loginSaga() {
   yield all([
     takeLatest(accountActions.onLogin, onLogin),
     takeLatest(accountActions.onRefreshToken, onRefreshToken),
-    takeLatest(accountActions.onRegister, onRegister),
     takeLatest(accountActions.logoutSuccess, logoutSuccess),
     takeLatest(accountActions.changePasswordSuccess, changePasswordSuccess),
     takeLatest(accountActions.changePasswordFailure, changePasswordFailure),

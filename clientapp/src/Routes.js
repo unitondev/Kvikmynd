@@ -7,6 +7,7 @@ export const movie = (id) => `/movie/${id}`
 export const search = `/search`
 export const forgotPassword = `/forgotPassword`
 export const resetPassword = `/resetPassword`
+export const confirmEmail = `/confirmEmail`
 
 export default {
   root,
@@ -18,4 +19,5 @@ export default {
   search,
   forgotPassword,
   resetPassword,
+  confirmEmail,
 }

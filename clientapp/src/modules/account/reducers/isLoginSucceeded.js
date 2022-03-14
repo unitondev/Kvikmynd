@@ -17,7 +17,7 @@ export default handleActions(
     [combineActions(
       accountActions.getTokenSuccess,
       accountActions.refreshTokensSuccess,
-      accountActions.registerSuccess,
+      accountActions.confirmEmailSuccess,
     )] (state, action) {
       return true
     },

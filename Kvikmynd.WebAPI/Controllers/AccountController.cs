@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Mail;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Common.EmailTemplates;
 using Kvikmynd.Application.Common.Enums;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Kvikmynd.Controllers
 {
@@ -26,18 +28,21 @@ namespace Kvikmynd.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
         public AccountController(
             IAccountService accountService,
             UserManager<User> userManager,
             IEmailService emailService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            ITokenService tokenService
             )
         {
             _accountService = accountService;
             _userManager = userManager;
             _emailService = emailService;
             _configuration = configuration;
+            _tokenService = tokenService;
         }
 
         [HttpGet("{id}")]
@@ -64,13 +69,50 @@ namespace Kvikmynd.Controllers
                 return CustomBadRequest(result.Error);
             }
 
-            var setRefreshTokenResult = SetRefreshTokenCookie(result.Result.RefreshToken.Token);
-            if (!setRefreshTokenResult)
-            {
-                return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
-            }
+            var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(result.Result);
             
-            return Ok(result.Result.JwtToken);
+            var clientUrl = _configuration["ClientUrl"] + "/confirmEmail";
+            var queryParams = new Dictionary<string, string>
+            {
+                {"token", confirmEmailToken},
+                {"email", result.Result.Email}
+            };
+            
+            var url = new Uri(QueryHelpers.AddQueryString(clientUrl, queryParams));
+            var email = new MailMessage()
+            {
+                To = { new MailAddress(result.Result.Email) },
+                Subject = "Email confirmation",
+                Body = EmailTemplates.GetConfirmEmailTemplate(result.Result.UserName, url.ToString())
+            };
+            
+            var emailResult = await _emailService.SendMailAsync(email);
+            if (!emailResult) return CustomBadRequest(ErrorCode.EmailWasNotSent);
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("confirmEmail")]
+        public async Task<IActionResult>ConfirmEmail([FromBody] ConfirmEmailModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user); 
+            if (isEmailConfirmed) return CustomBadRequest(ErrorCode.UserRegistrationAlreadyConfirmed);
+
+            var token = Uri.UnescapeDataString(model.Token);
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded) return CustomBadRequest(ErrorCode.RegisterConfirmationFailed);
+            
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
+            };
+            
+            var jwtToken = _tokenService.GetJwtToken(claims);
+
+            return Ok(jwtToken);
         }
 
         [AllowAnonymous]

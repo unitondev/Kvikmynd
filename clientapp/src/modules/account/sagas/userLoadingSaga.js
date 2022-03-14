@@ -24,6 +24,8 @@ function * userLoadingSaga() {
         accountActions.logoutRequest,
         accountActions.updateUserRequest,
         accountActions.deleteUserRequest,
+        accountActions.confirmEmailRequest,
+        accountActions.registerRequest,
       ],
       startLoadingUser
     ),
@@ -37,6 +39,10 @@ function * userLoadingSaga() {
         accountActions.updateUserFailure,
         accountActions.deleteUserSuccess,
         accountActions.deleteUserFailure,
+        accountActions.confirmEmailSuccess,
+        accountActions.confirmEmailFailure,
+        accountActions.registerSuccess,
+        accountActions.registerFailure,
       ],
       stopLoadingUser
     ),

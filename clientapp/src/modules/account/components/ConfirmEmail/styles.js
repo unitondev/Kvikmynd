@@ -2,14 +2,6 @@ const styles = (theme) => ({
   rootPaper: {
     padding: 30,
   },
-  avatarGrid: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  avatarBig: {
-    minWidth: '100px',
-    minHeight: '100px',
-  },
   cardHeader: {
     display: 'flex',
     flexDirection: 'column',
@@ -23,7 +15,7 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.success.main,
   },
   avatarBlockFailure: {
-    backgroundColor: theme.palette.error.error,
+    backgroundColor: theme.palette.error.error.main,
   },
 })
 

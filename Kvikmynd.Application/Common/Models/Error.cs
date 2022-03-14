@@ -52,7 +52,9 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.CurrentPasswordIncorrect => "Current password incorrect.",
                 ErrorCode.NewPasswordCanNotMatсhCurrentPassword => "New password can't matсh current password.",
                 ErrorCode.PasswordNotChanged => "Password wasn't changed.",
-                ErrorCode.PasswordWasNotReseted => "Password wasn't reseted",
+                ErrorCode.PasswordWasNotReseted => "Password wasn't reseted.",
+                ErrorCode.UserRegistrationAlreadyConfirmed => "User registration already confirmed.",
+                ErrorCode.RegisterConfirmationFailed => "Register confirmation failed.",
                 
                 #endregion
                 
