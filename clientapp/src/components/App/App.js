@@ -43,7 +43,9 @@ const App = ({ location }) => {
               <RegisterPage />
             </Route>
             <PrivateRoute path={routes.profile} component={ProfilePage} />
-            <PrivateRoute path={routes.movieWithId} component={MoviePage} />
+            <Route path={routes.movieWithId}>
+              <MoviePage />
+            </Route>
             <Route path={routes.search}>
               <MovieListPage />
             </Route>

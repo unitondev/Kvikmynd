@@ -6,7 +6,7 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import Movie from '../components/Movie'
 import * as rawActions from '../actions'
 import { getUser, getUserAvatar } from '../../account/selectors'
-import { getComments, getMovie, getMovieGenres, getNeedToUpdateMovie, getRatings, getUserRating } from '../selectors'
+import { getComments, getMovie, getMovieGenres, getRatings, getUserRating } from '../selectors'
 import { calculateMovieRating } from '../helpers'
 
 const MovieContainer = () => {
@@ -27,7 +27,7 @@ const MovieContainer = () => {
     dispatch(rawActions.selectedMovieRequest(id))
     dispatch(rawActions.movieCommentsRequest(id))
     dispatch(rawActions.movieRatingsRequest(id))
-    dispatch(
+    user.id && dispatch(
       rawActions.userRatingRequest({
         userId: user.id,
         movieId: id,

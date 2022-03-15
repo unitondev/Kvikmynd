@@ -41,6 +41,7 @@ namespace Kvikmynd.Controllers
             return Ok(result);
         }
         
+        [AllowAnonymous]
         [HttpGet("{id}/withGenres")]
         public async Task<IActionResult> GetMovieWithGenresById(int id)
         {
@@ -79,6 +80,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetMovieComments(int id)
         {
@@ -91,6 +93,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
         
+        [AllowAnonymous]
         [HttpGet("{id}/ratings")]
         public async Task<IActionResult> GetMovieRatings(int id)
         {
