@@ -1,10 +1,20 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
+import {
+  Avatar,
+  Container,
+  Fade,
+  Grid,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  Paper,
+  Typography,
+} from '@mui/material'
 
 import styles from './styles'
 import { getUserSettingsTabs } from '../../helpers'
-import { Avatar, Container, Fade, Grid, List, ListItemButton, ListItemIcon, Paper, Typography } from '@mui/material'
 import AccountInfo from '../AccountInfo'
 import ChangePassword from '../ChangePassword'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'

@@ -53,7 +53,6 @@ const ForgotPassword = ({
                     required
                     component={TextField}
                     fullWidth
-                    autoFocus
                   />
                 </Grid>
                 <Grid item container direction='row' spacing={4}>

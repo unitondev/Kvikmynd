@@ -1,6 +1,7 @@
 const styles = (theme) => ({
   rootPaper: {
     padding: 30,
+    overflow: 'hidden',
   },
   avatarGrid: {
     display: 'flex',
