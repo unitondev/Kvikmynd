@@ -27,52 +27,56 @@ const CommentList = ({
 }) => (
   <div className={classes.commentsBlock}>
     <Typography variant='h3'>Comments</Typography>
-    <Formik
-      initialValues={{ WrittenCommentText: '' }}
-      enableReinitialize
-      validationSchema={writtenCommentSchema}
-      onSubmit={(values, formikBag) => {
-        handleCommentSet(values)
-        formikBag.resetForm()
-      }}
-    >
-      {({ dirty, isValid }) => (
-        <div className={classes.commentBlock}>
-          <Card>
-            <Form className={classes.form} autoComplete='off'>
-              <CardHeader
-                avatar={
-                  <Avatar src={currentUserAvatar} />
-                }
-                title={`As ${currentUser.userName}`}
-                titleTypographyProps={{ fontSize: 18 }}
-              />
-              <CardContent>
-                <Field
-                  multiline
-                  placeholder='Write your comment here'
-                  variant='outlined'
-                  name='WrittenCommentText'
-                  component={TextField}
-                  className={classes.writingCommentTextArea}
-                />
-              </CardContent>
-              <CardActions>
-                <Button
-                  disabled={!(isValid && dirty)}
-                  color='primary'
-                  size='large'
-                  fullWidth
-                  type='submit'
-                >
-                  Send
-                </Button>
-              </CardActions>
-            </Form>
-          </Card>
-        </div>
-      )}
-    </Formik>
+    {
+      currentUser.id && (
+        <Formik
+          initialValues={{ WrittenCommentText: '' }}
+          enableReinitialize
+          validationSchema={writtenCommentSchema}
+          onSubmit={(values, formikBag) => {
+            handleCommentSet(values)
+            formikBag.resetForm()
+          }}
+        >
+          {({ dirty, isValid }) => (
+            <div className={classes.commentBlock}>
+              <Card>
+                <Form className={classes.form} autoComplete='off'>
+                  <CardHeader
+                    avatar={
+                      <Avatar src={currentUserAvatar} />
+                    }
+                    title={`As ${currentUser.userName}`}
+                    titleTypographyProps={{ fontSize: 18 }}
+                  />
+                  <CardContent>
+                    <Field
+                      multiline
+                      placeholder='Write your comment here'
+                      variant='outlined'
+                      name='WrittenCommentText'
+                      component={TextField}
+                      className={classes.writingCommentTextArea}
+                    />
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      disabled={!(isValid && dirty)}
+                      color='primary'
+                      size='large'
+                      fullWidth
+                      type='submit'
+                    >
+                      Send
+                    </Button>
+                  </CardActions>
+                </Form>
+              </Card>
+            </div>
+          )}
+        </Formik>
+      )
+    }
     {
       comments.length > 0
         ? (
@@ -95,7 +99,7 @@ const CommentList = ({
 
 CommentList.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUserAvatar: PropTypes.string.isRequired,
+  currentUserAvatar: PropTypes.string,
   handleCommentSet: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   currentUser: PropTypes.object.isRequired,

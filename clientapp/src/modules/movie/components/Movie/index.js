@@ -67,33 +67,37 @@ const Movie = ({
                         }
                       </Typography>
                     </Grid>
-                    <Grid item container direction='row'>
-                      <Grid item xs={1.2}>
-                        <Typography>My rating:</Typography>
-                      </Grid>
-                      <Grid item xs={3.5}>
-                        <Rating
-                          max={10}
-                          value={settedRating ?? 0}
-                          onChange={onRatingChange}
-                          onChangeActive={(event, newHover) => {
-                            setRatingHover(newHover)
-                          }}
-                        />
-                      </Grid>
-                      { settedRating !== null && (
-                        <Grid item xs={0.5}>
-                          <Box className={classes.ratingBox}>
-                            <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
-                          </Box>
+                    {
+                      currentUser.id && (
+                        <Grid item container direction='row'>
+                          <Grid item xs={1.2}>
+                            <Typography>My rating:</Typography>
+                          </Grid>
+                          <Grid item xs={3.5}>
+                            <Rating
+                              max={10}
+                              value={settedRating ?? 0}
+                              onChange={onRatingChange}
+                              onChangeActive={(event, newHover) => {
+                                setRatingHover(newHover)
+                              }}
+                            />
+                          </Grid>
+                          { settedRating !== null && (
+                            <Grid item xs={0.5}>
+                              <Box className={classes.ratingBox}>
+                                <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
+                              </Box>
+                            </Grid>
+                          )}
+                          <Grid item xs={1}>
+                            <Button size='small' color='primary' onClick={handleRatingSet}>
+                              Rate
+                            </Button>
+                          </Grid>
                         </Grid>
-                      )}
-                      <Grid item xs={1}>
-                        <Button size='small' color='primary' onClick={handleRatingSet}>
-                          Rate
-                        </Button>
-                      </Grid>
-                    </Grid>
+                      )
+                    }
                     <Grid item>
                       <Typography>
                         Genres: {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
@@ -137,7 +141,7 @@ Movie.propTypes = {
   movie: PropTypes.object.isRequired,
   movieRating: PropTypes.number.isRequired,
   comments: PropTypes.array.isRequired,
-  currentUserAvatar: PropTypes.string.isRequired,
+  currentUserAvatar: PropTypes.string,
   ratings: PropTypes.array.isRequired,
   genres: PropTypes.array,
   youtubeOpts: PropTypes.object.isRequired,
