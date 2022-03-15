@@ -55,6 +55,7 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.PasswordWasNotReseted => "Password wasn't reseted.",
                 ErrorCode.UserRegistrationAlreadyConfirmed => "User registration already confirmed.",
                 ErrorCode.RegisterConfirmationFailed => "Register confirmation failed.",
+                ErrorCode.EmailDoesNotConfirmed => "Email doesn't confirmed",
                 
                 #endregion
                 

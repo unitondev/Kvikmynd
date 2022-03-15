@@ -37,6 +37,7 @@
         PasswordWasNotReseted = 1115,
         UserRegistrationAlreadyConfirmed = 1116,
         RegisterConfirmationFailed = 1117,
+        EmailDoesNotConfirmed = 1118,
 
         #endregion
 

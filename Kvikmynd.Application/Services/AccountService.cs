@@ -58,6 +58,12 @@ namespace Kvikmynd.Application.Services
             {
                 return new ServiceResult<User>(ErrorCode.UserNotFound);
             }
+            
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (!isEmailConfirmed)
+            {
+                return new ServiceResult<User>(ErrorCode.EmailDoesNotConfirmed);
+            }
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
             if (!isPasswordValid)

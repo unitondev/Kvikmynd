@@ -24,7 +24,7 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.success.main,
   },
   avatarBlockFailure: {
-    backgroundColor: theme.palette.error.error,
+    backgroundColor: theme.palette.error.main,
   },
 })
 

@@ -1,6 +1,7 @@
 const styles = {
   rootPaper: {
     padding: 30,
+    overflow: 'hidden',
   },
   cardHeader: {
     display: 'flex',

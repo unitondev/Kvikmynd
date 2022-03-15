@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import routes from '@movie/routes'
 import { useSelector } from 'react-redux'
 import { getIsForgotPasswordSucceeded } from '@movie/modules/account/selectors'
+import LeftRightSlide from '@movie/shared/slides/LeftRightSlide'
 
 const initialValuesEmail = {
   email: '',
@@ -30,60 +31,63 @@ const ForgotPassword = ({
   const isForgotPasswordSucceeded = useSelector(getIsForgotPasswordSucceeded)
 
   return (
-    isForgotPasswordSucceeded
-      ? (
+    <>
+      <LeftRightSlide in={isForgotPasswordSucceeded} mountOnEnter unmountOnExit>
         <Typography>
           To reset your password, follow the link sent to your email.
         </Typography>
-      )
-      : (
-        <Formik
-          initialValues={initialValuesEmail}
-          validationSchema={forgotPasswordSchema}
-          onSubmit={handleForgotPassword}
-        >
-          {({ dirty, isValid }) => (
-            <Form>
-              <Grid container direction='column' spacing={2}>
-                <Grid item>
-                  <Field
-                    name='email'
-                    label='Email'
-                    color='primary'
-                    required
-                    component={TextField}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item container direction='row' spacing={4}>
-                  <Grid item xs={6}>
-                    <Button
+      </LeftRightSlide>
+      <LeftRightSlide in={!isForgotPasswordSucceeded} mountOnEnter unmountOnExit>
+        <div>
+          <Formik
+            initialValues={initialValuesEmail}
+            validationSchema={forgotPasswordSchema}
+            onSubmit={handleForgotPassword}
+          >
+            {({ dirty, isValid }) => (
+              <Form>
+                <Grid container direction='column' spacing={2}>
+                  <Grid item>
+                    <Field
+                      name='email'
+                      label='Email'
                       color='primary'
-                      variant='text'
+                      required
+                      component={TextField}
                       fullWidth
-                      component={Link}
-                      to={routes.login}
-                    >
-                      Back
-                    </Button>
+                    />
                   </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      disabled={!(isValid && dirty)}
-                      color='primary'
-                      variant='contained'
-                      type='submit'
-                      fullWidth
-                    >
-                      Next
-                    </Button>
+                  <Grid item container direction='row' spacing={4}>
+                    <Grid item xs={6}>
+                      <Button
+                        color='primary'
+                        variant='text'
+                        fullWidth
+                        component={Link}
+                        to={routes.login}
+                      >
+                        Back
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        disabled={!(isValid && dirty)}
+                        color='primary'
+                        variant='contained'
+                        type='submit'
+                        fullWidth
+                      >
+                        Next
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-      )
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </LeftRightSlide>
+    </>
   )
 }
 

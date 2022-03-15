@@ -1,6 +1,7 @@
 const styles = (theme) => ({
   rootPaper: {
     padding: 30,
+    overflow: 'hidden',
   },
   cardHeader: {
     display: 'flex',
@@ -15,7 +16,7 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.success.main,
   },
   avatarBlockFailure: {
-    backgroundColor: theme.palette.error.error.main,
+    backgroundColor: theme.palette.error.main,
   },
 })
 

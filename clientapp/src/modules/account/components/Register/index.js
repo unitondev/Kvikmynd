@@ -15,12 +15,12 @@ import {
 import { Form, Formik, Field } from 'formik'
 import { TextField } from 'formik-mui'
 import * as Yup from 'yup'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import Done from '@mui/icons-material/Done'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 import { AvatarPreview } from '../../helpers'
 import { passwordRegex } from '@movie/modules/shared/forms/helpers/regex'
@@ -78,148 +78,142 @@ const Register = ({
               {
                 isRegisterSucceeded
                   ? <Done />
-                  : <LockOutlinedIcon />
+                  : <AccountCircleIcon />
               }
-
             </Avatar>
             <Typography component='h1' variant='h5' align='center'>
               Register
             </Typography>
           </Grid>
         </Grid>
-        {
-          isRegisterSucceeded
-            ? (
-              <Typography>
-                Registration completed successfully. Please, follow the link sent to your email to confirm register and login.
-              </Typography>
-            )
-            : (
-              <LeftRightSlide in mountOnEnter unmountOnExit container={containerRef.current}>
-                <div>
-                  <Formik
-                    initialValues={initial}
-                    validationSchema={registerSchema}
-                    onSubmit={(values, formikBag) => {
-                      handleRegister(values)
-                      formikBag.resetForm()
-                    }}
-                  >
-                    {({ dirty, isValid, values, setFieldValue }) => (
-                      <Form>
-                        <Grid container direction='column' spacing={2}>
-                          <Grid item className={classes.avatarGrid}>
-                            {
-                              !!values.avatar
-                                ?
-                                <AvatarPreview file={values.avatar} className={classes.avatarBig} />
-                                :
-                                <Avatar className={classes.avatarBig} />
-                            }
-                          </Grid>
-                          <Grid item>
-                            <input
-                              type='file'
-                              name='avatar'
-                              accept='image/*'
-                              onChange={(e) => setFieldValue('avatar', e.currentTarget.files[0])}
-                              hidden
-                              ref={uploadInputRef}
-                            />
-                            <Button
-                              fullWidth
-                              color='primary'
-                              variant='contained'
-                              onClick={() => uploadInputRef.current && uploadInputRef.current.click()}
+        <LeftRightSlide in={isRegisterSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
+          <Typography>
+            Registration completed successfully. Please, follow the link sent to your email to confirm register and login.
+          </Typography>
+        </LeftRightSlide>
+        <LeftRightSlide in={!isRegisterSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
+          <div>
+            <Formik
+              initialValues={initial}
+              validationSchema={registerSchema}
+              onSubmit={(values, formikBag) => {
+                handleRegister(values)
+                formikBag.resetForm()
+              }}
+            >
+              {({ dirty, isValid, values, setFieldValue }) => (
+                <Form>
+                  <Grid container direction='column' spacing={2}>
+                    <Grid item className={classes.avatarGrid}>
+                      {
+                        !!values.avatar
+                          ?
+                          <AvatarPreview file={values.avatar} className={classes.avatarBig} />
+                          :
+                          <Avatar className={classes.avatarBig} />
+                      }
+                    </Grid>
+                    <Grid item>
+                      <input
+                        type='file'
+                        name='avatar'
+                        accept='image/*'
+                        onChange={(e) => setFieldValue('avatar', e.currentTarget.files[0])}
+                        hidden
+                        ref={uploadInputRef}
+                      />
+                      <Button
+                        fullWidth
+                        color='primary'
+                        variant='contained'
+                        onClick={() => uploadInputRef.current && uploadInputRef.current.click()}
+                      >
+                        Upload photo
+                      </Button>
+                    </Grid>
+                    <Grid item container direction='row' spacing={2}>
+                      <Grid item xs={6}>
+                        <Field
+                          name='fullName'
+                          label='Full name'
+                          color='primary'
+                          required
+                          component={TextField}
+                          fullWidth
+                          autoFocus
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Field
+                          name='userName'
+                          label='User name'
+                          color='primary'
+                          required
+                          component={TextField}
+                          fullWidth
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Field
+                        name='email'
+                        label='Email'
+                        color='primary'
+                        required
+                        component={TextField}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Field
+                        name='password'
+                        label='Password'
+                        type={values.showPassword ? 'text' : 'password'}
+                        color='primary'
+                        required
+                        component={TextField}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: <InputAdornment position='end'>
+                            <IconButton
+                              onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                              edge='end'
                             >
-                              Upload photo
-                            </Button>
-                          </Grid>
-                          <Grid item container direction='row' spacing={2}>
-                            <Grid item xs={6}>
-                              <Field
-                                name='fullName'
-                                label='Full name'
-                                color='primary'
-                                required
-                                component={TextField}
-                                fullWidth
-                                autoFocus
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Field
-                                name='userName'
-                                label='User name'
-                                color='primary'
-                                required
-                                component={TextField}
-                                fullWidth
-                              />
-                            </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Field
-                              name='email'
-                              label='Email'
-                              color='primary'
-                              required
-                              component={TextField}
-                              fullWidth
-                            />
-                          </Grid>
-                          <Grid item>
-                            <Field
-                              name='password'
-                              label='Password'
-                              type={values.showPassword ? 'text' : 'password'}
-                              color='primary'
-                              required
-                              component={TextField}
-                              fullWidth
-                              InputProps={{
-                                endAdornment: <InputAdornment position='end'>
-                                  <IconButton
-                                    onClick={() => setFieldValue('showPassword', !values.showPassword)}
-                                    edge='end'
-                                  >
-                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                                  </IconButton>
-                                </InputAdornment>,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item container direction='row' spacing={4}>
-                            <Grid item xs={6}>
-                              <Button
-                                color='primary'
-                                variant='text'
-                                component={Link}
-                                to={routes.login}
-                              >
-                                Log in
-                              </Button>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Button
-                                disabled={!(isValid && dirty)}
-                                fullWidth
-                                color='primary'
-                                variant='contained'
-                                type='submit'
-                              >
-                                Register
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Form>
-                    )}
-                  </Formik>
-                </div>
-              </LeftRightSlide>
-            )
-        }
+                              {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item container direction='row' spacing={4}>
+                      <Grid item xs={6}>
+                        <Button
+                          color='primary'
+                          variant='text'
+                          component={Link}
+                          to={routes.login}
+                        >
+                          Log in
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          disabled={!(isValid && dirty)}
+                          fullWidth
+                          color='primary'
+                          variant='contained'
+                          type='submit'
+                        >
+                          Register
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </LeftRightSlide>
       </Paper>
       <Copyright sx={{ mt: 5 }} />
     </Container>

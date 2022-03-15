@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
@@ -15,6 +15,7 @@ import Email from '@mui/icons-material/Email'
 
 import { getIsConfirmEmailSucceeded, getIsUserLoading } from '@movie/modules/account/selectors'
 import * as rawAction from '@movie/modules/account/actions'
+import LeftRightSlide from '@movie/shared/slides/LeftRightSlide'
 import styles from './styles'
 
 const ConfirmEmail = ({
@@ -26,9 +27,10 @@ const ConfirmEmail = ({
   const locationQuery = useSelector(state => state.router.location.query)
 
   const { token, email } = locationQuery
+  const containerRef = useRef(null)
 
   useEffect(() => {
-    dispatch(rawAction.confirmEmailRequest({ Token: token, Email: email}))
+    dispatch(rawAction.confirmEmailRequest({ Token: token, Email: email }))
 
     return () => {
       dispatch(rawAction.resetConfirmEmail())
@@ -37,11 +39,11 @@ const ConfirmEmail = ({
 
   return (
     <Container maxWidth='sm'>
-      { isLoading && <LinearProgress sx={{ borderRadius: 10}} />}
-      <Paper className={classes.rootPaper}>
+      {isLoading && <LinearProgress sx={{ borderRadius: 10 }} />}
+      <Paper className={classes.rootPaper} ref={containerRef}>
         <Grid container direction='column' spacing={2}>
           <Grid item className={classes.cardHeader}>
-            <Avatar sx={{ m: 1 }} className={ isConfirmEmailSucceeded ? classes.avatarBlockSucceeded : classes.avatarBlock}>
+            <Avatar sx={{ m: 1 }} className={isConfirmEmailSucceeded ? classes.avatarBlockSucceeded : classes.avatarBlock}>
               {
                 isConfirmEmailSucceeded
                   ? <Done />
@@ -63,22 +65,22 @@ const ConfirmEmail = ({
               </Grid>
             )
             : (
-              isConfirmEmailSucceeded
-                ? (
+              <>
+                <LeftRightSlide in={isConfirmEmailSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
                   <Grid item>
                     <Typography align='center'>
                       Your email was successfully confirmed.
                     </Typography>
                   </Grid>
-                )
-                : (
+                </LeftRightSlide>
+                <LeftRightSlide in={!isConfirmEmailSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
                   <Grid item>
                     <Typography align='center'>
                       For some reason email confirmation was not successful.
                     </Typography>
                   </Grid>
-                )
-
+                </LeftRightSlide>
+              </>
             )
         }
       </Paper>
