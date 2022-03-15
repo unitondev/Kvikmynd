@@ -29,18 +29,6 @@ function * onRefreshToken(action) {
   }
 }
 
-function * onRegister(action) {
-  yield put(accountActions.registerRequest(action.payload))
-  const result = yield take([accountActions.registerSuccess, accountActions.registerFailure])
-  if (result.type === accountActions.registerFailure().type) {
-    const message = 'Register failure'
-    yield put(notificationActions.enqueueSnackbarError({ message }))
-    return
-  }
-
-  yield put(accountActions.getMeRequest())
-}
-
 function * logoutSuccess (action) {
   yield put(push(routes.root))
 }
@@ -56,14 +44,32 @@ function * changePasswordFailure (action) {
   yield put(notificationActions.enqueueSnackbarError({ message }))
 }
 
+function * onForgotPassword (action) {
+  const { email } = action.payload
+  yield put(accountActions.forgotPasswordRequest({ Email: email }))
+  const result = yield take([accountActions.forgotPasswordSuccess, accountActions.forgotPasswordFailure])
+  if (result.type === accountActions.forgotPasswordFailure().type) {
+    const message = 'Reset password failed'
+    yield put(notificationActions.enqueueSnackbarError({ message }))
+    yield put(push(routes.login))
+    return
+  }
+}
+
+function * resetPasswordFailure (action) {
+  const message = 'Reset password failed'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
 function * loginSaga() {
   yield all([
     takeLatest(accountActions.onLogin, onLogin),
     takeLatest(accountActions.onRefreshToken, onRefreshToken),
-    takeLatest(accountActions.onRegister, onRegister),
     takeLatest(accountActions.logoutSuccess, logoutSuccess),
     takeLatest(accountActions.changePasswordSuccess, changePasswordSuccess),
     takeLatest(accountActions.changePasswordFailure, changePasswordFailure),
+    takeLatest(accountActions.onForgotPassword, onForgotPassword),
+    takeLatest(accountActions.resetPasswordFailure, resetPasswordFailure),
   ])
 }
 

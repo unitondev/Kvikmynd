@@ -36,6 +36,21 @@ const accountRequests = {
     method: 'post',
     data,
   }),
+  forgotPasswordRequest: (data) => ({
+    url: 'api/account/forgotPassword',
+    method: 'post',
+    data,
+  }),
+  resetPasswordRequest: (data) => ({
+    url: 'api/account/resetPassword',
+    method: 'post',
+    data,
+  }),
+  confirmEmailRequest: (data) => ({
+    url: 'api/account/confirmEmail',
+    method: 'post',
+    data,
+  })
 }
 
 export default accountRequests

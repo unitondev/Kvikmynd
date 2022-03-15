@@ -19,7 +19,7 @@ export default handleActions(
     [accountActions.refreshTokensSuccess] (state, action) {
       return action.response.data.accessToken
     },
-    [accountActions.registerSuccess] (state, action) {
+    [accountActions.confirmEmailSuccess] (state, action) {
       return action.response.data.accessToken
     }
   },

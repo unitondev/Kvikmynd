@@ -3,14 +3,6 @@ const styles = (theme) => ({
     padding: 30,
     overflow: 'hidden',
   },
-  avatarGrid: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  avatarBig: {
-    minWidth: '100px',
-    minHeight: '100px',
-  },
   cardHeader: {
     display: 'flex',
     flexDirection: 'column',

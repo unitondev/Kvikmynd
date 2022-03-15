@@ -81,6 +81,7 @@ const NavBarContainer = () => {
       inputRef={inputRef}
       pageSize={PageSize}
       generateUrlWithSearchQuery={generateUrlWithSearchQuery}
+      pathname={location.pathname}
     />
   )
 }

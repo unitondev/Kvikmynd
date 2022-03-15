@@ -20,6 +20,11 @@ export const registerRequest = createAction('REGISTER_REQUEST')
 export const registerSuccess = createAction('REGISTER_SUCCESS')
 export const registerFailure = createAction('REGISTER_FAILURE')
 
+export const confirmEmailRequest = createAction('CONFIRM_EMAIL_REQUEST')
+export const confirmEmailSuccess = createAction('CONFIRM_EMAIL_SUCCESS')
+export const confirmEmailFailure = createAction('CONFIRM_EMAIL_FAILURE')
+export const resetConfirmEmail = createAction('RESET_CONFIRM_EMAIL_STATE')
+
 export const startLoadingUser = createAction('START_LOADING_USER')
 export const stopLoadingUser = createAction('STOP_LOADING_USER')
 
@@ -27,6 +32,7 @@ export const onLogin = createAction('ON_LOGIN')
 export const onLogout = createAction('ON_LOGOUT')
 export const onRegister = createAction('ON_REGISTER')
 export const onRefreshToken = createAction('ON_REFRESH_TOKEN')
+export const onForgotPassword = createAction('ON_FORGOT_PASSWORD')
 
 export const getTokenRequest = createAction('GET_TOKEN_REQUEST')
 export const getTokenSuccess = createAction('GET_TOKEN_SUCCESS')
@@ -39,4 +45,13 @@ export const getMeFailure = createAction('GET_ME_FAILURE')
 export const changePasswordRequest = createAction('CHANGE_PASSWORD_REQUEST')
 export const changePasswordSuccess = createAction('CHANGE_PASSWORD_SUCCESS')
 export const changePasswordFailure = createAction('CHANGE_PASSWORD_FAILURE')
+
+export const forgotPasswordRequest = createAction('FORGOT_PASSWORD_REQUEST')
+export const forgotPasswordSuccess = createAction('FORGOT_PASSWORD_SUCCESS')
+export const forgotPasswordFailure = createAction('FORGOT_PASSWORD_FAILURE')
+export const resetForgotPassword = createAction('RESET_FORGOT_PASSWORD_STATE')
+
+export const resetPasswordRequest = createAction('RESET_PASSWORD_REQUEST')
+export const resetPasswordSuccess = createAction('RESET_PASSWORD_SUCCESS')
+export const resetPasswordFailure = createAction('RESET_PASSWORD_FAILURE')
 

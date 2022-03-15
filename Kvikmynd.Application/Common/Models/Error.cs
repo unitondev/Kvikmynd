@@ -31,6 +31,7 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.EntityNotUpdated => "Entity wasn't updated.",
                 ErrorCode.EntityNotDeleted => "Entity wasn't deleted.",
                 ErrorCode.SearchQueryIsEmpty => "Search query is empty.",
+                ErrorCode.EmailWasNotSent => "Email was not sent",
                 
                 #endregion
                 
@@ -51,6 +52,10 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.CurrentPasswordIncorrect => "Current password incorrect.",
                 ErrorCode.NewPasswordCanNotMatсhCurrentPassword => "New password can't matсh current password.",
                 ErrorCode.PasswordNotChanged => "Password wasn't changed.",
+                ErrorCode.PasswordWasNotReseted => "Password wasn't reseted.",
+                ErrorCode.UserRegistrationAlreadyConfirmed => "User registration already confirmed.",
+                ErrorCode.RegisterConfirmationFailed => "Register confirmation failed.",
+                ErrorCode.EmailDoesNotConfirmed => "Email doesn't confirmed",
                 
                 #endregion
                 

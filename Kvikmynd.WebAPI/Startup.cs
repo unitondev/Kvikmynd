@@ -1,8 +1,8 @@
 using System;
 using System.Text;
+using Kvikmynd.Application.Common.Models;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
-using Kvikmynd.Application.Jwt;
 using Kvikmynd.Application.Services;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
@@ -58,6 +58,8 @@ namespace Kvikmynd
             {
                 config.LoginPath = "/login";
             });
+            
+            services.Configure<SendGridSettings>(Configuration.GetSection(nameof(SendGridSettings)));
 
             #region Authentication
 
@@ -110,6 +112,7 @@ namespace Kvikmynd
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddSingleton<ITokenService, TokenService>();
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;

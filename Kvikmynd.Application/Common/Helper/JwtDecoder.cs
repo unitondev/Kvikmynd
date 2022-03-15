@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
-namespace Kvikmynd.Application.Jwt
+namespace Kvikmynd.Application.Common.Helper
 {
     public static class JwtDecoder
     {

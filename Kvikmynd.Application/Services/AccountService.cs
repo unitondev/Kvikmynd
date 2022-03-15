@@ -5,10 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
+using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
-using Kvikmynd.Application.Jwt;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain.Models;
@@ -58,6 +58,12 @@ namespace Kvikmynd.Application.Services
             {
                 return new ServiceResult<User>(ErrorCode.UserNotFound);
             }
+            
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (!isEmailConfirmed)
+            {
+                return new ServiceResult<User>(ErrorCode.EmailDoesNotConfirmed);
+            }
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
             if (!isPasswordValid)
@@ -68,41 +74,25 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(user);
         }
         
-        public async Task<ServiceResult<RefreshAndJwtTokenModel>> RegisterAsync(UserRegistrationModel model)
+        public async Task<ServiceResult<User>> RegisterAsync(UserRegistrationModel model)
         {
             var registeredUser = await _userManager.FindByEmailAsync(model.Email) 
                                  ?? await _userManager.FindByNameAsync(model.Username);
 
             if (registeredUser != null)
             {
-                return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.UserAlreadyExists);
+                return new ServiceResult<User>(ErrorCode.UserAlreadyExists);
             }
             
             var createdUser = _mapper.Map<UserRegistrationModel, User>(model);
-
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            createdUser.RefreshTokens.Add(refreshToken);
-
+            
             var result = await _userManager.CreateAsync(createdUser, model.Password);
             if (!result.Succeeded)
             {
-                return new ServiceResult<RefreshAndJwtTokenModel>(ErrorCode.UserNotCreated);
+                return new ServiceResult<User>(ErrorCode.UserNotCreated);
             }
 
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(createdUser.Id))
-            };
-
-            var jwtToken = _tokenService.GetJwtToken(claims);
-            
-            var refreshAndJwtTokenModel = new RefreshAndJwtTokenModel
-            {
-                RefreshToken = refreshToken,
-                JwtToken = jwtToken
-            };
-
-            return new ServiceResult<RefreshAndJwtTokenModel>(refreshAndJwtTokenModel);
+            return new ServiceResult<User>(createdUser);
         }
         
         public async Task<ServiceResult> DeleteByIdAsync(string userId)
@@ -254,7 +244,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult();
         }
 
-        public async Task<ServiceResult<User>> GetCurrentUserAsync(string jwtPlainText)
+        public async Task<ServiceResult<User>> GetCurrentUserByJwtTokenAsync(string jwtPlainText)
         {
             var userId = GetIdFromFromJwtToken(jwtPlainText);
             var user = await _userManager.FindByIdAsync(userId);
