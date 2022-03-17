@@ -89,7 +89,7 @@ const MovieList = ({
                     <Grid item key={movie.id}>
                       <Card>
                         <CardHeader
-                          title={movie.title}
+                          title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
                         />
                         <CardContent>
                           <Grid container direction='row' spacing={2}>
