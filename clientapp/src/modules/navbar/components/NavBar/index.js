@@ -105,7 +105,7 @@ const Navbar = ({
                         }} />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={option.title}
+                        primary={`${option.title} ${option.year ? `(${option.year})` : ''}`}
                         primaryTypographyProps={{
                           variant: 'body2',
                         }}

@@ -44,7 +44,7 @@ const Movie = ({
           <CardContent>
             <Grid container direction='column' spacing={2}>
               <Grid item>
-                <Typography variant='h2' align='center'>{movie.title}</Typography>
+                <Typography variant='h2' align='center'>{movie.title} {movie.year && `(${movie.year})`}</Typography>
               </Grid>
               <Grid item container direction='row' spacing={2}>
                 <Grid item xs={3}>

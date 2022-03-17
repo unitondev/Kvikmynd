@@ -16,6 +16,7 @@ namespace Kvikmynd.Domain.Models
         public byte[] Cover { get; set; } = Encoding.UTF8.GetBytes(BaseCover);
         [MaxLength(128)]
         public string YoutubeLink { get; set; }
+        public int Year { get; set; }
         [JsonIgnore]
         public virtual IList<GenreMovie> GenreMovies { get; set; }
         [JsonIgnore]
