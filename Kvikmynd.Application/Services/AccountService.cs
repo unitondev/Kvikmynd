@@ -92,6 +92,12 @@ namespace Kvikmynd.Application.Services
                 return new ServiceResult<User>(ErrorCode.UserNotCreated);
             }
 
+            var roleResult = await _userManager.AddToRoleAsync(createdUser, ApplicationRole.User);
+            if (!roleResult.Succeeded)
+            {
+                return new ServiceResult<User>(ErrorCode.UserNotCreated);
+            }
+
             return new ServiceResult<User>(createdUser);
         }
         

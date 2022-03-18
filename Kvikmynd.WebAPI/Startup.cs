@@ -43,7 +43,7 @@ namespace Kvikmynd
                 }));
             
             services.AddSignalR();
-            services.AddIdentity<User, IdentityRole<int>>(options =>
+            services.AddIdentity<User, ApplicationRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 6;
@@ -87,12 +87,12 @@ namespace Kvikmynd
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+            
+            #endregion
 
             services.AddDbContext<KvikmyndDbContext>(builder => 
                 builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
-            #endregion
-            
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -103,17 +103,25 @@ namespace Kvikmynd
             {
                 c.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
             });
-            
+
+            #region Database and repositories
+
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+            #endregion
             
+            #region Services
+
             services.AddScoped(typeof(IService<>), typeof(GenericService<>));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddSingleton<ITokenService, TokenService>();
+
+            #endregion
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
             
