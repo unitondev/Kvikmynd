@@ -3,6 +3,7 @@ using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +57,7 @@ namespace Kvikmynd.Controllers
             return Ok(movieWithGenres);
         }
 
+        [Authorize(Policy = PolicyTypes.AddMovie)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
@@ -68,6 +70,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
 
+        [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
@@ -106,6 +109,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
         
+        [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
