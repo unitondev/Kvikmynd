@@ -4,6 +4,12 @@ export const Roles = {
   User: 3,
 }
 
+export const RolesString = {
+  SystemAdmin: 'SystemAdmin',
+  Admin: 'Admin',
+  User: 'User',
+}
+
 export const ApplicationPermissions = {
   All: 1,
   AddMovie: 2,
@@ -11,6 +17,6 @@ export const ApplicationPermissions = {
 }
 
 export const RolePermissions = {
-  [Roles.SystemAdmin]: [ApplicationPermissions.All],
-  [Roles.Admin]: [ApplicationPermissions.AddMovie, ApplicationPermissions.EditMovie],
+  [RolesString.SystemAdmin]: [ApplicationPermissions.All],
+  [RolesString.Admin]: [ApplicationPermissions.AddMovie, ApplicationPermissions.EditMovie],
 }

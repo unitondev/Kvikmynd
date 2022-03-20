@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material'
 import _ from 'lodash'
+import AddIcon from '@mui/icons-material/Add'
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
@@ -31,9 +32,17 @@ const MovieList = ({
   pagesTotalCount,
   searchQuery,
   isLoading,
+  isShowAddMovie,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
+      {isShowAddMovie && (
+        <Grid item sx={{alignSelf: 'end'}}>
+          <Button variant='outlined' color='primary' startIcon={<AddIcon />}>
+            Add movie
+          </Button>
+        </Grid>
+      )}
       {searchQuery?.length > 0 && (
         <Grid item>
           <Typography>Search: {searchQuery}</Typography>
@@ -171,6 +180,7 @@ MovieList.propTypes = {
   pagesTotalCount: PropTypes.number.isRequired,
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
+  isShowAddMovie: PropTypes.bool.isRequired,
 }
 
 export default withStyles(styles)(MovieList)
