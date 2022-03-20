@@ -16,12 +16,12 @@ const initial = {
 }
 
 const changePasswordSchema = Yup.object().shape({
-  oldPassword: Yup.string().trim().required('Required'),
+  currentPassword: Yup.string().trim().required('Required'),
   newPassword: Yup.string()
     .required('Required')
     .min(6, 'Minimum length is 6 characters ')
     .max(128, 'Maximum length is 128 characters ')
-    .notOneOf([Yup.ref('oldPassword'), null], 'Passwords must not match current password')
+    .notOneOf([Yup.ref('currentPassword'), null], 'Passwords must not match current password')
     .trim('There should be no spaces at the beginning and at the end of the password')
     .strict(true)
     .matches(passwordRegex, 'Password must contain at least one upper case letter, one lower case letter, one digit and one special character'),

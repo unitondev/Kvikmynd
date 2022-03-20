@@ -1,9 +1,12 @@
 using System;
+using System.Security.Claims;
 using System.Text;
 using Kvikmynd.Application.Common.Models;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Services;
+using Kvikmynd.Authorization;
+using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
 using Kvikmynd.Infrastructure;
@@ -43,7 +46,7 @@ namespace Kvikmynd
                 }));
             
             services.AddSignalR();
-            services.AddIdentity<User, IdentityRole<int>>(options =>
+            services.AddIdentity<User, ApplicationRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 6;
@@ -61,7 +64,7 @@ namespace Kvikmynd
             
             services.Configure<SendGridSettings>(Configuration.GetSection(nameof(SendGridSettings)));
 
-            #region Authentication
+            #region Authentication and authorization
 
             services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
             var jwtSettings = Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
@@ -88,11 +91,33 @@ namespace Kvikmynd
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyTypes.All, builder =>
+                {
+                    builder.RequireClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString());
+                });
+                options.AddPolicy(PolicyTypes.AddMovie, builder =>
+                {
+                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
+                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
+                    );
+                    // leaving here for possible future enhancement
+                    // builder.RequireClaim(CustomClaimTypes.Permission, ApplicationPermissions.AddMovie.ToString());
+                });
+                options.AddPolicy(PolicyTypes.EditMovie, builder =>
+                {
+                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
+                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
+                    );
+                });
+            });
+            
+            #endregion
+
             services.AddDbContext<KvikmyndDbContext>(builder => 
                 builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
-            #endregion
-            
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -103,17 +128,26 @@ namespace Kvikmynd
             {
                 c.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
             });
-            
+
+            #region Database and repositories
+
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+            #endregion
             
+            #region Services
+
             services.AddScoped(typeof(IService<>), typeof(GenericService<>));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped(typeof(SeedService));
+
+            #endregion
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
             

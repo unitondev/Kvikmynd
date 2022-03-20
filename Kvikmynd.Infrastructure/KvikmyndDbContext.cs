@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kvikmynd.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kvikmynd.Infrastructure
 {
-    public class KvikmyndDbContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class KvikmyndDbContext : IdentityDbContext<User, ApplicationRole, int>
     {
         public KvikmyndDbContext()
         { }
@@ -667,7 +666,7 @@ namespace Kvikmynd.Infrastructure
             );
 
             #endregion
-            
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<GenreMovie>().HasKey(gm => new {gm.GenreId, gm.MovieId});
             modelBuilder.Entity<MovieRating>().HasKey(mr => new {mr.MovieId, mr.UserId});

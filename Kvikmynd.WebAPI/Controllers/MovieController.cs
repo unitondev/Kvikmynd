@@ -3,6 +3,8 @@ using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Application.Services;
+using Kvikmynd.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +17,13 @@ namespace Kvikmynd.Controllers
     {
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
+        private readonly SeedService _seedService;
 
-        public MovieController(IMovieService movieService, IMapper mapper)
+        public MovieController(IMovieService movieService, IMapper mapper, SeedService seedService)
         {
             _movieService = movieService;
             _mapper = mapper;
+            _seedService = seedService;
         }
 
         [AllowAnonymous]
@@ -56,6 +60,7 @@ namespace Kvikmynd.Controllers
             return Ok(movieWithGenres);
         }
 
+        [Authorize(Policy = PolicyTypes.AddMovie)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
@@ -68,6 +73,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
 
+        [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
@@ -106,6 +112,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
         
+        [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
@@ -124,11 +131,13 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
+        // call this endpoint when initializing the db
         [AllowAnonymous]
-        [HttpGet("populateMoviesCovers")]
+        [HttpGet("seed")]
         public async Task<IActionResult> PopulateMoviesCovers()
         {
-            await _movieService.PopulateMoviesCoversAsync();
+            await _seedService.SeedMoviesCoversAsync();
+            await _seedService.SeedAdmin();
             return Ok();
         }
     }

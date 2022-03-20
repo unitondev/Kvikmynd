@@ -12,14 +12,11 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<ServiceResult<User>> FindByEmailAsync(string email);
         Task<ServiceResult<User>> FindByEmailAndCheckCredentialsAsync(string email, string password);
         Task<ServiceResult<User>> RegisterAsync(UserRegistrationModel item);
-        Task<ServiceResult> DeleteByIdAsync(string id);
-        Task<ServiceResult> DeleteByJwtTokenAsync(string jwtTokenPlainText);
         Task<ServiceResult<RefreshAndJwtTokenModel>> RefreshTokenAsync(string token);
         Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken token);
         Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText);
-        Task<ServiceResult> LogOut(string jwtTokenPlainText);
+        Task<ServiceResult> LogOut(string userId);
         Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel requestedUser);
-        Task<ServiceResult<User>> GetCurrentUserByJwtTokenAsync(string jwtPlainText);
         Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId);
     }
 }

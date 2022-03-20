@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -15,11 +18,13 @@ namespace Kvikmynd.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IAccountService _accountService;
+        private readonly UserManager<User> _userManager;
 
-        public TokenController(ITokenService tokenService, IAccountService accountService)
+        public TokenController(ITokenService tokenService, IAccountService accountService, UserManager<User> userManager)
         {
             _tokenService = tokenService;
             _accountService = accountService;
+            _userManager = userManager;
         }
 
         [HttpPost("api/token")]
@@ -27,11 +32,11 @@ namespace Kvikmynd.Controllers
         {
             var result = await _accountService.FindByEmailAndCheckCredentialsAsync(model.Email, model.Password);
             if (!result.IsSucceeded) return CustomBadRequest(result.Error);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(result.Result.Id))
-            };
+            
+            var userRoles = await _userManager.GetRolesAsync(result.Result);
+            var claims = userRoles.Select(s => new Claim(ClaimTypes.Role, s)).ToList();
+            
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(result.Result.Id)));
 
             var jwtToken = _tokenService.GetJwtToken(claims);
 

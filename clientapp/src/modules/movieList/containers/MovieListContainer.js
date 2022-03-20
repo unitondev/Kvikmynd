@@ -6,6 +6,8 @@ import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
 import { getIsMovieListLoading, getMovieList, getMovieListTotalCount } from '../selectors'
 import { addQueryToUrl } from '@movie/modules/movieList/helpers'
+import { hasPermission } from '@movie/modules/permissions/selectors'
+import { ApplicationPermissions } from '../../../Enums'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -13,6 +15,7 @@ const MovieListContainer = () => {
   const moviesTotalCount = useSelector(getMovieListTotalCount)
   const isLoading = useSelector(getIsMovieListLoading)
   const location = useSelector(state => state.router.location)
+  const hasAddMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.AddMovie))
   const PageSize = 5
   const pageNumber = location.query.page
   const searchQuery = location.query.query
@@ -43,6 +46,7 @@ const MovieListContainer = () => {
       pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
       searchQuery={location.query.query}
       isLoading={isLoading}
+      isShowAddMovie={hasAddMoviePermission}
     />
   )
 }
