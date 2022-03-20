@@ -11,6 +11,7 @@ using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
+using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -92,7 +93,7 @@ namespace Kvikmynd.Application.Services
                 return new ServiceResult<User>(ErrorCode.UserNotCreated);
             }
 
-            var roleResult = await _userManager.AddToRoleAsync(createdUser, ApplicationRole.User);
+            var roleResult = await _userManager.AddToRoleAsync(createdUser, Roles.User.ToString());
             if (!roleResult.Succeeded)
             {
                 return new ServiceResult<User>(ErrorCode.UserNotCreated);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kvikmynd.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -668,23 +667,6 @@ namespace Kvikmynd.Infrastructure
 
             #endregion
 
-            #region Roles seeding
-
-            modelBuilder.Entity<ApplicationRole>().HasData(
-                new ApplicationRole(ApplicationRole.Admin)
-                {
-                    Id = 1,
-                    NormalizedName = ApplicationRole.Admin.ToUpper()
-                }, 
-                new ApplicationRole(ApplicationRole.User)
-                {
-                    Id = 2,
-                    NormalizedName = ApplicationRole.User.ToUpper()
-                }
-            );
-
-            #endregion
-            
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<GenreMovie>().HasKey(gm => new {gm.GenreId, gm.MovieId});
             modelBuilder.Entity<MovieRating>().HasKey(mr => new {mr.MovieId, mr.UserId});

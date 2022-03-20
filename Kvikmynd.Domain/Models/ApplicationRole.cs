@@ -6,9 +6,6 @@ namespace Kvikmynd.Domain.Models
     {
         public ApplicationRole() : base() { }
         public ApplicationRole(string roleName) : base(roleName) { }
-
-        public const string User = "User";
-        public const string Admin = "Admin";
     }
     
 }

@@ -46,22 +46,6 @@ namespace Kvikmynd.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConcurrencyStamp = "fa288881-390a-4c34-81f7-06b1dfad5f8a",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ConcurrencyStamp = "c3e2477e-ed71-4bbb-823e-c035de2b6b8f",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Kvikmynd.Domain.Models.Comment", b =>
