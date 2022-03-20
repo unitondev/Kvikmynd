@@ -102,40 +102,6 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(createdUser);
         }
         
-        public async Task<ServiceResult> DeleteByIdAsync(string userId)
-        {
-            var deletedUser = await _userManager.FindByIdAsync(userId);
-            if (deletedUser == null)
-            {
-                return new ServiceResult(ErrorCode.UserNotFound);
-            }
-            
-            var result = await _userManager.DeleteAsync(deletedUser);
-            if (!result.Succeeded)
-            {
-                return new ServiceResult(ErrorCode.UserNotDeleted);
-            }
-
-            return new ServiceResult();
-        }
-        
-        public async Task<ServiceResult> DeleteByJwtTokenAsync(string jwtTokenPlainText)
-        {
-            var userId = GetIdFromFromJwtToken(jwtTokenPlainText);
-            if (userId.Length == 0)
-            {
-                return new ServiceResult(ErrorCode.UserNotFound);
-            }
-            
-            var result = await DeleteByIdAsync(userId);
-            if (!result.IsSucceeded)
-            {
-                return new ServiceResult(ErrorCode.UserNotDeleted);
-            }
-            
-            return new ServiceResult();
-        }
-
         public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -144,16 +110,15 @@ namespace Kvikmynd.Application.Services
             var refreshToken = _tokenService.GenerateRefreshToken();
             user.RefreshTokens.Add(refreshToken);
             
-            await _work.UserRepository.UpdateAsync(user);
-            await _work.CommitAsync();
+            var result =  await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return new ServiceResult<RefreshToken>(ErrorCode.Unspecified);
 
             return new ServiceResult<RefreshToken>(refreshToken);
         }
 
-        public async Task<ServiceResult> LogOut(string jwtTokenPlainText)
+        public async Task<ServiceResult> LogOut(string userId)
         {
-            var userId = GetIdFromFromJwtToken(jwtTokenPlainText);
-            var user = await _userManager.FindByIdAsync(Convert.ToString(userId));
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return new ServiceResult(ErrorCode.UserNotFound);
@@ -249,21 +214,6 @@ namespace Kvikmynd.Application.Services
             await _work.CommitAsync();
 
             return new ServiceResult();
-        }
-
-        public async Task<ServiceResult<User>> GetCurrentUserByJwtTokenAsync(string jwtPlainText)
-        {
-            var userId = GetIdFromFromJwtToken(jwtPlainText);
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return new ServiceResult<User>(ErrorCode.UserNotFound);
-
-            return new ServiceResult<User>(user);
-        }
-
-        private static string GetIdFromFromJwtToken(string jwtPlainText)
-        {
-            var jwtClaimsDictionary = JwtDecoder.DecodeJwt(jwtPlainText);
-            return jwtClaimsDictionary["userId"];
         }
 
         public void Dispose()

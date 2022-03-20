@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -119,10 +120,10 @@ namespace Kvikmynd.Controllers
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
         {
-            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
+            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
             
-            var result = await _accountService.LogOut(jwtToken);
+            var result = await _accountService.LogOut(userId);
             if (!result.IsSucceeded)
             {
                 return CustomBadRequest(result.Error);
@@ -146,13 +147,16 @@ namespace Kvikmynd.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
+            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
             
-            var result = await _accountService.DeleteByJwtTokenAsync(jwtToken);
-            if (!result.IsSucceeded)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
             {
-                return CustomBadRequest(result.Error);
+                return CustomBadRequest(ErrorCode.UserNotDeleted);
             }
 
             return Ok();
@@ -174,13 +178,13 @@ namespace Kvikmynd.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
-            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
-            if (jwtToken.Length == 0) return CustomNotFound(ErrorCode.AccessTokenNotFound);
+            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
 
-            var result = await _accountService.GetCurrentUserByJwtTokenAsync(jwtToken);
-            if (!result.IsSucceeded) return CustomBadRequest(result.Error);
-
-            var userViewModel = new UserViewModel(result.Result, "");
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+            
+            var userViewModel = new UserViewModel(user, "");
 
             return Ok(userViewModel);
         }
@@ -193,24 +197,25 @@ namespace Kvikmynd.Controllers
                 return CustomBadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
             }
             
-            var jwtToken = Request.Headers["Authorization"].ToString().Split()[1];
+            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
             
-            var userResult = await _accountService.GetCurrentUserByJwtTokenAsync(jwtToken);
-            if (!userResult.IsSucceeded) return CustomBadRequest(userResult.Error);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
 
-            if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
+            if (_userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,
                 model.CurrentPassword) == PasswordVerificationResult.Failed)
             {
                 return CustomBadRequest(ErrorCode.CurrentPasswordIncorrect);
             }
             
-            if (_userManager.PasswordHasher.VerifyHashedPassword(userResult.Result, userResult.Result.PasswordHash,
+            if (_userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,
                 model.NewPassword) == PasswordVerificationResult.Success)
             {
                 return CustomBadRequest(ErrorCode.NewPasswordCanNotMatсhCurrentPassword);
             }
 
-            var result = await _userManager.ChangePasswordAsync(userResult.Result, model.CurrentPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             if (!result.Succeeded)
             {
                 return CustomBadRequest(ErrorCode.PasswordNotChanged);
