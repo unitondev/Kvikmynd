@@ -15,6 +15,5 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieModel model);
         Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id);
         Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id);
-        Task PopulateMoviesCoversAsync();
     }
 }

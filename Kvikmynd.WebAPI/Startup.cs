@@ -145,6 +145,7 @@ namespace Kvikmynd
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped(typeof(SeedService));
 
             #endregion
             
