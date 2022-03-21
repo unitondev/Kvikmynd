@@ -105,13 +105,7 @@ const Register = ({
                 <Form>
                   <Grid container direction='column' spacing={2}>
                     <Grid item className={classes.avatarGrid}>
-                      {
-                        !!values.avatar
-                          ?
-                          <AvatarPreview file={values.avatar} className={classes.avatarBig} />
-                          :
-                          <Avatar className={classes.avatarBig} />
-                      }
+                      <AvatarPreview file={values.avatar} className={classes.avatarBig} />
                     </Grid>
                     <Grid item>
                       <input
