@@ -23,6 +23,7 @@ import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import routes from '@movie/routes'
+import AddMovieDialog from '@movie/modules/movieList/components/AddMovieDialog'
 
 const MovieList = ({
   classes,
@@ -33,12 +34,16 @@ const MovieList = ({
   searchQuery,
   isLoading,
   isShowAddMovie,
+  isOpenAddMovie,
+  handleOpenAddMovieDialog,
+  handleCloseAddMovieDialog,
+  handleAddMovieSubmit,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
       {isShowAddMovie && (
         <Grid item sx={{alignSelf: 'end'}}>
-          <Button variant='outlined' color='primary' startIcon={<AddIcon />}>
+          <Button variant='outlined' color='primary' onClick={handleOpenAddMovieDialog} startIcon={<AddIcon />}>
             Add movie
           </Button>
         </Grid>
@@ -168,6 +173,11 @@ const MovieList = ({
           )
       }
     </Grid>
+    <AddMovieDialog
+      isOpen={isOpenAddMovie}
+      onClose={handleCloseAddMovieDialog}
+      onSubmit={handleAddMovieSubmit}
+    />
     <ScrollTopFab />
   </>
 )
@@ -181,6 +191,10 @@ MovieList.propTypes = {
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   isShowAddMovie: PropTypes.bool.isRequired,
+  isOpenAddMovie: PropTypes.bool.isRequired,
+  handleOpenAddMovieDialog: PropTypes.func.isRequired,
+  handleCloseAddMovieDialog: PropTypes.func.isRequired,
+  handleAddMovieSubmit: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

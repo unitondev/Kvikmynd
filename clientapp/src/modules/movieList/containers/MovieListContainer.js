@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -15,6 +15,7 @@ const MovieListContainer = () => {
   const moviesTotalCount = useSelector(getMovieListTotalCount)
   const isLoading = useSelector(getIsMovieListLoading)
   const location = useSelector(state => state.router.location)
+  const [isOpenAddMovie, setIsOpenAddMovie] = useState(false)
   const hasAddMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.AddMovie))
   const PageSize = 5
   const pageNumber = location.query.page
@@ -38,6 +39,19 @@ const MovieListContainer = () => {
     return addQueryToUrl('page', page, location.pathName, location.search)
   }, [location])
 
+  const handleOpenAddMovieDialog = useCallback(() => {
+    setIsOpenAddMovie(true)
+  }, [])
+
+  const handleCloseAddMovieDialog = useCallback(() => {
+    setIsOpenAddMovie(false)
+  }, [])
+
+  const handleAddMovieSubmit = useCallback((values) => {
+    console.log(values)
+    handleCloseAddMovieDialog()
+  }, [])
+
   return (
     <MovieList
       movies={movies}
@@ -47,6 +61,10 @@ const MovieListContainer = () => {
       searchQuery={location.query.query}
       isLoading={isLoading}
       isShowAddMovie={hasAddMoviePermission}
+      isOpenAddMovie={isOpenAddMovie}
+      handleOpenAddMovieDialog={handleOpenAddMovieDialog}
+      handleCloseAddMovieDialog={handleCloseAddMovieDialog}
+      handleAddMovieSubmit={handleAddMovieSubmit}
     />
   )
 }

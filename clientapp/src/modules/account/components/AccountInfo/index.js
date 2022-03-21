@@ -45,7 +45,7 @@ const AccountInfo = ({
               <Grid item>
                 <Grid container direction='row' spacing={1}>
                   <Grid item xs={6}>
-                    <Field 
+                    <Field
                       name='fullName'
                       label='Full name'
                       color='primary'
@@ -55,7 +55,7 @@ const AccountInfo = ({
                     />
                   </Grid>
                   <Grid item xs={6}>
-                  <Field 
+                    <Field
                       name='userName'
                       label='User name'
                       color='primary'
@@ -67,7 +67,7 @@ const AccountInfo = ({
                 </Grid>
               </Grid>
               <Grid item>
-                <Field 
+                <Field
                   name='email'
                   label='Email'
                   color='primary'
