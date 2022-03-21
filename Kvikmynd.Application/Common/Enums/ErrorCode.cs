@@ -46,6 +46,8 @@
         MovieAlreadyExists = 1200,
         MovieNotFound = 1201,
         MovieNotDeleted = 1202,
+        MovieNotUpdated = 1203,
+        MovieNotCreated = 1204,
 
         #endregion
 

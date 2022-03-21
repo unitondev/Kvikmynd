@@ -12,7 +12,7 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model);
         Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int movieId);
         Task<ServiceResult<Movie>> CreateMovieAsync(MovieModel model);
-        Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieModel model);
+        Task<ServiceResult<Movie>> UpdateMovieAsync(MovieModel model);
         Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id);
         Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id);
     }

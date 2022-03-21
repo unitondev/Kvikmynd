@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Kvikmynd.Application.ViewModels;
 
 namespace Kvikmynd.Application.Models
 {
@@ -9,6 +10,6 @@ namespace Kvikmynd.Application.Models
         public string Cover { get; set; }
         public string YoutubeLink { get; set; }
         public int Year { get; set; }
-        public List<string> Genres { get; set; }
+        public List<GenreModel> Genres { get; set; }
     }
 }

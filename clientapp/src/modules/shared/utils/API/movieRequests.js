@@ -44,6 +44,11 @@ const movieRequests = {
       SearchQuery,
     }
   }),
+  createMovieRequest: (data) => ({
+    url: 'api/movie',
+    method: 'post',
+    data,
+  })
 }
 
 export default movieRequests

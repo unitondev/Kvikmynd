@@ -8,6 +8,8 @@ import { getIsMovieListLoading, getMovieList, getMovieListTotalCount } from '../
 import { addQueryToUrl } from '@movie/modules/movieList/helpers'
 import { hasPermission } from '@movie/modules/permissions/selectors'
 import { ApplicationPermissions } from '../../../Enums'
+import * as movieActions from '@movie/modules/movie/actions'
+import { toBase64 } from '@movie/modules/account/helpers'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -47,8 +49,11 @@ const MovieListContainer = () => {
     setIsOpenAddMovie(false)
   }, [])
 
-  const handleAddMovieSubmit = useCallback((values) => {
+  const handleAddMovieSubmit = useCallback(async (values) => {
     console.log(values)
+    if (values.cover) values.cover = await toBase64(values.cover)
+    console.log(values)
+    dispatch(movieActions.createMovieRequest(values))
     handleCloseAddMovieDialog()
   }, [])
 

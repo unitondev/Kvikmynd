@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
-using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
@@ -50,82 +48,68 @@ namespace Kvikmynd.Application.Services
         
         public async Task<ServiceResult<Movie>> CreateMovieAsync(MovieModel model)
         {
-            var createdMovie = await _work.MovieRepository.FindAsync(m => m.Title == model.Title);
-            if (createdMovie != null)
+            var movieToCreate = await FindAsync(m => m.Title == model.Title);
+            if (movieToCreate != null)
             {
                 return new ServiceResult<Movie>(ErrorCode.MovieAlreadyExists);
             }
 
-            List<Genre> genres = new List<Genre>();
+            var genres = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
             
-            foreach (var requestedGenre in model.Genres)
-            {
-                var genre = await _work.GenreRepository.FindAsync(g => g.Name == requestedGenre);
-                if (genre == null)
-                {
-                    return new ServiceResult<Movie>(ErrorCode.GenreNotFound);
-                }
-
-                genres.Add(genre);
-            }
-            
-            createdMovie = _mapper.Map<MovieModel, Movie>(model);
+            movieToCreate = _mapper.Map<MovieModel, Movie>(model);
 
             foreach (var genre in genres)
             {
-                createdMovie.GenreMovies.Add(new GenreMovie
+                movieToCreate.GenreMovies.Add(new GenreMovie
                 {
-                    Movie = createdMovie,
+                    Movie = movieToCreate,
                     Genre = genre,
                 });
             }
 
-            var result = await _work.MovieRepository.CreateAsync(createdMovie);
-            await _work.CommitAsync();
+            var result = await CreateAsync(movieToCreate);
+            if (!result.IsSucceeded) return new ServiceResult<Movie>(ErrorCode.MovieNotCreated);
 
-            return new ServiceResult<Movie>(result);
+            return new ServiceResult<Movie>(result.Result);
         }
         
-        public async Task<ServiceResult<Movie>> UpdateMovieAsync(EditMovieModel model)
+        public async Task<ServiceResult<Movie>> UpdateMovieAsync(MovieModel model)
         {
             // TODO split for update movie and split genres for movie
-            var updatedMovie = await _work.MovieRepository.All(m => m.GenreMovies)
-                .Where(m => m.Title == model.Title)
-                .FirstOrDefaultAsync();
-
-            if (updatedMovie == null)
+            var movieToUpdate = await FindAsync(m => m.Title == model.Title);
+            if (movieToUpdate == null)
             {
                 return new ServiceResult<Movie>(ErrorCode.MovieNotFound);
             }
 
-            List<Genre> genres = new List<Genre>();
+            var genresToUpdate = new List<Genre>();
             
             foreach (var requestedGenre in model.Genres)
             {
-                var genre = await _work.GenreRepository.FindAsync(g => g.Name == requestedGenre);
+                var genre = await _work.GenreRepository.FindAsync(g => g.Name == requestedGenre.Name);
                 if (genre == null)
                 {
                     return new ServiceResult<Movie>(ErrorCode.GenreNotFound);
                 }
 
-                genres.Add(genre);
+                genresToUpdate.Add(genre);
             }
 
-            _mapper.Map<EditMovieModel, Movie>(model, updatedMovie);
+            _mapper.Map<MovieModel, Movie>(model, movieToUpdate);
             
-            foreach (var genre in genres)
+            foreach (var genre in genresToUpdate)
             {
-                updatedMovie.GenreMovies.Add(new GenreMovie
+                movieToUpdate.GenreMovies.Add(new GenreMovie
                 {
-                    Movie = updatedMovie,
+                    Movie = movieToUpdate,
                     Genre = genre,
                 });
             }
             
-            await _work.MovieRepository.UpdateAsync(updatedMovie);
-            await _work.CommitAsync();
+            var result = await UpdateAsync(movieToUpdate);
+            if (!result.IsSucceeded) return new ServiceResult<Movie>(ErrorCode.MovieNotUpdated);
 
-            return new ServiceResult<Movie>(updatedMovie);
+            return new ServiceResult<Movie>(movieToUpdate);
         }
 
         public async Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id)

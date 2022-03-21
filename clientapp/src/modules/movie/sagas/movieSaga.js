@@ -25,12 +25,24 @@ function * userCommentFailure (action) {
   yield put(notificationActions.enqueueSnackbarError({ message }))
 }
 
+function * createMovieSuccess (action) {
+  const message = 'Movie was successfully created'
+  yield put(notificationActions.enqueueSnackbarSuccess({ message }))
+}
+
+function * createMovieFailure (action) {
+  const message = 'Movie was not successfully created'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
 function * movieSaga() {
   yield all([
     takeLatest(movieActions.userCommentSuccess, onPostedComment),
     takeLatest(movieActions.deleteCommentSuccess, onDeletedComment),
     takeLatest([movieActions.setUserRatingSuccess, movieActions.deleteUserRatingSuccess], onChangedRating),
     takeLatest(movieActions.userCommentFailure, userCommentFailure),
+    takeLatest(movieActions.createMovieSuccess, createMovieSuccess),
+    takeLatest(movieActions.createMovieFailure, createMovieFailure),
   ])
 }
 

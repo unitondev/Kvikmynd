@@ -8,9 +8,10 @@ namespace Kvikmynd.Application.Mapper
     {
         public GenreProfile()
         {
-            CreateMap<Genre, GenreViewModel>();
+            CreateMap<Genre, GenreModel>();
+            CreateMap<GenreModel, Genre>();
 
-            CreateMap<GenreMovie, GenreViewModel>().IncludeMembers(src => src.Genre);
+            CreateMap<GenreMovie, GenreModel>().IncludeMembers(src => src.Genre);
         }
     }
 }

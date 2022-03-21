@@ -64,6 +64,8 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.MovieAlreadyExists => "Movie already exists.",
                 ErrorCode.MovieNotFound => "Movie not found.",
                 ErrorCode.MovieNotDeleted => "Movie wasn't deleted.",
+                ErrorCode.MovieNotUpdated => "Movie wasn't updated.",
+                ErrorCode.MovieNotCreated => "Movie wasn't created.",
                 
                 #endregion
                 

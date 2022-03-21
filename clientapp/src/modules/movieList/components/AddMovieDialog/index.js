@@ -54,14 +54,14 @@ const AddMovieDialog = ({ classes, isOpen, onClose, onSubmit }) => {
             <DialogContent>
               <Grid container direction='column' spacing={2}>
                 <Grid item alignSelf='center'>
-                  <AvatarPreview file={values.avatar} className={classes.cover} variant='rounded' />
+                  <AvatarPreview file={values.cover} className={classes.cover} variant='rounded' />
                 </Grid>
                 <Grid item>
                   <input
                     type='file'
                     name='cover'
                     accept='image/*'
-                    onChange={(e) => setFieldValue('avatar', e.currentTarget.files[0])}
+                    onChange={(e) => setFieldValue('cover', e.currentTarget.files[0])}
                     hidden
                     ref={uploadInputRef}
                   />

@@ -75,7 +75,7 @@ namespace Kvikmynd.Controllers
 
         [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] EditMovieModel model)
+        public async Task<IActionResult> Put([FromBody] MovieModel model)
         {
             var result = await _movieService.UpdateMovieAsync(model);
             if (!result.IsSucceeded)
