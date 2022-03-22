@@ -41,3 +41,7 @@ export const createMovieRequest = createAction('CREATE_MOVIE_REQUEST')
 export const createMovieSuccess = createAction('CREATE_MOVIE_SUCCESS')
 export const createMovieFailure = createAction('CREATE_MOVIE_FAILURE')
 
+export const deleteMovieRequest = createAction('DELETE_MOVIE_REQUEST')
+export const deleteMovieSuccess = createAction('DELETE_MOVIE_SUCCESS')
+export const deleteMovieFailure = createAction('DELETE_MOVIE_FAILURE')
+

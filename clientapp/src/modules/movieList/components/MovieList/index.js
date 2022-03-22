@@ -9,7 +9,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
-  Grid,
+  Grid, IconButton,
   Pagination,
   PaginationItem,
   Rating,
@@ -18,12 +18,14 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import routes from '@movie/routes'
 import AddMovieDialog from '@movie/modules/movieList/components/AddMovieDialog'
+import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 
 const MovieList = ({
   classes,
@@ -34,10 +36,13 @@ const MovieList = ({
   searchQuery,
   isLoading,
   isShowAddMovie,
+  isShowEditMovie,
   isOpenAddMovie,
   handleOpenAddMovieDialog,
   handleCloseAddMovieDialog,
   handleAddMovieSubmit,
+  handleClickDeleteMovie,
+  dialogProps,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
@@ -104,6 +109,13 @@ const MovieList = ({
                       <Card>
                         <CardHeader
                           title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
+                          action={
+                            isShowEditMovie && (
+                              <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                                <DeleteIcon />
+                              </IconButton>
+                            )
+                          }
                         />
                         <CardContent>
                           <Grid container direction='row' spacing={2}>
@@ -179,6 +191,7 @@ const MovieList = ({
       onSubmit={handleAddMovieSubmit}
     />
     <ScrollTopFab />
+    <ConfirmationDialog {...dialogProps} />
   </>
 )
 
@@ -191,10 +204,13 @@ MovieList.propTypes = {
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   isShowAddMovie: PropTypes.bool.isRequired,
+  isShowEditMovie: PropTypes.bool.isRequired,
   isOpenAddMovie: PropTypes.bool.isRequired,
   handleOpenAddMovieDialog: PropTypes.func.isRequired,
   handleCloseAddMovieDialog: PropTypes.func.isRequired,
   handleAddMovieSubmit: PropTypes.func.isRequired,
+  handleClickDeleteMovie: PropTypes.func.isRequired,
+  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

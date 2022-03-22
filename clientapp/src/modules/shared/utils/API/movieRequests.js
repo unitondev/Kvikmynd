@@ -1,3 +1,5 @@
+import { deleteMovieRequest } from '@movie/modules/movie/actions'
+
 const movieRequests = {
   selectedMovieRequest: (data) => ({
     url: `api/movie/${data}/withGenres`,
@@ -48,6 +50,10 @@ const movieRequests = {
     url: 'api/movie',
     method: 'post',
     data,
+  }),
+  deleteMovieRequest: ({ id }) => ({
+    url: `api/movie/${id}`,
+    method: 'delete',
   })
 }
 
