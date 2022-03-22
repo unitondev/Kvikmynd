@@ -9,7 +9,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
-  Grid,
+  Grid, IconButton,
   Pagination,
   PaginationItem,
   Rating,
@@ -18,6 +18,8 @@ import {
 } from '@mui/material'
 import _ from 'lodash'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
@@ -33,12 +35,15 @@ const MovieList = ({
   searchQuery,
   isLoading,
   isShowAddMovie,
+  isShowEditMovie,
+  handleOpenAddMovieDialog,
+  handleClickDeleteMovie,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
       {isShowAddMovie && (
         <Grid item sx={{alignSelf: 'end'}}>
-          <Button variant='outlined' color='primary' startIcon={<AddIcon />}>
+          <Button variant='outlined' color='primary' onClick={handleOpenAddMovieDialog} startIcon={<AddIcon />}>
             Add movie
           </Button>
         </Grid>
@@ -92,13 +97,25 @@ const MovieList = ({
           ))
           : (
             <>
-              {
+            {
                 movies.length > 0 && movies.map((movie) => {
                   return (
                     <Grid item key={movie.id}>
                       <Card>
                         <CardHeader
                           title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
+                          action={
+                            isShowEditMovie && (
+                              <>
+                                <IconButton onClick={() => handleOpenAddMovieDialog(movie)}>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </>
+                            )
+                          }
                         />
                         <CardContent>
                           <Grid container direction='row' spacing={2}>
@@ -181,6 +198,9 @@ MovieList.propTypes = {
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   isShowAddMovie: PropTypes.bool.isRequired,
+  isShowEditMovie: PropTypes.bool.isRequired,
+  handleOpenAddMovieDialog: PropTypes.func.isRequired,
+  handleClickDeleteMovie: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

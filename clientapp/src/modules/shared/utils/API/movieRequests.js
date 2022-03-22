@@ -44,6 +44,20 @@ const movieRequests = {
       SearchQuery,
     }
   }),
+  createMovieRequest: (data) => ({
+    url: 'api/movie',
+    method: 'post',
+    data,
+  }),
+  deleteMovieRequest: ({ id }) => ({
+    url: `api/movie/${id}`,
+    method: 'delete',
+  }),
+  updateMovieRequest: (data) => ({
+    url: 'api/movie',
+    method: 'put',
+    data,
+  }),
 }
 
 export default movieRequests

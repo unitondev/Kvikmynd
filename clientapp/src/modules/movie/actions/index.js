@@ -37,3 +37,15 @@ export const deleteCommentRequest = createAction('DELETE_COMMENT_REQUEST')
 export const deleteCommentSuccess = createAction('DELETE_COMMENT_SUCCESS')
 export const deleteCommentFailure = createAction('DELETE_COMMENT_FAILURE')
 
+export const createMovieRequest = createAction('CREATE_MOVIE_REQUEST')
+export const createMovieSuccess = createAction('CREATE_MOVIE_SUCCESS')
+export const createMovieFailure = createAction('CREATE_MOVIE_FAILURE')
+
+export const deleteMovieRequest = createAction('DELETE_MOVIE_REQUEST')
+export const deleteMovieSuccess = createAction('DELETE_MOVIE_SUCCESS')
+export const deleteMovieFailure = createAction('DELETE_MOVIE_FAILURE')
+
+export const updateMovieRequest = createAction('UPDATE_MOVIE_REQUEST')
+export const updateMovieSuccess = createAction('UPDATE_MOVIE_SUCCESS')
+export const updateMovieFailure = createAction('UPDATE_MOVIE_FAILURE')
+

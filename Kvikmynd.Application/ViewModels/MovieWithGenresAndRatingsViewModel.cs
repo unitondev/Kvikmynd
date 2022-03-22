@@ -10,7 +10,7 @@ namespace Kvikmynd.Application.ViewModels
         public string Cover { get; set; } 
         public string YoutubeLink { get; set; }
         public int Year { get; set; }
-        public IList<GenreViewModel> Genres { get; set; }
+        public IList<GenreModel> Genres { get; set; }
         public IList<MovieRatingViewModel> Ratings { get; set; }
     }
 }

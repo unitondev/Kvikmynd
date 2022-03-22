@@ -85,9 +85,7 @@ const UserSettings = ({
           }
         </Grid>
       </Paper>
-      <ConfirmationDialog
-        {...dialogProps}
-      />
+      <ConfirmationDialog {...dialogProps} />
     </Container>
   )
 }

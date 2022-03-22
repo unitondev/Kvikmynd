@@ -1,12 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.Services;
+using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Authorization;
+using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kvikmynd.Controllers
 {
@@ -64,7 +69,25 @@ namespace Kvikmynd.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
-            var result = await _movieService.CreateMovieAsync(model);
+            var movieToCreate = await _movieService.FindAsync(m => m.Title == model.Title);
+            if (movieToCreate != null)
+            {
+                return CustomBadRequest(ErrorCode.MovieAlreadyExists);
+            }
+            
+            var genres = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
+            movieToCreate = _mapper.Map<MovieModel, Movie>(model);
+            
+            foreach (var genre in genres)
+            {
+                movieToCreate.GenreMovies.Add(new GenreMovie
+                {
+                    Movie = movieToCreate,
+                    Genre = genre,
+                });
+            }
+            
+            var result = await _movieService.CreateAsync(movieToCreate);
             if (!result.IsSucceeded)
             {
                 return CustomBadRequest(result.Error);
@@ -77,13 +100,35 @@ namespace Kvikmynd.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
-            var result = await _movieService.UpdateMovieAsync(model);
+            var isMovieExists = await _movieService.ExistsAsync(model.Id);
+            if (!isMovieExists) return CustomNotFound(ErrorCode.MovieNotFound);
+
+            var movieToUpdate = await _movieService
+                .GetAll()
+                .Where(m => m.Id == model.Id)
+                .Include(m => m.GenreMovies)
+                .AsTracking()
+                .FirstOrDefaultAsync();
+
+            var genresToUpdate = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
+            _mapper.Map<EditMovieModel, Movie>(model, movieToUpdate);
+            
+            foreach (var genre in genresToUpdate)
+            {
+                movieToUpdate.GenreMovies.Add(new GenreMovie
+                {
+                    Movie = movieToUpdate,
+                    Genre = genre,
+                });
+            }
+            
+            var result = await _movieService.UpdateAsync(movieToUpdate);
             if (!result.IsSucceeded)
             {
                 return CustomBadRequest(result.Error);
             }
             
-            return Ok(result.Result);
+            return Ok(result);
         }
 
         [AllowAnonymous]

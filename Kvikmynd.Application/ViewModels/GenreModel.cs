@@ -1,6 +1,6 @@
 ﻿namespace Kvikmynd.Application.ViewModels
 {
-    public class GenreViewModel
+    public class GenreModel
     {
         public string Name { get; set; }
     }
