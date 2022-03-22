@@ -38,14 +38,15 @@ const initial = {
   genres: [],
 }
 
-const AddMovieDialog = ({ classes, isOpen, onClose, onSubmit }) => {
+const AddEditMovieDialog = ({ classes, isOpen, onClose, onSubmit, movieToUpdate }) => {
+  const isUpdateMode = Boolean(movieToUpdate)
   const uploadInputRef = useRef(null)
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth='md'>
-      <DialogTitle>Add movie</DialogTitle>
+      <DialogTitle>{isUpdateMode ? 'Edit movie' : 'Add movie'}</DialogTitle>
       <Formik
-        initialValues={initial}
+        initialValues={isUpdateMode ? movieToUpdate : initial}
         validationSchema={addMovieSchema}
         onSubmit={onSubmit}
       >
@@ -122,7 +123,7 @@ const AddMovieDialog = ({ classes, isOpen, onClose, onSubmit }) => {
             </DialogContent>
             <DialogActions>
               <Button disabled={!(isValid && dirty)} type='submit' color='primary'>
-                Add
+                {isUpdateMode ? 'Edit' : 'Add'}
               </Button>
               <Button onClick={onClose} color='primary'>
                 Cancel
@@ -135,11 +136,12 @@ const AddMovieDialog = ({ classes, isOpen, onClose, onSubmit }) => {
   )
 }
 
-AddMovieDialog.propTypes = {
+AddEditMovieDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  movieToUpdate: PropTypes.object,
 }
 
-export default withStyles(styles)(AddMovieDialog)
+export default withStyles(styles)(AddEditMovieDialog)

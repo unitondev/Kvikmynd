@@ -19,13 +19,12 @@ import {
 import _ from 'lodash'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 
 import styles from './styles'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import routes from '@movie/routes'
-import AddMovieDialog from '@movie/modules/movieList/components/AddMovieDialog'
-import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 
 const MovieList = ({
   classes,
@@ -37,12 +36,8 @@ const MovieList = ({
   isLoading,
   isShowAddMovie,
   isShowEditMovie,
-  isOpenAddMovie,
   handleOpenAddMovieDialog,
-  handleCloseAddMovieDialog,
-  handleAddMovieSubmit,
   handleClickDeleteMovie,
-  dialogProps,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
@@ -102,7 +97,7 @@ const MovieList = ({
           ))
           : (
             <>
-              {
+            {
                 movies.length > 0 && movies.map((movie) => {
                   return (
                     <Grid item key={movie.id}>
@@ -111,9 +106,14 @@ const MovieList = ({
                           title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
                           action={
                             isShowEditMovie && (
-                              <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
-                                <DeleteIcon />
-                              </IconButton>
+                              <>
+                                <IconButton onClick={() => handleOpenAddMovieDialog(movie)}>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </>
                             )
                           }
                         />
@@ -185,13 +185,7 @@ const MovieList = ({
           )
       }
     </Grid>
-    <AddMovieDialog
-      isOpen={isOpenAddMovie}
-      onClose={handleCloseAddMovieDialog}
-      onSubmit={handleAddMovieSubmit}
-    />
     <ScrollTopFab />
-    <ConfirmationDialog {...dialogProps} />
   </>
 )
 
@@ -205,12 +199,8 @@ MovieList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isShowAddMovie: PropTypes.bool.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
-  isOpenAddMovie: PropTypes.bool.isRequired,
   handleOpenAddMovieDialog: PropTypes.func.isRequired,
-  handleCloseAddMovieDialog: PropTypes.func.isRequired,
-  handleAddMovieSubmit: PropTypes.func.isRequired,
   handleClickDeleteMovie: PropTypes.func.isRequired,
-  dialogProps: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(MovieList)

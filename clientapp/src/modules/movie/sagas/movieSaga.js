@@ -1,4 +1,4 @@
-import { all, put, select, takeLatest } from 'redux-saga/effects'
+import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
 import * as movieActions from '../actions'
 import * as notificationActions from '../../shared/snackBarNotification/actions'
@@ -30,15 +30,7 @@ function * createMovieSuccess (action) {
   const message = 'Movie was successfully created'
   yield put(notificationActions.enqueueSnackbarSuccess({ message }))
 
-  const location = yield select(state => state.router.location)
-  const pageNumber = location.query.page
-  const searchQuery = location.query.query
-
-  yield put(movieListActions.movieListRequest({
-    PageNumber: pageNumber ?? 1,
-    PageSize: 5,
-    ...searchQuery && { SearchQuery: searchQuery },
-  }))
+  yield call(updateMovieList)
 }
 
 function * createMovieFailure (action) {
@@ -50,6 +42,27 @@ function * deleteMovieSuccess (action) {
   const message = 'Movie was successfully deleted'
   yield put(notificationActions.enqueueSnackbarSuccess({ message }))
 
+  yield call(updateMovieList)
+}
+
+function * deleteMovieFailure (action) {
+  const message = 'Movie was not successfully deleted'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
+function * updateMovieSuccess (action) {
+  const message = 'Movie was successfully updated'
+  yield put(notificationActions.enqueueSnackbarSuccess({ message }))
+
+  yield call(updateMovieList)
+}
+
+function * updateMovieFailure (action) {
+  const message = 'Movie was not successfully updated'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
+function * updateMovieList () {
   const location = yield select(state => state.router.location)
   const pageNumber = location.query.page
   const searchQuery = location.query.query
@@ -59,11 +72,6 @@ function * deleteMovieSuccess (action) {
     PageSize: 5,
     ...searchQuery && { SearchQuery: searchQuery },
   }))
-}
-
-function * deleteMovieFailure (action) {
-  const message = 'Movie was not successfully deleted'
-  yield put(notificationActions.enqueueSnackbarError({ message }))
 }
 
 function * movieSaga() {
@@ -76,6 +84,8 @@ function * movieSaga() {
     takeLatest(movieActions.createMovieFailure, createMovieFailure),
     takeLatest(movieActions.deleteMovieSuccess, deleteMovieSuccess),
     takeLatest(movieActions.deleteMovieFailure, deleteMovieFailure),
+    takeLatest(movieActions.updateMovieSuccess, updateMovieSuccess),
+    takeLatest(movieActions.updateMovieFailure, updateMovieFailure),
   ])
 }
 

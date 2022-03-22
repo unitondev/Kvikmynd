@@ -23,6 +23,19 @@ namespace Kvikmynd.Application.Mapper
                     dest.MovieRatings ??= new List<MovieRating>();
                     dest.Comments ??= new List<Comment>();
                 });
+            
+            CreateMap<EditMovieModel, Movie>()
+                .ForMember(dest => dest.Cover, opt => 
+                {
+                    opt.PreCondition(src => src.Cover != null);
+                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Cover));
+                })
+                .AfterMap((src, dest) =>
+                {
+                    dest.GenreMovies = new List<GenreMovie>();
+                    dest.MovieRatings ??= new List<MovieRating>();
+                    dest.Comments ??= new List<Comment>();
+                });
 
             CreateMap<Movie, MovieViewModel>()
                 .ForMember(dest => dest.Cover, opt =>

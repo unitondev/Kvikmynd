@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
@@ -10,6 +11,7 @@ using Kvikmynd.Authorization;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kvikmynd.Controllers
 {
@@ -96,16 +98,20 @@ namespace Kvikmynd.Controllers
 
         [Authorize(Policy = PolicyTypes.EditMovie)]
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] MovieModel model)
+        public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
-            var movieToUpdate = await _movieService.FindAsync(m => m.Title == model.Title);
-            if (movieToUpdate == null)
-            {
-                return CustomNotFound(ErrorCode.MovieNotFound);
-            }
-            
+            var isMovieExists = await _movieService.ExistsAsync(model.Id);
+            if (!isMovieExists) return CustomNotFound(ErrorCode.MovieNotFound);
+
+            var movieToUpdate = await _movieService
+                .GetAll()
+                .Where(m => m.Id == model.Id)
+                .Include(m => m.GenreMovies)
+                .AsTracking()
+                .FirstOrDefaultAsync();
+
             var genresToUpdate = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
-            _mapper.Map<MovieModel, Movie>(model, movieToUpdate);
+            _mapper.Map<EditMovieModel, Movie>(model, movieToUpdate);
             
             foreach (var genre in genresToUpdate)
             {

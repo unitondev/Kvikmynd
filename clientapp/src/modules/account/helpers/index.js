@@ -21,6 +21,8 @@ export const AvatarPreview = ({ file, ...props }) => {
         setPreviewString(reader.result)
       }
       reader.readAsDataURL(file)
+    } else if (typeof file === 'string') {
+      setPreviewString(file)
     }
   }, [file])
 
