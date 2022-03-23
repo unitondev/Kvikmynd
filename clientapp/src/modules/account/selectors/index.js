@@ -8,6 +8,6 @@ export const getIsRegisterSucceeded = (state) => state.account.isRegisterSucceed
 export const getIsConfirmEmailSucceeded = (state) => state.account.isConfirmEmailSucceeded
 
 export const getUser = (state) => state.account.me
-export const getUserAvatar = (state) => state.account.me?.avatar
+export const getUserAvatar = (state) => state.account.me?.avatarUrl
 export const getFullName = (state) => state.account.me?.fullName
 export const getJwt = (state) => state.account.token

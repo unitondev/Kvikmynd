@@ -16,7 +16,7 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken token);
         Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText);
         Task<ServiceResult> LogOut(string userId);
-        Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel requestedUser);
+        Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel model);
         Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId);
     }
 }

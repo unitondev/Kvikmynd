@@ -43,7 +43,7 @@ const UserSettings = ({
             <Grid container direction='column'>
               <Grid item>
                 <div className={classes.avatarBlock}>
-                  <Avatar src={user.avatar} className={classes.avatarPicture}/>
+                  <Avatar src={user.avatarUrl} className={classes.avatarPicture}/>
                 </div>
               </Grid>
               <Grid item>

@@ -82,7 +82,7 @@ namespace Kvikmynd.Infrastructure.Repositories
                     CommentId = c.Id,
                     CommentText = c.Text,
                     UserName = c.User.UserName,
-                    UserAvatar = Encoding.UTF8.GetString(c.User.Avatar)
+                    UserAvatar = c.User.AvatarUrl
                 })
                 .ToListAsync();
         }
