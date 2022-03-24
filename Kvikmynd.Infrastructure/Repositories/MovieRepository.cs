@@ -30,7 +30,7 @@ namespace Kvikmynd.Infrastructure.Repositories
             };;
         }
 
-        public async Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model)
+        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model)
         {
             var query = DbSet.AsQueryable();
 
@@ -60,7 +60,7 @@ namespace Kvikmynd.Infrastructure.Repositories
 
             var totalCount = await query.CountAsync();
 
-            return new GenericTotalCountViewModel<MovieWithGenresAndRatingsModel>
+            return new TotalCountViewModel<MovieWithGenresAndRatingsModel>
             {
                 TotalCount = totalCount,
                 Items = movies.Select(movie => new MovieWithGenresAndRatingsModel

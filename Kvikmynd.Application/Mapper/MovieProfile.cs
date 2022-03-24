@@ -12,11 +12,6 @@ namespace Kvikmynd.Application.Mapper
         public MovieProfile()
         {
             CreateMap<MovieModel, Movie>()
-                .ForMember(dest => dest.Cover, opt => 
-                {
-                    opt.PreCondition(src => src.Cover != null);
-                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Cover));
-                })
                 .AfterMap((src, dest) =>
                 {
                     dest.GenreMovies ??= new List<GenreMovie>();
@@ -25,11 +20,6 @@ namespace Kvikmynd.Application.Mapper
                 });
             
             CreateMap<EditMovieModel, Movie>()
-                .ForMember(dest => dest.Cover, opt => 
-                {
-                    opt.PreCondition(src => src.Cover != null);
-                    opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Cover));
-                })
                 .AfterMap((src, dest) =>
                 {
                     dest.GenreMovies = new List<GenreMovie>();
@@ -37,9 +27,7 @@ namespace Kvikmynd.Application.Mapper
                     dest.Comments ??= new List<Comment>();
                 });
 
-            CreateMap<Movie, MovieViewModel>()
-                .ForMember(dest => dest.Cover, opt =>
-                    opt.MapFrom(src => Encoding.UTF8.GetString(src.Cover)));
+            CreateMap<Movie, MovieViewModel>();
 
             CreateMap<MovieWithGenresAndRatingsModel, MovieWithGenresAndRatingsViewModel>()
                 .ForMember(dest => dest.Id, opt =>
@@ -48,8 +36,8 @@ namespace Kvikmynd.Application.Mapper
                     opt.MapFrom(src => src.Movie.Title))
                 .ForMember(dest => dest.Description, opt =>
                     opt.MapFrom(src => src.Movie.Description))
-                .ForMember(dest => dest.Cover, opt =>
-                    opt.MapFrom(src => Encoding.UTF8.GetString(src.Movie.Cover)))
+                .ForMember(dest => dest.CoverUrl, opt =>
+                    opt.MapFrom(src => src.Movie.CoverUrl))
                 .ForMember(dest => dest.YoutubeLink, opt =>
                     opt.MapFrom(src => src.Movie.YoutubeLink))
                 .ForMember(dest => dest.Genres, opt =>
