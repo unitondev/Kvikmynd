@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Models;

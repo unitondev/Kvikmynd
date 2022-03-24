@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Common.Enums;
-using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
@@ -49,7 +47,6 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult();
         }
         
-        // Temp solution for movie covers. Will be removed in the future after replacing images with links
         public async Task SeedMoviesCoversAsync()
         {
             var coversPaths = new[]

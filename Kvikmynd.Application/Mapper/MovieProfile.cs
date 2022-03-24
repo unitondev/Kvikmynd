@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using AutoMapper;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;

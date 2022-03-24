@@ -8,7 +8,6 @@ using Kvikmynd.Application.Common.EmailTemplates;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
-using Kvikmynd.Application.Services;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
