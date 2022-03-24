@@ -51,7 +51,7 @@ const Movie = ({
                   <CardMedia
                     component='img'
                     height='400'
-                    image={movie.cover}
+                    image={movie.coverUrl}
                     alt={movie.title}
                   />
                 </Grid>

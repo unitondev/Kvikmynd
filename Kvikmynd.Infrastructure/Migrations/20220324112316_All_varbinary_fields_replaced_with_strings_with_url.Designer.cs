@@ -4,14 +4,16 @@ using Kvikmynd.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kvikmynd.Infrastructure.Migrations
 {
     [DbContext(typeof(KvikmyndDbContext))]
-    partial class KvikmyndDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220324112316_All_varbinary_fields_replaced_with_strings_with_url")]
+    partial class All_varbinary_fields_replaced_with_strings_with_url
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

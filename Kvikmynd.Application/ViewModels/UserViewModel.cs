@@ -10,7 +10,7 @@ namespace Kvikmynd.Application.ViewModels
         public string FullName { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public string Avatar { get; set; }
+        public string AvatarUrl { get; set; }
         [JsonIgnore] // cause refresh token returns in http only cookie
         public string RefreshToken { get; set; }
 
@@ -21,7 +21,7 @@ namespace Kvikmynd.Application.ViewModels
             FullName = user.FullName;
             Email = user.Email;
             UserName = user.UserName;
-            Avatar = Encoding.UTF8.GetString(user.Avatar);
+            AvatarUrl = user.AvatarUrl;
             RefreshToken = refreshToken;
         }
     }

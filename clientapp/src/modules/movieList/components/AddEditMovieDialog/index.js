@@ -55,7 +55,7 @@ const AddEditMovieDialog = ({ classes, isOpen, onClose, onSubmit, movieToUpdate 
             <DialogContent>
               <Grid container direction='column' spacing={2}>
                 <Grid item alignSelf='center'>
-                  <AvatarPreview file={values.cover} className={classes.cover} variant='rounded' />
+                  <AvatarPreview file={typeof values.cover === 'object' ? values.cover : values.coverUrl} className={classes.cover} variant='rounded' />
                 </Grid>
                 <Grid item>
                   <input

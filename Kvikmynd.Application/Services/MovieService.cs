@@ -25,14 +25,14 @@ namespace Kvikmynd.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model)
+        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model)
         {
             var movies = await _work.MovieRepository.GetMoviesWithGenresAndRatingsAsync(model);
 
             var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
                 List<MovieWithGenresAndRatingsViewModel>>(movies.Items);
 
-            return new GenericTotalCountViewModel<MovieWithGenresAndRatingsViewModel>()
+            return new TotalCountViewModel<MovieWithGenresAndRatingsViewModel>()
             {
                 Items = moviesViewModels,
                 TotalCount = movies.TotalCount

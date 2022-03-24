@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,17 +24,20 @@ namespace Kvikmynd.Application.Services
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
+        private readonly IFileUploadService _fileUploadService;
 
         public AccountService(
             IUnitOfWork work,
             UserManager<User> userManager,
             IMapper mapper,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IFileUploadService fileUploadService)
         {
             _work = work;
             _userManager = userManager;
             _mapper = mapper;
             _tokenService = tokenService;
+            _fileUploadService = fileUploadService;
         }
         
         public async Task<User> FindByIdAsync(int userId)
@@ -86,7 +90,16 @@ namespace Kvikmynd.Application.Services
             }
             
             var createdUser = _mapper.Map<UserRegistrationModel, User>(model);
-            
+            if (model.Avatar?.Length > 0)
+            {
+                createdUser.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Avatar, "avatars");
+            }
+            else
+            {
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                createdUser.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
+            }
+
             var result = await _userManager.CreateAsync(createdUser, model.Password);
             if (!result.Succeeded)
             {
@@ -132,15 +145,24 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult();
         }
 
-        public async Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel requestedUser)
+        public async Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel model)
         {
-            var user = await _userManager.FindByEmailAsync(requestedUser.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 return new ServiceResult<UpdatedUserViewModel>(ErrorCode.UserNotFound);
             }
 
-            _mapper.Map<UpdateUserModel, User>(requestedUser, user);
+            _mapper.Map<UpdateUserModel, User>(model, user);
+            if (model.Avatar.Length > 0)
+            {
+                user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Avatar, "avatars");
+            }
+            else
+            {
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
+            }
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

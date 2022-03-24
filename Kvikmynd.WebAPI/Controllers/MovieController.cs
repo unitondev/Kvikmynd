@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -23,12 +24,14 @@ namespace Kvikmynd.Controllers
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
         private readonly SeedService _seedService;
+        private readonly IFileUploadService _fileUploadService;
 
-        public MovieController(IMovieService movieService, IMapper mapper, SeedService seedService)
+        public MovieController(IMovieService movieService, IMapper mapper, SeedService seedService, IFileUploadService fileUploadService)
         {
             _movieService = movieService;
             _mapper = mapper;
             _seedService = seedService;
+            _fileUploadService = fileUploadService;
         }
 
         [AllowAnonymous]
@@ -78,6 +81,16 @@ namespace Kvikmynd.Controllers
             var genres = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
             movieToCreate = _mapper.Map<MovieModel, Movie>(model);
             
+            if (model.Cover?.Length > 0)
+            {
+                movieToCreate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Cover, "covers");
+            }
+            else
+            {
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                movieToCreate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
+            }
+            
             foreach (var genre in genres)
             {
                 movieToCreate.GenreMovies.Add(new GenreMovie
@@ -86,7 +99,7 @@ namespace Kvikmynd.Controllers
                     Genre = genre,
                 });
             }
-            
+
             var result = await _movieService.CreateAsync(movieToCreate);
             if (!result.IsSucceeded)
             {
@@ -112,6 +125,17 @@ namespace Kvikmynd.Controllers
 
             var genresToUpdate = _mapper.Map<List<GenreModel>, List<Genre>>(model.Genres);
             _mapper.Map<EditMovieModel, Movie>(model, movieToUpdate);
+            
+            if (model.Cover?.Length > 0)
+            {
+                await _fileUploadService.DeleteImageFromFirebaseAsync(movieToUpdate.CoverUrl, "covers");
+                movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Cover, "covers");
+            }
+            else if (model.CoverUrl?.Length == 0)
+            {
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
+            }
             
             foreach (var genre in genresToUpdate)
             {
@@ -166,6 +190,8 @@ namespace Kvikmynd.Controllers
             {
                 return CustomNotFound(ErrorCode.MovieNotFound);
             }
+            
+            await _fileUploadService.DeleteImageFromFirebaseAsync(movie.CoverUrl, "covers");
             
             var result = await _movieService.DeleteAsync(movie);
             if (!result.IsSucceeded)

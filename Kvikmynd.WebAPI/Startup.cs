@@ -63,6 +63,7 @@ namespace Kvikmynd
             });
             
             services.Configure<SendGridSettings>(Configuration.GetSection(nameof(SendGridSettings)));
+            services.Configure<FirebaseSettings>(Configuration.GetSection(nameof(FirebaseSettings)));
 
             #region Authentication and authorization
 
@@ -146,6 +147,7 @@ namespace Kvikmynd
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddSingleton<ITokenService, TokenService>();
             services.AddScoped(typeof(SeedService));
+            services.AddScoped<IFileUploadService, FileUploadService>();
 
             #endregion
             

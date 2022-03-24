@@ -1,9 +1,11 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Common.Helper;
 using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
+using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +16,13 @@ namespace Kvikmynd.Application.Services
     {
         private readonly IUnitOfWork _work;
         private readonly UserManager<User> _userManager;
+        private readonly IFileUploadService _fileUploadService;
 
-        public SeedService(IUnitOfWork work, UserManager<User> userManager)
+        public SeedService(IUnitOfWork work, UserManager<User> userManager, IFileUploadService fileUploadService)
         {
             _work = work;
             _userManager = userManager;
+            _fileUploadService = fileUploadService;
         }
 
         public async Task<ServiceResult> SeedAdmin()
@@ -78,9 +82,10 @@ namespace Kvikmynd.Application.Services
             for (var i = 0; i < coversPaths.Length; i++)
             {
                 var movie = await _work.MovieRepository.FindByKeyAsync(i + 1);
-                if (movie.Cover is {Length: 0})
+                if (movie.CoverUrl is null)
                 {
-                    movie.Cover = Encoding.UTF8.GetBytes("data:image/jpeg;base64," + Base64Coder.EncodeImageToString(coversPaths[i]));
+                    var coverInBytes = await System.IO.File.ReadAllBytesAsync(coversPaths[i]);
+                    movie.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(coverInBytes), "covers");
                 }
             }
             
