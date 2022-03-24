@@ -8,6 +8,7 @@ using Kvikmynd.Application.Common.EmailTemplates;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Application.Services;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -30,13 +31,15 @@ namespace Kvikmynd.Controllers
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
+        private readonly IFileUploadService _fileUploadService;
 
         public AccountController(
             IAccountService accountService,
             UserManager<User> userManager,
             IEmailService emailService,
             IConfiguration configuration,
-            ITokenService tokenService
+            ITokenService tokenService,
+            IFileUploadService fileUploadService
             )
         {
             _accountService = accountService;
@@ -44,6 +47,7 @@ namespace Kvikmynd.Controllers
             _emailService = emailService;
             _configuration = configuration;
             _tokenService = tokenService;
+            _fileUploadService = fileUploadService;
         }
 
         [HttpGet("{id}")]
@@ -153,6 +157,8 @@ namespace Kvikmynd.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
 
+            await _fileUploadService.DeleteImageFromFirebaseAsync(user.AvatarUrl, "avatars");
+            
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
             {

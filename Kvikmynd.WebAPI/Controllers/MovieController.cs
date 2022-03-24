@@ -128,6 +128,7 @@ namespace Kvikmynd.Controllers
             
             if (model.Cover?.Length > 0)
             {
+                await _fileUploadService.DeleteImageFromFirebaseAsync(movieToUpdate.CoverUrl, "covers");
                 movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Cover, "covers");
             }
             else if (model.CoverUrl?.Length == 0)
@@ -189,6 +190,8 @@ namespace Kvikmynd.Controllers
             {
                 return CustomNotFound(ErrorCode.MovieNotFound);
             }
+            
+            await _fileUploadService.DeleteImageFromFirebaseAsync(movie.CoverUrl, "covers");
             
             var result = await _movieService.DeleteAsync(movie);
             if (!result.IsSucceeded)
