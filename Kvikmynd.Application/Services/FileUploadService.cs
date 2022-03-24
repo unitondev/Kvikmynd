@@ -39,7 +39,7 @@ namespace Kvikmynd.Application.Services
         public async Task DeleteImageFromFirebaseAsync(string imageUrl, string bucketStorageName)
         {
             imageUrl = Uri.UnescapeDataString(imageUrl);
-            var startIndex = imageUrl.IndexOf($"{bucketStorageName}/", StringComparison.Ordinal) + "avatars/".Length;
+            var startIndex = imageUrl.IndexOf($"{bucketStorageName}/", StringComparison.Ordinal) + $"{bucketStorageName}/".Length;
             var endIndex = imageUrl.IndexOf("?alt", StringComparison.Ordinal);
             var imageId = imageUrl.Substring(startIndex, endIndex - startIndex);
 
