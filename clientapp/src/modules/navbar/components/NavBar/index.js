@@ -27,6 +27,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import SearchIcon from '@mui/icons-material/Search'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 
 import styles from './styles'
 import routes  from '@movie/routes'
@@ -168,6 +169,12 @@ const Navbar = ({
                           <Avatar src={avatar} className={classes.menuAvatar} />
                         </ListItemIcon>
                         <Typography textAlign='center'>Profile</Typography>
+                      </MenuItem>
+                      <MenuItem component={Link} to={routes.favorites} onClick={handleCloseUserMenu}>
+                        <ListItemIcon>
+                          <BookmarkIcon />
+                        </ListItemIcon>
+                        <Typography textAlign='center'>Favorites</Typography>
                       </MenuItem>
                       <MenuItem onClick={() => {
                         onClickLogout()

@@ -8,6 +8,11 @@ const movieListRequests = {
       SearchQuery,
     }
   }),
+  favoritesMoviesListRequest: (data) => ({
+    url: 'api/movie/getFavorites',
+    method: 'post',
+    data,
+  }),
 }
 
 export default movieListRequests

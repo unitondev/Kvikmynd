@@ -52,6 +52,22 @@ namespace Kvikmynd.Application.Mapper
                     opt.MapFrom(src => src.Movie))
                 .ForMember(dest => dest.GenreNames, opt =>
                     opt.MapFrom(src => src.Genres));
+            
+            CreateMap<MovieWithRatingsModel, MovieWithRatingsViewModel>()
+                .ForMember(dest => dest.Id, opt =>
+                    opt.MapFrom(src => src.Movie.Id))
+                .ForMember(dest => dest.Title, opt =>
+                    opt.MapFrom(src => src.Movie.Title))
+                .ForMember(dest => dest.Description, opt =>
+                    opt.MapFrom(src => src.Movie.Description))
+                .ForMember(dest => dest.CoverUrl, opt =>
+                    opt.MapFrom(src => src.Movie.CoverUrl))
+                .ForMember(dest => dest.YoutubeLink, opt =>
+                    opt.MapFrom(src => src.Movie.YoutubeLink))
+                .ForMember(dest => dest.Rating, opt =>
+                    opt.MapFrom(src => src.MovieRating))
+                .ForMember(dest => dest.Year, opt =>
+                    opt.MapFrom(src => src.Movie.Year));
         }
     }
 }

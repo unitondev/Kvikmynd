@@ -11,7 +11,7 @@ namespace Kvikmynd.Application.Interfaces.Services
     {
         Task<TotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model);
         Task<MovieWithGenresViewModel> GetMovieWithGenresByIdAsync(int movieId);
-        Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id);
         Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id);
+        Task<TotalCountViewModel<MovieWithRatingsModel>> GetFavoritesMoviesAsync(GetFavoritesMoviesModel model);
     }
 }

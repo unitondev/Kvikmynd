@@ -46,21 +46,6 @@ namespace Kvikmynd.Application.Services
             return _mapper.Map<MovieWithGenresModel, MovieWithGenresViewModel>(entityModel);
         }
 
-        public async Task<ServiceResult<IEnumerable<MovieRating>>> GetMovieRatings(int id)
-        {
-            if (!await ExistsAsync(id))
-            {
-                return new ServiceResult<IEnumerable<MovieRating>>(ErrorCode.MovieNotFound);
-            }
-
-            var movieRatings = await _work.MovieRepository.All()
-                .Where(m => m.Id == id)
-                .Select(m => m.MovieRatings)
-                .FirstOrDefaultAsync();
-
-            return new ServiceResult<IEnumerable<MovieRating>>(movieRatings);
-        }
-
         public async Task<ServiceResult<List<MovieCommentsViewModel>>> GetMovieComments(int id)
         {
             if (!await ExistsAsync(id))
@@ -71,6 +56,35 @@ namespace Kvikmynd.Application.Services
             var movieComments = await _work.MovieRepository.GetMovieCommentsAsync(id);
             
             return new ServiceResult<List<MovieCommentsViewModel>>(movieComments);
+        }
+
+        public async Task<TotalCountViewModel<MovieWithRatingsModel>> GetFavoritesMoviesAsync(
+            GetFavoritesMoviesModel model)
+        {
+            var query = _work.RatingRepository
+                .All(mr => mr.Movie)
+                .Where(mr => mr.UserId == model.UserId);
+            
+            var movieRating = await query 
+                .OrderBy(mr => mr.Movie.Id)
+                .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
+                        ? ((model.PageNumber - 1) * model.PageSize) 
+                        : 0)
+                )
+                .Take(model.PageSize ?? int.MaxValue)
+                .ToListAsync();
+            
+            var totalCount = await query.CountAsync();
+
+            return new TotalCountViewModel<MovieWithRatingsModel>
+            {
+                TotalCount = totalCount,
+                Items = movieRating.Select(rating => new MovieWithRatingsModel
+                {
+                    Movie = rating.Movie,
+                    MovieRating = rating
+                }).ToList()
+            };
         }
 
         public void Dispose()
