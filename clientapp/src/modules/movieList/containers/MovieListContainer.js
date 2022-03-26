@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
 import { getIsMovieListLoading, getMovieList, getMovieListTotalCount } from '../selectors'
-import { addQueryToUrl } from '@movie/modules/movieList/helpers'
 import { hasPermission } from '@movie/modules/permissions/selectors'
 import { ApplicationPermissions } from '../../../Enums'
 import * as movieActions from '@movie/modules/movie/actions'
@@ -42,10 +41,6 @@ const MovieListContainer = () => {
       ...searchQuery && { SearchQuery: searchQuery },
     }))
   }, [dispatch, pageNumber, searchQuery])
-
-  const generateUrlWithPageQuery = useCallback((page) => {
-    return addQueryToUrl('page', page, location.pathName, location.search)
-  }, [location])
 
   // add edit movie
   const handleOpenAddEditMovieDialog = useCallback((movieToUpdate) => {
@@ -95,7 +90,6 @@ const MovieListContainer = () => {
       <MovieList
         movies={movies}
         pageNumber={pageNumber ? Number(pageNumber) : 1}
-        generateUrlWithPageQuery={generateUrlWithPageQuery}
         pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
         searchQuery={location.query.query}
         isLoading={isLoading}

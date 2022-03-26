@@ -172,13 +172,18 @@ namespace Kvikmynd.Controllers
         [HttpGet("{id}/ratings")]
         public async Task<IActionResult> GetMovieRatings(int id)
         {
-            var result = await _movieService.GetMovieRatings(id);
-            if (!result.IsSucceeded)
+            if (!await _movieService.ExistsAsync(id))
             {
-                return CustomBadRequest(result.Error);
+                return CustomNotFound(ErrorCode.MovieNotFound);
             }
-            
-            return Ok(result.Result);
+
+            var movieRatings = await _movieService
+                .GetAll()
+                .Where(m => m.Id == id)
+                .Select(m => m.MovieRatings)
+                .FirstOrDefaultAsync();
+
+            return Ok(movieRatings);
         }
         
         [Authorize(Policy = PolicyTypes.EditMovie)]
@@ -200,6 +205,20 @@ namespace Kvikmynd.Controllers
             }
             
             return Ok();
+        }
+
+        [HttpPost("getFavorites")]
+        public async Task<IActionResult> GetFavorites([FromBody] GetFavoritesMoviesModel model)
+        {
+            var result = await _movieService.GetFavoritesMoviesAsync(model);
+
+            var viewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(result.Items);
+            
+            return Ok(new TotalCountViewModel<MovieWithRatingsViewModel>()
+            {
+                Items = viewModels,
+                TotalCount = result.TotalCount
+            });
         }
 
         // call this endpoint when initializing the db

@@ -8,6 +8,7 @@ export const search = `/search`
 export const forgotPassword = `/forgotPassword`
 export const resetPassword = `/resetPassword`
 export const confirmEmail = `/confirmEmail`
+export const favorites = `/favorites`
 
 export default {
   root,
@@ -20,4 +21,5 @@ export default {
   forgotPassword,
   resetPassword,
   confirmEmail,
+  favorites,
 }
