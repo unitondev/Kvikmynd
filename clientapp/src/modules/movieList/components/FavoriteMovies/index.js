@@ -25,10 +25,10 @@ const FavoriteMovies = () => {
   const PageSize = 5
 
   useEffect(() => {
-    dispatch(rawActions.onGetFavoritesMoviesList({ PageNumber: pageNumber ?? 1, PageSize}))
+    dispatch(rawActions.onGetMyMoviesRatingsList({ PageNumber: pageNumber ?? 1, PageSize}))
 
     return () => {
-      dispatch(rawActions.resetFavoritesMovies())
+      dispatch(rawActions.resetMoviesRatingsList())
     }
   }, [])
 

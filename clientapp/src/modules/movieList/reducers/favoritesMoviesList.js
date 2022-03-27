@@ -9,18 +9,18 @@ const defaultState = {
 
 export default handleActions(
   {
-    [rawActions.favoritesMoviesListSuccess]: (state, action) => {
+    [rawActions.getMyMoviesRatingsListSuccess]: (state, action) => {
       return { ...action.response.data, isLoading: false }
     },
-    [rawActions.favoritesMoviesListFailure]: (state, action) => {
+    [rawActions.getMyMoviesRatingsListFailure]: (state, action) => {
       return {...state, isLoading: false }
     },
-    [rawActions.favoritesMoviesListRequest]: (state, action) => {
+    [rawActions.getMyMoviesRatingsListRequest]: (state, action) => {
       return {...state, isLoading: true }
     },
     [combineActions(
       rawActions.resetState,
-      rawActions.resetFavoritesMovies,
+      rawActions.resetMoviesRatingsList,
     )] (state, action) {
       return defaultState
     },

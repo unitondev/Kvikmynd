@@ -207,10 +207,10 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpPost("getFavorites")]
-        public async Task<IActionResult> GetFavorites([FromBody] GetFavoritesMoviesModel model)
+        [HttpPost("getMyMoviesRatings")]
+        public async Task<IActionResult> GetMoviesRatings([FromBody] GetMoviesRatingsModel model)
         {
-            var result = await _movieService.GetFavoritesMoviesAsync(model);
+            var result = await _movieService.GetMoviesWithRatingByUserIdAsync(model);
 
             var viewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(result.Items);
             

@@ -6,7 +6,7 @@ function * onGetFavoritesMoviesList (action) {
   const { PageNumber, PageSize } = action.payload
   const UserId = yield select(getUserId)
 
-  yield put(rawActions.favoritesMoviesListRequest({
+  yield put(rawActions.getMyMoviesRatingsListRequest({
     PageNumber,
     PageSize,
     UserId,
@@ -15,7 +15,7 @@ function * onGetFavoritesMoviesList (action) {
 
 function * movieListSaga() {
   yield all([
-    takeLatest(rawActions.onGetFavoritesMoviesList, onGetFavoritesMoviesList),
+    takeLatest(rawActions.onGetMyMoviesRatingsList, onGetFavoritesMoviesList),
   ])
 }
 

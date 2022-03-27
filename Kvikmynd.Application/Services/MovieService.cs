@@ -58,8 +58,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<List<MovieCommentsViewModel>>(movieComments);
         }
 
-        public async Task<TotalCountViewModel<MovieWithRatingsModel>> GetFavoritesMoviesAsync(
-            GetFavoritesMoviesModel model)
+        public async Task<TotalCountViewModel<MovieWithRatingsModel>> GetMoviesWithRatingByUserIdAsync(GetMoviesRatingsModel model)
         {
             var query = _work.RatingRepository
                 .All(mr => mr.Movie)

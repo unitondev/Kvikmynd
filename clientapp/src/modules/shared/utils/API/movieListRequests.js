@@ -8,8 +8,8 @@ const movieListRequests = {
       SearchQuery,
     }
   }),
-  favoritesMoviesListRequest: (data) => ({
-    url: 'api/movie/getFavorites',
+  getMyMoviesRatingsListRequest: (data) => ({
+    url: 'api/movie/getMyMoviesRatings',
     method: 'post',
     data,
   }),
