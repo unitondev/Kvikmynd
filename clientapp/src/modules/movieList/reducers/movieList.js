@@ -20,13 +20,19 @@ export default handleActions(
     },
     [movieActions.addMovieToBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
-      state.items.find(i => i.id === MovieId).isBookmark = !state.items.find(i => i.id === MovieId).isBookmark
-      return {...state}
+
+      return {...state, items: state.items.map(i => {
+          if (i.id === MovieId) i.isBookmark = true
+          return i
+        })}
     },
     [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
-      state.items.find(i => i.id === MovieId).isBookmark = !state.items.find(i => i.id === MovieId).isBookmark
-      return {...state}
+
+      return {...state, items: state.items.map(i => {
+          if (i.id === MovieId) i.isBookmark = false
+          return i
+        })}
     },
     [movieActions.resetState]: (state, action) => {
       return defaultState
