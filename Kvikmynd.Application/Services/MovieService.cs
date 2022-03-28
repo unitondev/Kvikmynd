@@ -65,7 +65,7 @@ namespace Kvikmynd.Application.Services
                 .Where(mr => mr.UserId == model.UserId);
             
             var movieRating = await query 
-                .OrderBy(mr => mr.Movie.Id)
+                .OrderByDescending(mr => mr.Value)
                 .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
                         ? ((model.PageNumber - 1) * model.PageSize) 
                         : 0)

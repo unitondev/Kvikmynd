@@ -101,7 +101,7 @@ const Navbar = ({
                   return (
                     <ListItem {...props} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
                       <ListItemAvatar>
-                        <Avatar alr={option.title} src={option.cover} variant='square' style={{
+                        <Avatar alr={option.title} src={option.coverUrl} variant='square' style={{
                           width: 36,
                           height: 64,
                         }} />
