@@ -174,7 +174,7 @@ const Navbar = ({
                         <ListItemIcon>
                           <BookmarkIcon />
                         </ListItemIcon>
-                        <Typography textAlign='center'>Favorites</Typography>
+                        <Typography textAlign='center'>My ratings</Typography>
                       </MenuItem>
                       <MenuItem onClick={() => {
                         onClickLogout()

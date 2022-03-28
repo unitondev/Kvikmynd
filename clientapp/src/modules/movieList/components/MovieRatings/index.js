@@ -1,7 +1,6 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import withStyles from '@mui/styles/withStyles'
 import _ from 'lodash'
 import { Grid } from '@mui/material'
 
@@ -14,7 +13,7 @@ import Pagination from '@movie/modules/movieList/components/Pagination'
 import MovieListItem from '@movie/modules/movieList/components/MovieListItem'
 import SkeletonMovieListItem from '@movie/modules/movieList/components/SkeletonMovieListItem'
 
-const FavoriteMovies = () => {
+const MovieRatings = () => {
   const dispatch = useDispatch()
   const location = useSelector(state => state.router.location)
   const movies = useSelector(getFavoritesMoviesList)
@@ -66,4 +65,8 @@ const FavoriteMovies = () => {
   )
 }
 
-export default FavoriteMovies
+MovieRatings.propTypes = {
+
+}
+
+export default MovieRatings
