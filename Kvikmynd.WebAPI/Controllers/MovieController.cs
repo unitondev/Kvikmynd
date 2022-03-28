@@ -25,25 +25,30 @@ namespace Kvikmynd.Controllers
         private readonly IMapper _mapper;
         private readonly SeedService _seedService;
         private readonly IFileUploadService _fileUploadService;
+        private readonly IService<BookmarkMovie> _bookmarkMovieService;
 
         public MovieController(
             IAccountService accountService,
             IMovieService movieService,
             IMapper mapper,
             SeedService seedService,
-            IFileUploadService fileUploadService
+            IFileUploadService fileUploadService,
+            IService<BookmarkMovie> bookmarkMovieService
             ) : base(accountService)
         {
             _movieService = movieService;
             _mapper = mapper;
             _seedService = seedService;
             _fileUploadService = fileUploadService;
+            _bookmarkMovieService = bookmarkMovieService;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model)
         {
+            var userId = await GetUserIdAsync();
+            if (userId > 0) model.UserId = userId;
             var result = await _movieService.GetAllMoviesAsync(model);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
@@ -226,6 +231,51 @@ namespace Kvikmynd.Controllers
                 TotalCount = result.TotalCount
             });
         }
+
+        [HttpPost("addBookmark")]
+        public async Task<IActionResult> AddBookmark([FromBody] BookmarkMovieModel model)
+        {
+            var bookmarkMovie = new BookmarkMovie
+            {
+                MovieId = model.MovieId,
+                UserId = model.UserId,
+            };
+            
+            var result = await _bookmarkMovieService.CreateAsync(bookmarkMovie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+
+            return Ok(result.Result);
+        }
+        
+        [HttpDelete("deleteBookmark")]
+        public async Task<IActionResult> DeleteBookmark([FromBody] BookmarkMovieModel model)
+        {
+            var bookmarkMovie = await _bookmarkMovieService.FindAsync(i => i.MovieId == model.MovieId && i.UserId == model.UserId);
+            if (bookmarkMovie == null) return CustomNotFound(ErrorCode.BookmarkMovieNotFound);
+            
+            var result = await _bookmarkMovieService.DeleteAsync(bookmarkMovie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("getBookmarks")]
+        public async Task<IActionResult> GetBookmarks()
+        {
+            var currentUserId = await GetUserIdAsync();
+            var result = await _bookmarkMovieService
+                .Filter(b => b.UserId == currentUserId)
+                .ToListAsync();
+
+            return Ok(result);
+        }
+        
 
         // call this endpoint when initializing the db
         [AllowAnonymous]

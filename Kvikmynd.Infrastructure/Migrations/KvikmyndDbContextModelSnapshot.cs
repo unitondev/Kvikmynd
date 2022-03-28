@@ -1032,13 +1032,13 @@ namespace Kvikmynd.Infrastructure.Migrations
             modelBuilder.Entity("Kvikmynd.Domain.Models.BookmarkMovie", b =>
                 {
                     b.HasOne("Kvikmynd.Domain.Models.Movie", "Movie")
-                        .WithMany()
+                        .WithMany("BookmarkMovies")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Kvikmynd.Domain.Models.User", "User")
-                        .WithMany()
+                        .WithMany("BookmarkMovies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1201,6 +1201,8 @@ namespace Kvikmynd.Infrastructure.Migrations
 
             modelBuilder.Entity("Kvikmynd.Domain.Models.Movie", b =>
                 {
+                    b.Navigation("BookmarkMovies");
+
                     b.Navigation("Comments");
 
                     b.Navigation("GenreMovies");
@@ -1210,6 +1212,8 @@ namespace Kvikmynd.Infrastructure.Migrations
 
             modelBuilder.Entity("Kvikmynd.Domain.Models.User", b =>
                 {
+                    b.Navigation("BookmarkMovies");
+
                     b.Navigation("Comments");
 
                     b.Navigation("MovieRatings");

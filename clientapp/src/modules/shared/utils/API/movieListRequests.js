@@ -13,6 +13,21 @@ const movieListRequests = {
     method: 'post',
     data,
   }),
+  addMovieToBookmarkRequest: (data) => ({
+    url: 'api/movie/addBookmark',
+    method: 'post',
+    data,
+  }),
+  deleteMovieBookmarkRequest: (data) => ({
+    url: 'api/movie/deleteBookmark',
+    method: 'delete',
+    data,
+  }),
+  getBookmarksMoviesRequest: () => ({
+    url: 'api/movie/getBookmarks',
+    method: 'get',
+  }),
+
 }
 
 export default movieListRequests

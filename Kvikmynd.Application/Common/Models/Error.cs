@@ -66,6 +66,7 @@ namespace Kvikmynd.Application.Common.Models
                 ErrorCode.MovieNotDeleted => "Movie wasn't deleted.",
                 ErrorCode.MovieNotUpdated => "Movie wasn't updated.",
                 ErrorCode.MovieNotCreated => "Movie wasn't created.",
+                ErrorCode.BookmarkMovieNotFound => "Bookmark movie not found.",
                 
                 #endregion
                 

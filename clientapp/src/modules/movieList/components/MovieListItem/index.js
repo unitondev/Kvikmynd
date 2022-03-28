@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Button, Card,
   CardActions,
@@ -14,32 +15,61 @@ import {
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Link } from 'react-router-dom'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import routes from '@movie/routes'
+import { getUserId } from '@movie/modules/account/selectors'
+import * as rawActions from '@movie/modules/movieList/actions'
 
 const MovieListItem = ({
   movie,
   isShowEditMovie,
   handleOpenAddMovieDialog,
-  handleClickDeleteMovie
- }) => {
+  handleClickDeleteMovie,
+}) => {
+  const dispatch = useDispatch()
+  const userId = useSelector(getUserId)
+
+  const handleChangeBookmark = (movie) => {
+    const data = {
+      UserId: userId,
+      MovieId: movie.id,
+    }
+
+    movie.isBookmark
+      ? dispatch(rawActions.deleteMovieBookmarkRequest(data))
+      : dispatch(rawActions.addMovieToBookmarkRequest(data))
+  }
+
   return (
     <Grid item>
       <Card>
         <CardHeader
           title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
           action={
-            isShowEditMovie && (
-              <>
-                <IconButton onClick={() => handleOpenAddMovieDialog(movie)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </>
-            )
+            <>
+              {
+                userId && (
+                  <IconButton onClick={() => handleChangeBookmark(movie)}>
+                    {movie.isBookmark ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                  </IconButton>
+                )
+              }
+              {
+                isShowEditMovie && (
+                  <>
+                    <IconButton onClick={() => handleOpenAddMovieDialog(movie)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </>
+                )
+              }
+            </>
           }
         />
         <CardContent>

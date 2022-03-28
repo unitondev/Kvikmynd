@@ -35,19 +35,22 @@ namespace Kvikmynd.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(model.SearchQuery))
             {
-                query = query
-                    .Where(i => i.Title.Contains(model.SearchQuery))
-                    .Include(m => m.MovieRatings);
+                query = query.Where(i => i.Title.Contains(model.SearchQuery));
             }
             else
             {
                 query = query
-                    .Include(m => m.MovieRatings)
                     .Include(m => m.GenreMovies)
                     .ThenInclude(gm => gm.Genre);
             }
 
+            if (model.UserId.HasValue)
+            {
+                query = query.Include(m => m.BookmarkMovies.Where(bm => bm.UserId == model.UserId));
+            }
+
             var movies = await query
+                .Include(m => m.MovieRatings)
                 .OrderBy(m => m.Id)
                 .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
                         ? ((model.PageNumber - 1) * model.PageSize) 
@@ -58,7 +61,7 @@ namespace Kvikmynd.Infrastructure.Repositories
                 .ToListAsync();
 
             var totalCount = await query.CountAsync();
-
+            
             return new TotalCountViewModel<MovieWithGenresAndRatingsModel>
             {
                 TotalCount = totalCount,
@@ -66,7 +69,8 @@ namespace Kvikmynd.Infrastructure.Repositories
                 {
                     Movie = movie,
                     GenreMovies = movie.GenreMovies,
-                    Ratings = movie.MovieRatings
+                    Ratings = movie.MovieRatings,
+                    IsBookmark = movie.BookmarkMovies?.Count > 0,
                 }).ToList()
             };
         }

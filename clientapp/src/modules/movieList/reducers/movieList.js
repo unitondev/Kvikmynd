@@ -18,7 +18,16 @@ export default handleActions(
     [movieActions.movieListRequest]: (state, action) => {
       return {...state, isLoading: true }
     },
-
+    [movieActions.addMovieToBookmarkSuccess]: (state, action) => {
+      const { MovieId } = action.payload
+      state.items.find(i => i.id === MovieId).isBookmark = !state.items.find(i => i.id === MovieId).isBookmark
+      return {...state}
+    },
+    [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
+      const { MovieId } = action.payload
+      state.items.find(i => i.id === MovieId).isBookmark = !state.items.find(i => i.id === MovieId).isBookmark
+      return {...state}
+    },
     [movieActions.resetState]: (state, action) => {
       return defaultState
     },

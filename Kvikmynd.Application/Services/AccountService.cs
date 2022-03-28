@@ -242,21 +242,20 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult();
         }
 
-        public async Task<User> GetCurrentUserAsync()
+        public async Task<ServiceResult<User>> GetCurrentUserAsync()
         {
             var userId = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c => 
                 c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
 
             var user = await FindByIdAsync(Convert.ToInt32(userId));
-            if (user == null) throw new Exception($"User {userId} not found.");
-
-            return user;
+            if (user == null) return new ServiceResult<User>(ErrorCode.UserNotFound);
+            return new ServiceResult<User>(user);
         }
 
         public async Task<int> GetCurrentUserIdAsync()
         {
-            var user = await GetCurrentUserAsync();
-            return user?.Id ?? -1;
+            var result = await GetCurrentUserAsync();
+            return result.Result?.Id ?? -1;
         }
 
         public void Dispose()

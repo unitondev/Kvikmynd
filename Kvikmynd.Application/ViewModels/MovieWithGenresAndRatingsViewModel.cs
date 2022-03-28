@@ -12,5 +12,6 @@ namespace Kvikmynd.Application.ViewModels
         public int Year { get; set; }
         public IList<GenreModel> Genres { get; set; }
         public IList<MovieRatingViewModel> Ratings { get; set; }
+        public bool IsBookmark { get; set; }
     }
 }

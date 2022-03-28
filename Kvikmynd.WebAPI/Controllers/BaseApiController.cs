@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Common.Models;
+using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Kvikmynd.Controllers
     public class BaseApiController : BaseSimpleApiController
     {
         private int? _userId;
-        private User _user;
+        private ServiceResult<User> _user;
         private readonly IAccountService _accountService;
 
         public BaseApiController(IAccountService accountService)
@@ -43,7 +44,8 @@ namespace Kvikmynd.Controllers
         [NonAction]
         protected async Task<User> GetUserAsync()
         {
-            return _user ??= await _accountService.GetCurrentUserAsync();
+            _user ??= await _accountService.GetCurrentUserAsync();
+            return _user.Result;
         }
     }
 }

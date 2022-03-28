@@ -17,5 +17,7 @@ namespace Kvikmynd.Domain.Models
         public virtual IList<MovieRating> MovieRatings { get; set; }
         [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
+        [JsonIgnore]
+        public virtual IList<BookmarkMovie> BookmarkMovies { get; set; }
     }
 }
