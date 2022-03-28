@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 namespace Kvikmynd.Controllers
 {
     [ApiController]
-    public class TokenController : BaseApiController
+    public class TokenController : BaseSimpleApiController
     {
         private readonly ITokenService _tokenService;
         private readonly IAccountService _accountService;

@@ -12,7 +12,7 @@ namespace Kvikmynd.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CommentController : BaseApiController
+    public class CommentController : BaseSimpleApiController
     {
         private readonly IService<Comment> _commentService;
         private readonly IMapper _mapper;

@@ -26,7 +26,13 @@ namespace Kvikmynd.Controllers
         private readonly SeedService _seedService;
         private readonly IFileUploadService _fileUploadService;
 
-        public MovieController(IMovieService movieService, IMapper mapper, SeedService seedService, IFileUploadService fileUploadService)
+        public MovieController(
+            IAccountService accountService,
+            IMovieService movieService,
+            IMapper mapper,
+            SeedService seedService,
+            IFileUploadService fileUploadService
+            ) : base(accountService)
         {
             _movieService = movieService;
             _mapper = mapper;

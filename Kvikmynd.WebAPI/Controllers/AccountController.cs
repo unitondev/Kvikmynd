@@ -39,7 +39,7 @@ namespace Kvikmynd.Controllers
             IConfiguration configuration,
             ITokenService tokenService,
             IFileUploadService fileUploadService
-            )
+            ) : base(accountService)
         {
             _accountService = accountService;
             _userManager = userManager;
@@ -123,10 +123,9 @@ namespace Kvikmynd.Controllers
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
         {
-            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
-            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
-            
-            var result = await _accountService.LogOut(userId);
+            var userId = await GetUserIdAsync();
+
+            var result = await _accountService.LogOut(userId.ToString());
             if (!result.IsSucceeded)
             {
                 return CustomBadRequest(result.Error);
@@ -150,11 +149,7 @@ namespace Kvikmynd.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
-            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
-            
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+            var user = await GetUserAsync();
 
             await _fileUploadService.DeleteImageFromFirebaseAsync(user.AvatarUrl, "avatars");
             
@@ -183,12 +178,7 @@ namespace Kvikmynd.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
-            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
-            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
-            
+            var user = await GetUserAsync();
             var userViewModel = new UserViewModel(user, "");
 
             return Ok(userViewModel);
@@ -201,15 +191,12 @@ namespace Kvikmynd.Controllers
             {
                 return CustomBadRequest(ErrorCode.PasswordSpacesAtTheBeginningOrAtTheEnd);
             }
-            
-            var userId = HttpContext.User?.Claims?.FirstOrDefault(c => c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
-            if (string.IsNullOrEmpty(userId)) return CustomNotFound(ErrorCode.AccessTokenNotFound);
-            
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return CustomNotFound(ErrorCode.UserNotFound);
+
+
+            var user = await GetUserAsync();
 
             if (_userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,
-                model.CurrentPassword) == PasswordVerificationResult.Failed)
+                    model.CurrentPassword) == PasswordVerificationResult.Failed)
             {
                 return CustomBadRequest(ErrorCode.CurrentPasswordIncorrect);
             }

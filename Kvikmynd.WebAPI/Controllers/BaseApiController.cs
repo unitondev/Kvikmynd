@@ -1,10 +1,13 @@
-﻿using Kvikmynd.Application.Common.Enums;
+﻿using System.Threading.Tasks;
+using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Common.Models;
+using Kvikmynd.Application.Interfaces.Services;
+using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kvikmynd.Controllers
 {
-    public class BaseApiController : ControllerBase
+    public class BaseSimpleApiController : ControllerBase
     {
         [NonAction]
         public ObjectResult CustomNotFound(ErrorCode? code)
@@ -16,6 +19,31 @@ namespace Kvikmynd.Controllers
         public ObjectResult CustomBadRequest(ErrorCode? code)
         {
             return BadRequest(new Error(code ?? ErrorCode.Unspecified));
+        }
+    }
+    
+    public class BaseApiController : BaseSimpleApiController
+    {
+        private int? _userId;
+        private User _user;
+        private readonly IAccountService _accountService;
+
+        public BaseApiController(IAccountService accountService)
+        {
+            _accountService = accountService;
+        }
+
+        [NonAction]
+        protected async Task<int> GetUserIdAsync()
+        {
+            _userId ??= await _accountService.GetCurrentUserIdAsync();
+            return _userId.Value;
+        }
+        
+        [NonAction]
+        protected async Task<User> GetUserAsync()
+        {
+            return _user ??= await _accountService.GetCurrentUserAsync();
         }
     }
 }
