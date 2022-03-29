@@ -6,5 +6,6 @@ namespace Kvikmynd.Application.Models
     {
         public Movie Movie { get; set; }
         public MovieRating MovieRating { get; set; }
+        public bool IsBookmark { get; set; }
     }
 }

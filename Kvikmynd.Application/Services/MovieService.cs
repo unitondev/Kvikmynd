@@ -61,10 +61,12 @@ namespace Kvikmynd.Application.Services
         public async Task<TotalCountViewModel<MovieWithRatingsModel>> GetMoviesWithRatingByUserIdAsync(GetMoviesRatingsModel model)
         {
             var query = _work.RatingRepository
-                .All(mr => mr.Movie)
+                .All()
+                .Include(mr => mr.Movie)
+                    .ThenInclude(m => m.BookmarkMovies.Where(bm => bm.UserId == model.UserId))
                 .Where(mr => mr.UserId == model.UserId);
             
-            var movieRating = await query 
+            var movieRating = await query
                 .OrderByDescending(mr => mr.Value)
                 .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
                         ? ((model.PageNumber - 1) * model.PageSize) 
@@ -81,7 +83,8 @@ namespace Kvikmynd.Application.Services
                 Items = movieRating.Select(rating => new MovieWithRatingsModel
                 {
                     Movie = rating.Movie,
-                    MovieRating = rating
+                    MovieRating = rating,
+                    IsBookmark = rating.Movie.BookmarkMovies?.Count > 0, 
                 }).ToList()
             };
         }

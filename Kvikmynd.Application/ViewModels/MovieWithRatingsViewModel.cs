@@ -11,5 +11,6 @@ namespace Kvikmynd.Application.ViewModels
         public string YoutubeLink { get; set; }
         public int Year { get; set; }
         public MovieRatingViewModel Rating { get; set; }
+        public bool IsBookmark { get; set; }
     }
 }

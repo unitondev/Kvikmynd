@@ -1,5 +1,6 @@
 import { handleActions, combineActions } from 'redux-actions'
 import * as rawActions from '../actions'
+import * as movieActions from '@movie/modules/movieList/actions'
 
 const defaultState = {
   items: [],
@@ -17,6 +18,11 @@ export default handleActions(
     },
     [rawActions.getBookmarksMoviesRequest]: (state, action) => {
       return {...state, isLoading: true }
+    },
+    [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
+      const { MovieId } = action.payload
+
+      return {...state, items: state.items.filter(i => i.id !== MovieId)}
     },
     [combineActions(
       rawActions.resetState,
