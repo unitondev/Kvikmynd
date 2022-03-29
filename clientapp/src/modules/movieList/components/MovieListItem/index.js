@@ -22,11 +22,12 @@ import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import routes from '@movie/routes'
 import { getUserId } from '@movie/modules/account/selectors'
 import * as rawActions from '@movie/modules/movieList/actions'
+import { conditionalPropType } from '@movie/shared/helpers'
 
 const MovieListItem = ({
   movie,
   isShowEditMovie,
-  handleOpenAddMovieDialog,
+  handleOpenAddEditMovieDialog,
   handleClickDeleteMovie,
 }) => {
   const dispatch = useDispatch()
@@ -60,7 +61,7 @@ const MovieListItem = ({
               {
                 isShowEditMovie && (
                   <>
-                    <IconButton onClick={() => handleOpenAddMovieDialog(movie)}>
+                    <IconButton onClick={() => handleOpenAddEditMovieDialog(movie)}>
                       <EditIcon />
                     </IconButton>
                     <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
@@ -140,8 +141,10 @@ const MovieListItem = ({
 MovieListItem.propTypes = {
   movie: PropTypes.object.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
-  handleOpenAddMovieDialog: PropTypes.func,
-  handleClickDeleteMovie: PropTypes.func,
+  handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
+    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
+  handleClickDeleteMovie: conditionalPropType((props, propName) =>
+    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
 }
 
 export default MovieListItem

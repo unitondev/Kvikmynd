@@ -266,14 +266,51 @@ namespace Kvikmynd.Controllers
         }
 
         [HttpGet("getBookmarks")]
-        public async Task<IActionResult> GetBookmarks()
+        public async Task<IActionResult> GetBookmarks([FromQuery] PagintaionModel model)
         {
             var currentUserId = await GetUserIdAsync();
-            var result = await _bookmarkMovieService
-                .Filter(b => b.UserId == currentUserId)
+            var query = _bookmarkMovieService
+                .GetAll()
+                .Include(b => b.Movie)
+                    .ThenInclude(m => m.GenreMovies)
+                    .ThenInclude(gm => gm.Genre)
+                .Include(b => b.Movie)
+                    .ThenInclude(m => m.MovieRatings)
+                .Where(b => b.UserId == currentUserId);
+
+            var resultList = await query
+                .OrderBy(b => b.MovieId)
+                .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue
+                        ? ((model.PageNumber - 1) * model.PageSize)
+                        : 0)
+                )
+                .Take(model.PageSize ?? int.MaxValue)
                 .ToListAsync();
 
-            return Ok(result);
+            var totalCount = await query.CountAsync();
+
+            var result = new TotalCountViewModel<MovieWithGenresAndRatingsModel>
+            {
+                TotalCount = totalCount,
+                Items = resultList.Select(b => new MovieWithGenresAndRatingsModel
+                {
+                    Movie = b.Movie,
+                    GenreMovies = b.Movie.GenreMovies,
+                    Ratings = b.Movie.MovieRatings,
+                    IsBookmark = true
+                }).ToList()
+            };
+            
+            var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
+                List<MovieWithGenresAndRatingsViewModel>>(result.Items);
+
+            var final =  new TotalCountViewModel<MovieWithGenresAndRatingsViewModel>()
+            {
+                Items = moviesViewModels,
+                TotalCount = result.TotalCount
+            };
+
+            return Ok(final);
         }
         
 

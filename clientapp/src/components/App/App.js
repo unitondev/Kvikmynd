@@ -14,7 +14,8 @@ import NotFoundPage from '@movie/shared/components/NotFound'
 import ScrollToTop from '@movie/services/ScrollToTop'
 import ResetPasswordPage from '@movie/modules/account/components/ResetPassword'
 import ConfirmEmailPage from '@movie/modules/account/components/ConfirmEmail'
-import MovieRatings from '@movie/modules/movieList/components/MovieRatings'
+import BookmarksMoviesContainer from '@movie/modules/movieList/containers/BookmarksMoviesContainer'
+import MovieRatingsContainer from '@movie/modules/movieList/containers/MovieRatingsContainer'
 
 const hideNavbarOn = []
 const hideFooterOn = [
@@ -59,7 +60,8 @@ const App = ({ location }) => {
             <Route path={routes.confirmEmail}>
               <ConfirmEmailPage />
             </Route>
-            <PrivateRoute path={routes.favorites} component={MovieRatings} />
+            <PrivateRoute path={routes.myRatings} component={MovieRatingsContainer} />
+            <PrivateRoute path={routes.bookmarks} component={BookmarksMoviesContainer} />
             <Route path="*">
               <NotFoundPage />
             </Route>

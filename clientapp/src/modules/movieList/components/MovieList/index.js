@@ -14,6 +14,7 @@ import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import MovieListItem from '@movie/modules/movieList/components/MovieListItem'
 import SkeletonMovieListItem from '@movie/modules/movieList/components/SkeletonMovieListItem'
 import Pagination from '@movie/modules/movieList/components/Pagination'
+import { conditionalPropType } from '@movie/shared/helpers'
 
 const MovieList = ({
   classes,
@@ -24,14 +25,14 @@ const MovieList = ({
   isLoading,
   isShowAddMovie,
   isShowEditMovie,
-  handleOpenAddMovieDialog,
+  handleOpenAddEditMovieDialog,
   handleClickDeleteMovie,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
       {isShowAddMovie && (
         <Grid item sx={{alignSelf: 'end'}}>
-          <Button variant='outlined' color='primary' onClick={handleOpenAddMovieDialog} startIcon={<AddIcon />}>
+          <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />}>
             Add movie
           </Button>
         </Grid>
@@ -52,7 +53,7 @@ const MovieList = ({
                     key={movie.id}
                     movie={movie}
                     isShowEditMovie={isShowEditMovie}
-                    handleOpenAddMovieDialog={handleOpenAddMovieDialog}
+                    handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
                     handleClickDeleteMovie={handleClickDeleteMovie}
                   />
                   )
@@ -83,8 +84,10 @@ MovieList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isShowAddMovie: PropTypes.bool.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
-  handleOpenAddMovieDialog: PropTypes.func.isRequired,
-  handleClickDeleteMovie: PropTypes.func.isRequired,
+  handleClickDeleteMovie: conditionalPropType((props, propName) =>
+    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
+  handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
+    ((props['isShowEditMovie'] === true || props['isShowAddMovie'] === true) && typeof(props[propName]) !== 'function')),
 }
 
 export default withStyles(styles)(MovieList)

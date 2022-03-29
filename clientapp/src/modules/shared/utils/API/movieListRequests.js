@@ -23,9 +23,13 @@ const movieListRequests = {
     method: 'delete',
     data,
   }),
-  getBookmarksMoviesRequest: () => ({
+  getBookmarksMoviesRequest: ({ PageNumber, PageSize, }) => ({
     url: 'api/movie/getBookmarks',
     method: 'get',
+    params: {
+      PageNumber,
+      PageSize,
+    }
   }),
 
 }

@@ -171,7 +171,7 @@ const Navbar = ({
                         </ListItemIcon>
                         <Typography textAlign='center'>Profile</Typography>
                       </MenuItem>
-                      <MenuItem component={Link} to={routes.favorites} onClick={handleCloseUserMenu}>
+                      <MenuItem component={Link} to={routes.myRatings} onClick={handleCloseUserMenu}>
                         <ListItemIcon>
                           <GradeIcon />
                         </ListItemIcon>
