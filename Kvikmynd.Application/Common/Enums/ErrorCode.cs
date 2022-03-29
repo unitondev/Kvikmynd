@@ -48,6 +48,7 @@
         MovieNotDeleted = 1202,
         MovieNotUpdated = 1203,
         MovieNotCreated = 1204,
+        BookmarkMovieNotFound = 1205,
 
         #endregion
 

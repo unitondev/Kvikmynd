@@ -95,7 +95,7 @@ const MovieListContainer = () => {
         isLoading={isLoading}
         isShowAddMovie={hasAddMoviePermission}
         isShowEditMovie={hasEditMoviePermission}
-        handleOpenAddMovieDialog={handleOpenAddEditMovieDialog}
+        handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
         handleClickDeleteMovie={handleClickDeleteMovie}
       />
       <AddEditMovieDialog
@@ -110,7 +110,6 @@ const MovieListContainer = () => {
 }
 
 MovieListContainer.propTypes = {
-  searchRoute: PropTypes.bool,
 }
 
 export default MovieListContainer

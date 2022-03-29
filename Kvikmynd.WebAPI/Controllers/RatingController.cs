@@ -13,16 +13,14 @@ namespace Kvikmynd.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class RatingController : BaseApiController
+    public class RatingController : BaseSimpleApiController
     {
         private readonly IRatingService _ratingService;
-        private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
 
-        public RatingController(IRatingService ratingService, IMovieService movieService, IMapper mapper)
+        public RatingController(IRatingService ratingService, IMapper mapper)
         {
             _ratingService = ratingService;
-            _movieService = movieService;
             _mapper = mapper;
         }
 

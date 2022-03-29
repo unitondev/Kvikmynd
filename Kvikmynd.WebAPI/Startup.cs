@@ -150,6 +150,8 @@ namespace Kvikmynd
             services.AddScoped<IFileUploadService, FileUploadService>();
 
             #endregion
+
+            services.AddHttpContextAccessor();
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
             

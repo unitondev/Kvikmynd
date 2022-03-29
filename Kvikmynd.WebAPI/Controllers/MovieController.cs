@@ -25,19 +25,30 @@ namespace Kvikmynd.Controllers
         private readonly IMapper _mapper;
         private readonly SeedService _seedService;
         private readonly IFileUploadService _fileUploadService;
+        private readonly IService<BookmarkMovie> _bookmarkMovieService;
 
-        public MovieController(IMovieService movieService, IMapper mapper, SeedService seedService, IFileUploadService fileUploadService)
+        public MovieController(
+            IAccountService accountService,
+            IMovieService movieService,
+            IMapper mapper,
+            SeedService seedService,
+            IFileUploadService fileUploadService,
+            IService<BookmarkMovie> bookmarkMovieService
+            ) : base(accountService)
         {
             _movieService = movieService;
             _mapper = mapper;
             _seedService = seedService;
             _fileUploadService = fileUploadService;
+            _bookmarkMovieService = bookmarkMovieService;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model)
         {
+            var userId = await GetUserIdAsync();
+            if (userId > 0) model.UserId = userId;
             var result = await _movieService.GetAllMoviesAsync(model);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
@@ -207,10 +218,10 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpPost("getFavorites")]
-        public async Task<IActionResult> GetFavorites([FromBody] GetFavoritesMoviesModel model)
+        [HttpPost("getMyMoviesRatings")]
+        public async Task<IActionResult> GetMoviesRatings([FromBody] GetMoviesRatingsModel model)
         {
-            var result = await _movieService.GetFavoritesMoviesAsync(model);
+            var result = await _movieService.GetMoviesWithRatingByUserIdAsync(model);
 
             var viewModels = _mapper.Map<List<MovieWithRatingsModel>, List<MovieWithRatingsViewModel>>(result.Items);
             
@@ -220,6 +231,88 @@ namespace Kvikmynd.Controllers
                 TotalCount = result.TotalCount
             });
         }
+
+        [HttpPost("addBookmark")]
+        public async Task<IActionResult> AddBookmark([FromBody] BookmarkMovieModel model)
+        {
+            var bookmarkMovie = new BookmarkMovie
+            {
+                MovieId = model.MovieId,
+                UserId = model.UserId,
+            };
+            
+            var result = await _bookmarkMovieService.CreateAsync(bookmarkMovie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+
+            return Ok(result.Result);
+        }
+        
+        [HttpDelete("deleteBookmark")]
+        public async Task<IActionResult> DeleteBookmark([FromBody] BookmarkMovieModel model)
+        {
+            var bookmarkMovie = await _bookmarkMovieService.FindAsync(i => i.MovieId == model.MovieId && i.UserId == model.UserId);
+            if (bookmarkMovie == null) return CustomNotFound(ErrorCode.BookmarkMovieNotFound);
+            
+            var result = await _bookmarkMovieService.DeleteAsync(bookmarkMovie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("getBookmarks")]
+        public async Task<IActionResult> GetBookmarks([FromQuery] PagintaionModel model)
+        {
+            var currentUserId = await GetUserIdAsync();
+            var query = _bookmarkMovieService
+                .GetAll()
+                .Include(b => b.Movie)
+                    .ThenInclude(m => m.GenreMovies)
+                    .ThenInclude(gm => gm.Genre)
+                .Include(b => b.Movie)
+                    .ThenInclude(m => m.MovieRatings)
+                .Where(b => b.UserId == currentUserId);
+
+            var resultList = await query
+                .OrderBy(b => b.MovieId)
+                .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue
+                        ? ((model.PageNumber - 1) * model.PageSize)
+                        : 0)
+                )
+                .Take(model.PageSize ?? int.MaxValue)
+                .ToListAsync();
+
+            var totalCount = await query.CountAsync();
+
+            var result = new TotalCountViewModel<MovieWithGenresAndRatingsModel>
+            {
+                TotalCount = totalCount,
+                Items = resultList.Select(b => new MovieWithGenresAndRatingsModel
+                {
+                    Movie = b.Movie,
+                    GenreMovies = b.Movie.GenreMovies,
+                    Ratings = b.Movie.MovieRatings,
+                    IsBookmark = true
+                }).ToList()
+            };
+            
+            var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
+                List<MovieWithGenresAndRatingsViewModel>>(result.Items);
+
+            var final =  new TotalCountViewModel<MovieWithGenresAndRatingsViewModel>()
+            {
+                Items = moviesViewModels,
+                TotalCount = result.TotalCount
+            };
+
+            return Ok(final);
+        }
+        
 
         // call this endpoint when initializing the db
         [AllowAnonymous]

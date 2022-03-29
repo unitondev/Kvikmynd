@@ -4,14 +4,16 @@ using Kvikmynd.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kvikmynd.Infrastructure.Migrations
 {
     [DbContext(typeof(KvikmyndDbContext))]
-    partial class KvikmyndDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220327230151_AddedBookmarkMovie")]
+    partial class AddedBookmarkMovie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1032,13 +1034,13 @@ namespace Kvikmynd.Infrastructure.Migrations
             modelBuilder.Entity("Kvikmynd.Domain.Models.BookmarkMovie", b =>
                 {
                     b.HasOne("Kvikmynd.Domain.Models.Movie", "Movie")
-                        .WithMany("BookmarkMovies")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Kvikmynd.Domain.Models.User", "User")
-                        .WithMany("BookmarkMovies")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1201,8 +1203,6 @@ namespace Kvikmynd.Infrastructure.Migrations
 
             modelBuilder.Entity("Kvikmynd.Domain.Models.Movie", b =>
                 {
-                    b.Navigation("BookmarkMovies");
-
                     b.Navigation("Comments");
 
                     b.Navigation("GenreMovies");
@@ -1212,8 +1212,6 @@ namespace Kvikmynd.Infrastructure.Migrations
 
             modelBuilder.Entity("Kvikmynd.Domain.Models.User", b =>
                 {
-                    b.Navigation("BookmarkMovies");
-
                     b.Navigation("Comments");
 
                     b.Navigation("MovieRatings");

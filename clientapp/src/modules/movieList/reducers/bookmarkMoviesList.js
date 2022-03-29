@@ -10,35 +10,23 @@ const defaultState = {
 
 export default handleActions(
   {
-    [rawActions.getMyMoviesRatingsListSuccess]: (state, action) => {
+    [rawActions.getBookmarksMoviesSuccess]: (state, action) => {
       return { ...action.response.data, isLoading: false }
     },
-    [rawActions.getMyMoviesRatingsListFailure]: (state, action) => {
+    [rawActions.getBookmarksMoviesFailure]: (state, action) => {
       return {...state, isLoading: false }
     },
-    [rawActions.getMyMoviesRatingsListRequest]: (state, action) => {
+    [rawActions.getBookmarksMoviesRequest]: (state, action) => {
       return {...state, isLoading: true }
-    },
-    [movieActions.addMovieToBookmarkSuccess]: (state, action) => {
-      const { MovieId } = action.payload
-
-      return {...state, items: state.items.map(i => {
-          if (i.id === MovieId) i.isBookmark = true
-          return i
-        })}
     },
     [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
 
-      return {...state, items: state.items.map(i => {
-          if (i.id === MovieId) i.isBookmark = false
-          return i
-        })}
+      return {...state, items: state.items.filter(i => i.id !== MovieId)}
     },
     [combineActions(
       rawActions.resetState,
-      rawActions.resetMoviesRatingsList,
-    )] (state, action) {
+    )]: (state, action) => {
       return defaultState
     },
   },

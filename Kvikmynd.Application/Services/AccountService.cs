@@ -14,6 +14,7 @@ using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Kvikmynd.Application.Services
 {
@@ -24,19 +25,23 @@ namespace Kvikmynd.Application.Services
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IFileUploadService _fileUploadService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountService(
             IUnitOfWork work,
             UserManager<User> userManager,
             IMapper mapper,
             ITokenService tokenService,
-            IFileUploadService fileUploadService)
+            IFileUploadService fileUploadService,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             _work = work;
             _userManager = userManager;
             _mapper = mapper;
             _tokenService = tokenService;
             _fileUploadService = fileUploadService;
+            _httpContextAccessor = httpContextAccessor;
         }
         
         public async Task<User> FindByIdAsync(int userId)
@@ -235,6 +240,22 @@ namespace Kvikmynd.Application.Services
             await _work.CommitAsync();
 
             return new ServiceResult();
+        }
+
+        public async Task<ServiceResult<User>> GetCurrentUserAsync()
+        {
+            var userId = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c => 
+                c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+
+            var user = await FindByIdAsync(Convert.ToInt32(userId));
+            if (user == null) return new ServiceResult<User>(ErrorCode.UserNotFound);
+            return new ServiceResult<User>(user);
+        }
+
+        public async Task<int> GetCurrentUserIdAsync()
+        {
+            var result = await GetCurrentUserAsync();
+            return result.Result?.Id ?? -1;
         }
 
         public void Dispose()

@@ -650,10 +650,14 @@ namespace Kvikmynd.Infrastructure
                 .HasForeignKey(comment => comment.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Comment>().HasOne<Movie>(comment => comment.Movie).WithMany(movie => movie.Comments)
                 .HasForeignKey(comment => comment.MovieId).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BookmarkMovie>()
+                .HasKey(b => new {b.MovieId, b.UserId});
         }
         
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<BookmarkMovie> BookmarkMovies { get; set; }
     }
 }

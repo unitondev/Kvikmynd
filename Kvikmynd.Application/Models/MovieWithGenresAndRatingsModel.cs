@@ -8,5 +8,6 @@ namespace Kvikmynd.Application.Models
         public Movie Movie { get; set; }
         public IList<GenreMovie> GenreMovies { get; set; }
         public IList<MovieRating> Ratings { get; set; }
+        public bool IsBookmark { get; set; }
     }
 }

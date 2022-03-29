@@ -28,6 +28,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import SearchIcon from '@mui/icons-material/Search'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
+import GradeIcon from '@mui/icons-material/Grade'
 
 import styles from './styles'
 import routes  from '@movie/routes'
@@ -100,7 +101,7 @@ const Navbar = ({
                   return (
                     <ListItem {...props} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
                       <ListItemAvatar>
-                        <Avatar alr={option.title} src={option.cover} variant='square' style={{
+                        <Avatar alr={option.title} src={option.coverUrl} variant='square' style={{
                           width: 36,
                           height: 64,
                         }} />
@@ -170,11 +171,17 @@ const Navbar = ({
                         </ListItemIcon>
                         <Typography textAlign='center'>Profile</Typography>
                       </MenuItem>
-                      <MenuItem component={Link} to={routes.favorites} onClick={handleCloseUserMenu}>
+                      <MenuItem component={Link} to={routes.myRatings} onClick={handleCloseUserMenu}>
+                        <ListItemIcon>
+                          <GradeIcon />
+                        </ListItemIcon>
+                        <Typography textAlign='center'>My ratings</Typography>
+                      </MenuItem>
+                      <MenuItem component={Link} to={routes.bookmarks} onClick={handleCloseUserMenu}>
                         <ListItemIcon>
                           <BookmarkIcon />
                         </ListItemIcon>
-                        <Typography textAlign='center'>Favorites</Typography>
+                        <Typography textAlign='center'>Bookmarks</Typography>
                       </MenuItem>
                       <MenuItem onClick={() => {
                         onClickLogout()
