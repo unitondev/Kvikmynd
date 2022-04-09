@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -21,10 +21,10 @@ const RegisterContainer = () => {
     }
   }, [idLoading, isLogined])
 
-  const handleRegister = async (values) => {
+  const handleRegister = useCallback(async (values) => {
     if (!!values.avatar) values.avatar = await toBase64(values.avatar)
     dispatch(rawActions.onRegister(values))
-  }
+  }, [dispatch])
 
   return (
     <Register

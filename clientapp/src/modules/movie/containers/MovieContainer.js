@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
@@ -27,10 +27,9 @@ const MovieContainer = () => {
     dispatch(rawActions.selectedMovieRequest(id))
     dispatch(rawActions.movieCommentsRequest(id))
     dispatch(rawActions.movieRatingsRequest(id))
-    user.id && dispatch(
-      rawActions.userRatingRequest({
-        userId: user.id,
-        movieId: id,
+    user.id && dispatch(rawActions.userRatingRequest({
+      userId: user.id,
+      movieId: id,
       })
     )
     joinMoviePage(user.userName, id)
@@ -76,11 +75,11 @@ const MovieContainer = () => {
     setMovieRating(calculateMovieRating(ratings))
   }, [ratings])
 
-  const onRatingChange = (event, value) => {
+  const onRatingChange = useCallback((event, value) => {
     setSettedRating(value)
-  }
+  }, [])
 
-  const handleRatingSet = () => {
+  const handleRatingSet = useCallback(() => {
     settedRating === null
     ? dispatch(rawActions.deleteUserRatingRequest({
       userId: user.id,
@@ -92,9 +91,9 @@ const MovieContainer = () => {
       movieId: movie.id,
     })
     )
-  }
+  }, [dispatch, movie.id, settedRating, user.id])
 
-  const handleCommentSet = (values) => {
+  const handleCommentSet = useCallback((values) => {
     const { WrittenCommentText } = values
     const data = {
       text: WrittenCommentText,
@@ -105,22 +104,22 @@ const MovieContainer = () => {
     dispatch(
       rawActions.userCommentRequest(data)
     )
-  }
+  }, [dispatch, movie.id, user.id])
 
-  const handleDeleteCommentCancel = () => {
+  const handleDeleteCommentCancel = useCallback(() => {
     setOpenDeleteDialog(false)
-  }
+  }, [])
 
-  const handleDeleteCommentSubmit = () => {
+  const handleDeleteCommentSubmit = useCallback(() => {
     dispatch(rawActions.deleteCommentRequest({id: deletedComment}))
     setDeletedComment(null)
     handleDeleteCommentCancel()
-  }
+  }, [deletedComment, dispatch, handleDeleteCommentCancel])
 
-  const handleDeleteCommentClick = (id) => {
+  const handleDeleteCommentClick = useCallback((id) => {
     setDeletedComment(id)
     setOpenDeleteDialog(true)
-  }
+  }, [])
 
   const dialogProps = {
     onSubmit: handleDeleteCommentSubmit,

@@ -65,19 +65,20 @@ const MovieListContainer = () => {
   }, [dispatch, handleCloseAddEditMovieDialog])
 
   // remove movie
-  const handleClickDeleteMovie = (movieToDeleteId) => {
+  const handleClickDeleteMovie = useCallback((movieToDeleteId) => {
     setMovieToDeleteId(movieToDeleteId)
     setOpenDeleteDialog(true)
-  }
-  const handleCloseDeleteMovie = () => {
+  }, [])
+
+  const handleCloseDeleteMovie = useCallback(() => {
     setMovieToDeleteId(null)
     setOpenDeleteDialog(false)
-  }
+  }, [])
 
   const handleDeleteMovieSubmit = useCallback( () => {
     dispatch(movieActions.deleteMovieRequest({ id: movieToDeleteId }))
     handleCloseDeleteMovie()
-  }, [dispatch, movieToDeleteId])
+  }, [dispatch, handleCloseDeleteMovie, movieToDeleteId])
 
   const dialogProps = {
     onSubmit: handleDeleteMovieSubmit,

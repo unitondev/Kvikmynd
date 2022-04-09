@@ -35,7 +35,7 @@ const ConfirmEmail = ({
     return () => {
       dispatch(rawAction.resetConfirmEmail())
     }
-  }, [])
+  }, [dispatch, email, token])
 
   return (
     <Container maxWidth='sm'>

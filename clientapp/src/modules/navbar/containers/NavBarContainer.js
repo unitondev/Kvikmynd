@@ -52,7 +52,7 @@ const NavBarContainer = () => {
 
   useEffect(() => {
     searchQuery && debouncedSearchQuery(searchQuery)
-  }, [searchQuery])
+  }, [debouncedSearchQuery, searchQuery])
 
   const handleCloseSearch = () => {
     dispatch(movieListActions.resetMovieBySearch())
