@@ -2,12 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
 import {
-  Button,
+  Box,
   Grid,
   Typography,
 } from '@mui/material'
 import _ from 'lodash'
-import AddIcon from '@mui/icons-material/Add'
 
 import styles from './styles'
 import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
@@ -23,31 +22,33 @@ const MovieList = ({
   pagesTotalCount,
   searchQuery,
   isLoading,
-  isShowAddMovie,
   isShowEditMovie,
   handleOpenAddEditMovieDialog,
   handleClickDeleteMovie,
+  title,
+  action,
 }) => (
   <>
     <Grid container direction='column' spacing={5}>
-      {isShowAddMovie && (
-        <Grid item sx={{alignSelf: 'end'}}>
-          <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />}>
-            Add movie
-          </Button>
-        </Grid>
-      )}
-      {searchQuery?.length > 0 && (
-        <Grid item>
-          <Typography>Search: {searchQuery}</Typography>
-        </Grid>
-      )}
+      {
+        (title?.length > 0 || action || searchQuery?.length > 0) && (
+          <Grid item container alignItems='center'>
+            <Box sx={{flex: '1 1 auto'}}>
+              { title?.length > 0 && <Typography variant='h5'>{title}</Typography> }
+              { searchQuery?.length > 0 && <Typography>Search: {searchQuery}</Typography> }
+            </Box>
+            <Box>
+              {action}
+            </Box>
+          </Grid>
+        )
+      }
       {
         isLoading
           ? _.times(5, i => <SkeletonMovieListItem key={i} />)
           : (
             <>
-            {
+              {
                 movies.length > 0 && movies.map((movie) => (
                   <MovieListItem
                     key={movie.id}
@@ -82,12 +83,13 @@ MovieList.propTypes = {
   pagesTotalCount: PropTypes.number.isRequired,
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
-  isShowAddMovie: PropTypes.bool.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
   handleClickDeleteMovie: conditionalPropType((props, propName) =>
     (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
   handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
-    ((props['isShowEditMovie'] === true || props['isShowAddMovie'] === true) && typeof(props[propName]) !== 'function')),
+    ((props['isShowEditMovie'] === true) && typeof(props[propName]) !== 'function')),
+  title: PropTypes.string,
+  action: PropTypes.node,
 }
 
 export default withStyles(styles)(MovieList)
