@@ -1,10 +1,9 @@
 import { createAction } from 'redux-actions'
+import { createApiActions } from '@movie/shared/utils/actions'
 
 export const resetState = createAction('RESET_MOVIE_LIST_STATE')
 
-export const movieListRequest = createAction('MOVIE_LIST_REQUEST')
-export const movieListSuccess = createAction('MOVIE_LIST_SUCCESS')
-export const movieListFailure = createAction('MOVIE_LIST_FAILURE')
+export const movieList = createApiActions('MOVIE_LIST')
 
 export const getMovieBySearchRequest = createAction('GET_MOVIE_BY_SEARCH_REQUEST')
 export const getMovieBySearchSuccess = createAction('GET_MOVIE_BY_SEARCH_SUCCESS')

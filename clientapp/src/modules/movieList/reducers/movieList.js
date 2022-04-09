@@ -9,13 +9,13 @@ const defaultState = {
 
 export default handleActions(
   {
-    [movieActions.movieListSuccess]: (state, action) => {
+    [movieActions.movieList.success]: (state, action) => {
       return { ...action.response.data, isLoading: false }
     },
-    [movieActions.movieListFailure]: (state, action) => {
+    [movieActions.movieList.failure]: (state, action) => {
       return {...state, isLoading: false }
     },
-    [movieActions.movieListRequest]: (state, action) => {
+    [movieActions.movieList.request]: (state, action) => {
       return {...state, isLoading: true }
     },
     [movieActions.addMovieToBookmarkSuccess]: (state, action) => {

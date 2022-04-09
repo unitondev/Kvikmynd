@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
@@ -45,11 +46,11 @@ namespace Kvikmynd.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model)
+        public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
         {
             var userId = await GetUserIdAsync();
             if (userId > 0) model.UserId = userId;
-            var result = await _movieService.GetAllMoviesAsync(model);
+            var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
 
             return Ok(result);
