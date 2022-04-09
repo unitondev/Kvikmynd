@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '@mui/material'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
@@ -8,6 +10,7 @@ import {
   getBookmarkMoviesListLoading,
   getBookmarkMoviesListTotalCount,
 } from '@movie/modules/movieList/selectors'
+import { exportAsXlsxFile } from '@movie/shared/utils/excelFileHandler'
 
 const BookmarksMoviesContainer = () => {
   const dispatch = useDispatch()
@@ -25,6 +28,19 @@ const BookmarksMoviesContainer = () => {
     }))
   }, [dispatch, pageNumber])
 
+  const exportAsExcelFile = useCallback(() => {
+    const data = movies.map(e => {
+      delete e.coverUrl
+      delete e.description
+      delete e.youtubeLink
+      delete e.genres
+      delete e.ratings
+      delete e.isBookmark
+      return e
+    })
+    exportAsXlsxFile(data, 'Bookmarks')
+  }, [movies])
+
   return (
     <MovieList
       movies={movies}
@@ -32,8 +48,19 @@ const BookmarksMoviesContainer = () => {
       pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
       searchQuery={location.query.query}
       isLoading={isLoading}
-      isShowAddMovie={false}
       isShowEditMovie={false}
+      title='Bookmarks'
+      action={
+        <Button
+          variant='outlined'
+          color='primary'
+          onClick={exportAsExcelFile}
+          startIcon={<FileDownloadIcon />}
+          disabled={!movies.length > 0}
+        >
+          Export to excel
+        </Button>
+      }
     />
   )
 }

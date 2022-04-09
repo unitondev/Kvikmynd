@@ -11,6 +11,8 @@ import * as movieActions from '@movie/modules/movie/actions'
 import { toBase64 } from '@movie/modules/account/helpers'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 import AddEditMovieDialog from '@movie/modules/movieList/components/AddEditMovieDialog'
+import AddIcon from '@mui/icons-material/Add'
+import { Button } from '@mui/material'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -93,10 +95,16 @@ const MovieListContainer = () => {
         pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
         searchQuery={location.query.query}
         isLoading={isLoading}
-        isShowAddMovie={hasAddMoviePermission}
         isShowEditMovie={hasEditMoviePermission}
         handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
         handleClickDeleteMovie={handleClickDeleteMovie}
+        action={
+          hasAddMoviePermission && (
+            <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />}>
+              Add movie
+            </Button>
+        )
+        }
       />
       <AddEditMovieDialog
         isOpen={isOpenAddMovie}

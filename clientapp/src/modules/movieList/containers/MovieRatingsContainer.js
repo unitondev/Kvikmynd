@@ -36,8 +36,8 @@ const MovieRatingsContainer = () => {
       pagesTotalCount={Math.ceil(moviesTotalCount / PageSize)}
       searchQuery={location.query.query}
       isLoading={isLoading}
-      isShowAddMovie={false}
       isShowEditMovie={false}
+      title='My ratings'
     />
   )
 }
