@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
@@ -10,6 +11,6 @@ namespace Kvikmynd.Application.Interfaces.Repositories
     {
         Task<List<MovieCommentsViewModel>> GetMovieCommentsAsync(int id);
         Task<MovieWithGenresModel> GetMovieWithGenresByIdAsync(int id);
-        Task<TotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model);
+        Task<TotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model, CancellationToken cancellationToken);
     }
 }

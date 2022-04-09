@@ -15,19 +15,22 @@ const getHeaders = (httpMethod, accessToken, additionalHeaders = {}) => {
 }
 
 export default (paramsObject) => {
-  const { apiHostName, accessToken, data } = paramsObject
+  const { apiHostName, accessToken, data, signal } = paramsObject
 
   return axios({
     ...data,
     headers: getHeaders(data.method, accessToken, data.headers),
-    url: (data.url && data.url.indexOf('http') === 0) ? data.url : `${apiHostName}${data.url}`
+    url: (data.url && data.url.indexOf('http') === 0) ? data.url : `${apiHostName}${data.url}`,
+    signal,
   }).then((response) => {
     return response
   }).catch(error => {
-    const {statusText, status} = error.response || {}
+    if (!axios.isCancel(error)) {
+      const {statusText, status} = error.response || {}
 
-    const errorObject = {statusText, status, response: error.response}
-    console.error('paramsObject:', paramsObject, '; errorObject:', errorObject)
-    throw errorObject
+      const errorObject = {statusText, status, response: error.response}
+      console.error('paramsObject:', paramsObject, '; errorObject:', errorObject)
+      throw errorObject
+    }
   })
 }

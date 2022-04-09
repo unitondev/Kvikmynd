@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Models;
@@ -29,7 +30,7 @@ namespace Kvikmynd.Infrastructure.Repositories
             };;
         }
 
-        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model)
+        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsModel>> GetMoviesWithGenresAndRatingsAsync(SearchQueryModel model, CancellationToken cancellationToken)
         {
             var query = DbSet.AsQueryable();
 
@@ -58,9 +59,9 @@ namespace Kvikmynd.Infrastructure.Repositories
                 )
                 .Take(model.PageSize ?? int.MaxValue)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken: cancellationToken);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken: cancellationToken);
             
             return new TotalCountViewModel<MovieWithGenresAndRatingsModel>
             {

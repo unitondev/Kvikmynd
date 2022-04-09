@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import AddIcon from '@mui/icons-material/Add'
+import { Button } from '@mui/material'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
@@ -11,8 +13,6 @@ import * as movieActions from '@movie/modules/movie/actions'
 import { toBase64 } from '@movie/modules/account/helpers'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 import AddEditMovieDialog from '@movie/modules/movieList/components/AddEditMovieDialog'
-import AddIcon from '@mui/icons-material/Add'
-import { Button } from '@mui/material'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -31,17 +31,17 @@ const MovieListContainer = () => {
   const searchQuery = location.query.query
 
   useEffect(() => {
-    return () => {
-      dispatch(rawActions.resetState())
-    }
-  }, [])
+    return () => { dispatch(rawActions.resetState()) }
+  }, [dispatch])
 
   useEffect(() => {
-    dispatch(rawActions.movieListRequest({
+    dispatch(rawActions.movieList.request({
       PageNumber: pageNumber ?? 1,
       PageSize,
       ...searchQuery && { SearchQuery: searchQuery },
     }))
+
+    return () => { dispatch(rawActions.movieList.cancel()) }
   }, [dispatch, pageNumber, searchQuery])
 
   // add edit movie

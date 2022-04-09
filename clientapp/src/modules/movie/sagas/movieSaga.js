@@ -67,7 +67,7 @@ function * updateMovieList () {
   const pageNumber = location.query.page
   const searchQuery = location.query.query
 
-  yield put(movieListActions.movieListRequest({
+  yield put(movieListActions.movieList.request({
     PageNumber: pageNumber ?? 1,
     PageSize: 5,
     ...searchQuery && { SearchQuery: searchQuery },

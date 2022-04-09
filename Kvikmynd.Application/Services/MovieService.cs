@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
@@ -25,9 +26,9 @@ namespace Kvikmynd.Application.Services
             _mapper = mapper;
         }
         
-        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model)
+        public async Task<TotalCountViewModel<MovieWithGenresAndRatingsViewModel>> GetAllMoviesAsync(SearchQueryModel model, CancellationToken cancellationToken)
         {
-            var movies = await _work.MovieRepository.GetMoviesWithGenresAndRatingsAsync(model);
+            var movies = await _work.MovieRepository.GetMoviesWithGenresAndRatingsAsync(model, cancellationToken);
 
             var moviesViewModels = _mapper.Map<List<MovieWithGenresAndRatingsModel>, 
                 List<MovieWithGenresAndRatingsViewModel>>(movies.Items);
