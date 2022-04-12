@@ -14,6 +14,7 @@ import MovieListItem from '@movie/modules/movieList/components/MovieListItem'
 import SkeletonMovieListItem from '@movie/modules/movieList/components/SkeletonMovieListItem'
 import Pagination from '@movie/modules/movieList/components/Pagination'
 import { conditionalPropType } from '@movie/shared/helpers'
+import PromoMovie from '@movie/modules/movieList/components/promoMovie'
 
 const MovieList = ({
   classes,
@@ -42,6 +43,9 @@ const MovieList = ({
             </Box>
           </Grid>
         )
+      }
+      {
+        pageNumber === 1 && !searchQuery && <PromoMovie />
       }
       {
         isLoading
