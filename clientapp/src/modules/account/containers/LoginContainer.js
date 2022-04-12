@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -20,13 +20,13 @@ const LoginContainer = () => {
     if (isLoading === false && isLogined === true) history.push(routes.root)
   }, [isLoading, isLogined])
 
-  const handleLogin = (values) => {
+  const handleLogin = useCallback((values) => {
     dispatch(rawActions.onLogin(values))
-  }
+  }, [dispatch])
 
-  const handleForgotPassword = (values) => {
+  const handleForgotPassword = useCallback((values) => {
     dispatch(rawActions.onForgotPassword(values))
-  }
+  }, [dispatch])
 
   return (
     <LoginWrapper

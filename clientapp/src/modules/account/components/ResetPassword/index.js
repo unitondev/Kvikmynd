@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
@@ -49,16 +49,16 @@ const ResetPassword = ({
   const { token, email } = locationQuery
   const containerRef = useRef(null)
 
-  const handleSubmitResetPassword = (values) => {
+  const handleSubmitResetPassword = useCallback((values) => {
     const { newPassword } = values
     token && email && dispatch(rawActions.resetPasswordRequest({ Token: token, Email: email, Password: newPassword }))
-  }
+  }, [dispatch, email, token])
 
   useEffect(() => {
     return () => {
       dispatch(accountActions.resetForgotPassword())
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <Container maxWidth='xs'>

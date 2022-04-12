@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
@@ -29,7 +29,7 @@ const NotificationContainer = () => {
 
       storeDisplayed(key)
     })
-  }, [notifications])
+  }, [dispatch, enqueueSnackbar, notifications])
 
   const storeDisplayed = (key) => {
     displayed = [...displayed, { key }]
