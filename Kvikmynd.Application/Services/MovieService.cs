@@ -66,9 +66,10 @@ namespace Kvikmynd.Application.Services
                 .Include(mr => mr.Movie)
                     .ThenInclude(m => m.BookmarkMovies.Where(bm => bm.UserId == model.UserId))
                 .Where(mr => mr.UserId == model.UserId);
+
+            query = model.Order == "desc" ? query.OrderByDescending(mr => mr.Value) : query.OrderBy(mr => mr.Value);
             
             var movieRating = await query
-                .OrderByDescending(mr => mr.Value)
                 .Skip((int) (model.PageSize.HasValue && model.PageNumber.HasValue 
                         ? ((model.PageNumber - 1) * model.PageSize) 
                         : 0)
