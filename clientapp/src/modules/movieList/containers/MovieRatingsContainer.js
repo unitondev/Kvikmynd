@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { IconButton } from '@mui/material'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
@@ -17,17 +19,23 @@ const MovieRatingsContainer = () => {
   const isLoading = useSelector(getIsFavoritesMoviesListLoading)
   const pageNumber = location.query.page
   const PageSize = 5
+  const [order, setOrder] = useState('desc')
+
+  useEffect(() => {
+    return () => { dispatch(rawActions.resetMoviesRatingsList()) }
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(rawActions.onGetMyMoviesRatingsList({
       PageNumber: pageNumber ?? 1,
       PageSize,
+      Order: order,
     }))
+  }, [dispatch, pageNumber, order])
 
-    return () => {
-      dispatch(rawActions.resetMoviesRatingsList())
-    }
-  }, [dispatch, pageNumber])
+  const changeOrder = useCallback(() => {
+    setOrder(order === 'desc' ? 'asc' : 'desc')
+  }, [order])
 
   return (
     <MovieList
@@ -39,6 +47,11 @@ const MovieRatingsContainer = () => {
       isShowEditMovie={false}
       isShowDeleteMovie={false}
       title='My ratings'
+      action={
+        <IconButton onClick={changeOrder}>
+          <FilterListIcon sx={{ transform: `${order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'}` }} />
+        </IconButton>
+      }
     />
   )
 }

@@ -22,6 +22,10 @@ const BookmarksMoviesContainer = () => {
   const PageSize = 5
 
   useEffect(() => {
+    return () => { dispatch(rawActions.resetState()) }
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(rawActions.getBookmarksMoviesRequest({
       PageNumber: pageNumber ?? 1,
       PageSize,

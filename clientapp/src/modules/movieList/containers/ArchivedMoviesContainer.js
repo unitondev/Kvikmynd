@@ -24,6 +24,10 @@ const ArchivedMoviesContainer = () => {
   const hasEditMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
 
   useEffect(() => {
+    return () => { dispatch(rawActions.resetState()) }
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(rawActions.getArchivedMovieBySearch.request({
       PageNumber: pageNumber ?? 1,
       PageSize,
