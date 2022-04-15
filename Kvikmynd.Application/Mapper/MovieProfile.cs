@@ -44,7 +44,9 @@ namespace Kvikmynd.Application.Mapper
                 .ForMember(dest => dest.Ratings, opt =>
                     opt.MapFrom(src => src.Ratings))
                 .ForMember(dest => dest.Year, opt =>
-                    opt.MapFrom(src => src.Movie.Year));
+                    opt.MapFrom(src => src.Movie.Year))
+                .ForMember(dest => dest.IsDeleted, opt =>
+                    opt.MapFrom((src => src.Movie.IsDeleted)));
 
 
             CreateMap<MovieWithGenresModel, MovieWithGenresViewModel>()

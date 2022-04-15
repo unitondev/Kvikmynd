@@ -27,3 +27,5 @@ export const deleteMovieBookmarkFailure = createAction('DELETE_MOVIE_BOOKMARK_FA
 export const getBookmarksMoviesRequest = createAction('GET_BOOKMARKS_MOVIES_REQUEST')
 export const getBookmarksMoviesSuccess = createAction('GET_BOOKMARKS_MOVIES_SUCCESS')
 export const getBookmarksMoviesFailure = createAction('GET_BOOKMARKS_MOVIES_FAILURE')
+
+export const getArchivedMovieBySearch = createApiActions('GET_ARCHIVED_MOVIE_BY_SEARCH')

@@ -8,6 +8,8 @@ namespace Kvikmynd.Domain.Models
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        public bool IsDeleted { get; set; }
         [MaxLength((256))]
         public string Title { get; set; }
         [MaxLength(2048)]

@@ -24,8 +24,10 @@ const MovieList = ({
   searchQuery,
   isLoading,
   isShowEditMovie,
+  isShowDeleteMovie,
   handleOpenAddEditMovieDialog,
   handleClickDeleteMovie,
+  handleClickRestoreMovie,
   title,
   action,
 }) => (
@@ -58,8 +60,10 @@ const MovieList = ({
                     key={movie.id}
                     movie={movie}
                     isShowEditMovie={isShowEditMovie}
+                    isShowDeleteMovie={isShowDeleteMovie}
                     handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
                     handleClickDeleteMovie={handleClickDeleteMovie}
+                    handleClickRestoreMovie={handleClickRestoreMovie}
                   />
                   )
                 )
@@ -88,10 +92,12 @@ MovieList.propTypes = {
   searchQuery: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
+  isShowDeleteMovie: PropTypes.bool.isRequired,
   handleClickDeleteMovie: conditionalPropType((props, propName) =>
-    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
+    (props['isShowDeleteMovie'] === true && typeof(props[propName]) !== 'function')),
   handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
     ((props['isShowEditMovie'] === true) && typeof(props[propName]) !== 'function')),
+  handleClickRestoreMovie: PropTypes.func,
   title: PropTypes.string,
   action: PropTypes.node,
 }

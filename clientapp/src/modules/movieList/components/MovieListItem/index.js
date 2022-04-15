@@ -17,6 +17,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Link } from 'react-router-dom'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
 import routes from '@movie/routes'
@@ -27,8 +29,10 @@ import { conditionalPropType } from '@movie/shared/helpers'
 const MovieListItem = ({
   movie,
   isShowEditMovie,
+  isShowDeleteMovie,
   handleOpenAddEditMovieDialog,
   handleClickDeleteMovie,
+  handleClickRestoreMovie,
 }) => {
   const dispatch = useDispatch()
   const userId = useSelector(getUserId)
@@ -52,7 +56,7 @@ const MovieListItem = ({
           action={
             <>
               {
-                userId && (
+                !movie.isDeleted && userId && (
                   <IconButton onClick={() => handleChangeBookmark(movie)}>
                     {movie.isBookmark ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                   </IconButton>
@@ -60,14 +64,23 @@ const MovieListItem = ({
               }
               {
                 isShowEditMovie && (
-                  <>
-                    <IconButton onClick={() => handleOpenAddEditMovieDialog(movie)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </>
+                  <IconButton onClick={() => handleOpenAddEditMovieDialog(movie)}>
+                    <EditIcon />
+                  </IconButton>
+                )
+              }
+              {
+                isShowDeleteMovie && (
+                  <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                    { movie.isDeleted ? <DeleteForeverIcon /> : <DeleteIcon /> }
+                  </IconButton>
+                )
+              }
+              {
+                movie.isDeleted && (
+                  <IconButton onClick={() => handleClickRestoreMovie(movie.id)}>
+                    <RestoreFromTrashIcon />
+                  </IconButton>
                 )
               }
             </>
@@ -141,10 +154,12 @@ const MovieListItem = ({
 MovieListItem.propTypes = {
   movie: PropTypes.object.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
+  isShowDeleteMovie: PropTypes.bool.isRequired,
   handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
     (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
   handleClickDeleteMovie: conditionalPropType((props, propName) =>
-    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
+    (props['isShowDeleteMovie'] === true && typeof(props[propName]) !== 'function')),
+  handleClickRestoreMovie: PropTypes.func,
 }
 
 export default MovieListItem

@@ -10,3 +10,7 @@ export const getIsFavoritesMoviesListLoading = (state) => state.movieList.favori
 export const getBookmarkMoviesList = (state) => state.movieList.bookmarkMoviesList.items
 export const getBookmarkMoviesListTotalCount = (state) => state.movieList.bookmarkMoviesList.totalCount
 export const getBookmarkMoviesListLoading = (state) => state.movieList.bookmarkMoviesList.isLoading
+
+export const getArchivedMoviesList = (state) => state.movieList.archivedMovieList.items
+export const getArchivedMoviesListTotalCount = (state) => state.movieList.archivedMovieList.totalCount
+export const getArchivedMoviesListLoading = (state) => state.movieList.archivedMovieList.isLoading

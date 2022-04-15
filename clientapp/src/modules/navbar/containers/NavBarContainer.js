@@ -11,6 +11,8 @@ import * as movieListActions from '@movie/modules/movieList/actions'
 import { getMovieSearchList } from '@movie/modules/movieList/selectors'
 import { addQueryToUrl } from '@movie/modules/movieList/helpers'
 import routes from '@movie/routes'
+import { hasPermission } from '@movie/modules/permissions/selectors'
+import { ApplicationPermissions } from '../../../Enums'
 
 const NavBarContainer = () => {
   const dispatch = useDispatch()
@@ -21,6 +23,7 @@ const NavBarContainer = () => {
   const movieSearchList = useSelector(getMovieSearchList)
   const location = useSelector(state => state.router.location)
   const PageSize = 5
+  const hasEditMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
 
   const onClickLogout = () => {
     dispatch(logoutRequest())
@@ -82,6 +85,7 @@ const NavBarContainer = () => {
       pageSize={PageSize}
       generateUrlWithSearchQuery={generateUrlWithSearchQuery}
       pathname={location.pathname}
+      hasEditMoviePermission={hasEditMoviePermission}
     />
   )
 }

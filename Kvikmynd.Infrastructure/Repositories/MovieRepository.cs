@@ -50,6 +50,8 @@ namespace Kvikmynd.Infrastructure.Repositories
                 query = query.Include(m => m.BookmarkMovies.Where(bm => bm.UserId == model.UserId));
             }
 
+            query = model.AreDeletedMovies ? query.Where(m => m.IsDeleted) : query.Where(m => !m.IsDeleted);
+
             var movies = await query
                 .Include(m => m.MovieRatings)
                 .OrderBy(m => m.Id)
