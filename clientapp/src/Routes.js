@@ -10,6 +10,7 @@ export const resetPassword = `/resetPassword`
 export const confirmEmail = `/confirmEmail`
 export const myRatings = `/myRatings`
 export const bookmarks = `/bookmarks`
+export const archived = `/archived`
 
 export default {
   root,
@@ -24,4 +25,5 @@ export default {
   confirmEmail,
   myRatings,
   bookmarks,
+  archived,
 }

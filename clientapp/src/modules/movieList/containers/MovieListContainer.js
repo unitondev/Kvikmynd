@@ -97,6 +97,7 @@ const MovieListContainer = () => {
         searchQuery={location.query.query}
         isLoading={isLoading}
         isShowEditMovie={hasEditMoviePermission}
+        isShowDeleteMovie={hasEditMoviePermission}
         handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
         handleClickDeleteMovie={handleClickDeleteMovie}
         action={

@@ -1,3 +1,5 @@
+import { restoreMovie } from '@movie/modules/movie/actions'
+
 const movieRequests = {
   selectedMovieRequest: (data) => ({
     url: `api/movie/${data}/withGenres`,
@@ -44,6 +46,15 @@ const movieRequests = {
       SearchQuery,
     }
   }),
+  getArchivedMovieBySearchRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
+    url: 'api/movie/archived',
+    method: 'get',
+    params: {
+      PageNumber,
+      PageSize,
+      SearchQuery,
+    }
+  }),
   createMovieRequest: (data) => ({
     url: 'api/movie',
     method: 'post',
@@ -53,10 +64,18 @@ const movieRequests = {
     url: `api/movie/${id}`,
     method: 'delete',
   }),
+  deleteMoviePermanentlyRequest: ({ id }) => ({
+    url: `api/movie/permanently/${id}`,
+    method: 'delete',
+  }),
   updateMovieRequest: (data) => ({
     url: 'api/movie',
     method: 'put',
     data,
+  }),
+  restoreMovieRequest: ({ id }) => ({
+    url: `api/movie/restore/${id}`,
+    method: 'put',
   }),
 }
 

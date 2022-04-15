@@ -64,6 +64,18 @@ namespace Kvikmynd.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("archived")]
+        public async Task<IActionResult> GetAllArchived([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
+        {
+            var userId = await GetUserIdAsync();
+            if (userId > 0) model.UserId = userId;
+            model.AreDeletedMovies = true;
+            var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
+            if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
+
+            return Ok(result);
+        }
         
         [AllowAnonymous]
         [HttpGet("{id}/withGenres")]
@@ -207,6 +219,27 @@ namespace Kvikmynd.Controllers
             {
                 return CustomNotFound(ErrorCode.MovieNotFound);
             }
+
+            movie.IsDeleted = true;
+            
+            var result = await _movieService.UpdateAsync(movie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+            
+            return NoContent();
+        }
+
+        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HttpDelete("permanently/{id}")]
+        public async Task<IActionResult> DeleteMoviePermanentlyById(int id)
+        {
+            var movie = await _movieService.GetByKeyAsync(id);
+            if (movie == null)
+            {
+                return CustomNotFound(ErrorCode.MovieNotFound);
+            }
             
             await _fileUploadService.DeleteImageFromFirebaseAsync(movie.CoverUrl, "covers");
             
@@ -216,7 +249,7 @@ namespace Kvikmynd.Controllers
                 return CustomBadRequest(result.Error);
             }
             
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("getMyMoviesRatings")]
@@ -312,6 +345,27 @@ namespace Kvikmynd.Controllers
             };
 
             return Ok(final);
+        }
+
+        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HttpPut("restore/{id}")]
+        public async Task<IActionResult> RestoreById(int id)
+        {
+            var movie = await _movieService.GetByKeyAsync(id);
+            if (movie == null)
+            {
+                return CustomNotFound(ErrorCode.MovieNotFound);
+            }
+
+            movie.IsDeleted = false;
+            
+            var result = await _movieService.UpdateAsync(movie);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+            
+            return NoContent();
         }
         
 

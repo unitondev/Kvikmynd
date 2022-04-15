@@ -1,4 +1,5 @@
 import { createAction } from 'redux-actions'
+import { createApiActions } from '@movie/shared/utils/actions'
 
 export const selectedMovieRequest = createAction('SELECTED_MOVIE_REQUEST')
 export const selectedMovieSuccess = createAction('SELECTED_MOVIE_SUCCESS')
@@ -48,4 +49,8 @@ export const deleteMovieFailure = createAction('DELETE_MOVIE_FAILURE')
 export const updateMovieRequest = createAction('UPDATE_MOVIE_REQUEST')
 export const updateMovieSuccess = createAction('UPDATE_MOVIE_SUCCESS')
 export const updateMovieFailure = createAction('UPDATE_MOVIE_FAILURE')
+
+export const deleteMoviePermanently = createApiActions('DELETE_MOVIE_PERMANENTLY')
+
+export const restoreMovie = createApiActions('RESTORE_MOVIE')
 

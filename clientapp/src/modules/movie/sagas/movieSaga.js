@@ -74,6 +74,40 @@ function * updateMovieList () {
   }))
 }
 
+function * deleteMoviePermanentlySuccess () {
+  const message = 'Movie was successfully deleted'
+  yield put(notificationActions.enqueueSnackbarSuccess({ message }))
+
+  yield call(updateArchivedMovieList)
+}
+
+function * deleteMoviePermanentlyFailure () {
+  const message = 'Movie was not successfully deleted'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
+function * restoreMovieSuccess () {
+  const message = 'Movie was successfully restored'
+  yield put(notificationActions.enqueueSnackbarSuccess({ message }))
+
+  yield call(updateArchivedMovieList)
+}
+
+function * restoreMovieFailure () {
+  const message = 'Movie was not restored'
+  yield put(notificationActions.enqueueSnackbarError({ message }))
+}
+
+function * updateArchivedMovieList () {
+  const location = yield select(state => state.router.location)
+  const pageNumber = location.query.page
+
+  yield put(movieListActions.getArchivedMovieBySearch.request({
+    PageNumber: pageNumber ?? 1,
+    PageSize: 5,
+  }))
+}
+
 function * movieSaga() {
   yield all([
     takeLatest(movieActions.userCommentSuccess, onPostedComment),
@@ -86,6 +120,10 @@ function * movieSaga() {
     takeLatest(movieActions.deleteMovieFailure, deleteMovieFailure),
     takeLatest(movieActions.updateMovieSuccess, updateMovieSuccess),
     takeLatest(movieActions.updateMovieFailure, updateMovieFailure),
+    takeLatest(movieActions.deleteMoviePermanently.success, deleteMoviePermanentlySuccess),
+    takeLatest(movieActions.deleteMoviePermanently.failure, deleteMoviePermanentlyFailure),
+    takeLatest(movieActions.restoreMovie.success, restoreMovieSuccess),
+    takeLatest(movieActions.restoreMovie.failure, restoreMovieFailure),
   ])
 }
 

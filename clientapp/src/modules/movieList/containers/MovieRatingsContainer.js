@@ -37,6 +37,7 @@ const MovieRatingsContainer = () => {
       searchQuery={location.query.query}
       isLoading={isLoading}
       isShowEditMovie={false}
+      isShowDeleteMovie={false}
       title='My ratings'
     />
   )
