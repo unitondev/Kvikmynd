@@ -56,6 +56,7 @@ const Navbar = ({
   pageSize,
   generateUrlWithSearchQuery,
   pathname,
+  hasEditMoviePermission,
 }) => (
   <ElevationScroll>
     <>
@@ -184,12 +185,16 @@ const Navbar = ({
                         </ListItemIcon>
                         <Typography textAlign='center'>Bookmarks</Typography>
                       </MenuItem>
-                      <MenuItem component={Link} to={routes.archived} onClick={handleCloseUserMenu}>
-                        <ListItemIcon>
-                          <ArchiveIcon />
-                        </ListItemIcon>
-                        <Typography textAlign='center'>Archive</Typography>
-                      </MenuItem>
+                      {
+                        hasEditMoviePermission && (
+                          <MenuItem component={Link} to={routes.archived} onClick={handleCloseUserMenu}>
+                            <ListItemIcon>
+                              <ArchiveIcon />
+                            </ListItemIcon>
+                            <Typography textAlign='center'>Archive</Typography>
+                          </MenuItem>
+                        )
+                      }
                       <MenuItem onClick={() => {
                         onClickLogout()
                         handleCloseUserMenu()
@@ -256,6 +261,7 @@ Navbar.propTypes = {
   pageSize: PropTypes.number.isRequired,
   generateUrlWithSearchQuery: PropTypes.func.isRequired,
   pathname: PropTypes.string.isRequired,
+  hasEditMoviePermission: PropTypes.bool.isRequired,
 }
 
 export default withStyles(styles)(Navbar)

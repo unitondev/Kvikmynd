@@ -17,6 +17,7 @@ import ConfirmEmailPage from '@movie/modules/account/components/ConfirmEmail'
 import BookmarksMoviesContainer from '@movie/modules/movieList/containers/BookmarksMoviesContainer'
 import MovieRatingsContainer from '@movie/modules/movieList/containers/MovieRatingsContainer'
 import ArchivedMoviesContainer from '@movie/modules/movieList/containers/ArchivedMoviesContainer'
+import { ApplicationPermissions } from '../../Enums'
 
 const hideNavbarOn = []
 const hideFooterOn = [
@@ -63,7 +64,7 @@ const App = ({ location }) => {
             </Route>
             <PrivateRoute path={routes.myRatings} component={MovieRatingsContainer} />
             <PrivateRoute path={routes.bookmarks} component={BookmarksMoviesContainer} />
-            <PrivateRoute path={routes.archived} component={ArchivedMoviesContainer} />
+            <PrivateRoute path={routes.archived} component={ArchivedMoviesContainer} permission={ApplicationPermissions.EditMovie} />
             <Route path="*">
               <NotFoundPage />
             </Route>

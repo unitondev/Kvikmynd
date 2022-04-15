@@ -1,27 +1,37 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 import { CircularProgress } from '@mui/material'
-import _ from 'lodash'
 
 import routes from '@movie/routes'
-import { getJwt, getIsLoginSucceeded } from '@movie/modules/account/selectors'
+import { getIsLoginSucceeded } from '@movie/modules/account/selectors'
+import { hasPermission } from '@movie/modules/permissions/selectors'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const jwtToken = useSelector(getJwt)
-  const isLoginSucceeded = useSelector(getIsLoginSucceeded)
+const PrivateRoute = ({ component: Component, permission, ...rest }) => {
+  const isAuthorized = useSelector(getIsLoginSucceeded)
 
-  return isLoginSucceeded === null
+  const hasPermissions = useSelector(state => hasPermission(state, permission))
+
+  const isAuthenticated = isAuthorized && hasPermissions
+
+  const redirectUrl = useMemo(() => isAuthorized ? routes.root : routes.login, [isAuthorized])
+
+  return isAuthorized === null
     ? <CircularProgress />
     : <Route
       {...rest}
-      render={
-        (props) => (!_.isEmpty(jwtToken)
+      render={props => (
+        isAuthenticated
           ? <Component {...props} />
-          : <Redirect to={routes.login} />
-        )
-      }
+          : <Redirect to={redirectUrl} />
+      )}
     />
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+  permission: PropTypes.number,
 }
 
 export default PrivateRoute
