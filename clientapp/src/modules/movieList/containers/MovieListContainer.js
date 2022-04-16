@@ -144,9 +144,11 @@ const MovieListContainer = () => {
                     </IconButton>
                   </Tooltip>
                   <Tooltip TransitionComponent={Zoom} title='Restore movies'>
-                    <IconButton onClick={handleRestoreFromJson} disabled={jsonFile === null}>
-                      <SettingsBackupRestoreIcon />
-                    </IconButton>
+                    <span>
+                      <IconButton onClick={handleRestoreFromJson} disabled={jsonFile === null}>
+                        <SettingsBackupRestoreIcon />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </>
               )
