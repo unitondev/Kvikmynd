@@ -31,7 +31,15 @@ const movieListRequests = {
       PageSize,
     }
   }),
-
+  getAllMoviesForBackupRequest: () => ({
+    url: 'api/movie/forBackup',
+    method: 'get',
+  }),
+  restoreAllMoviesRequest: (data) => ({
+    url: 'api/movie/restore',
+    method: 'post',
+    data,
+  }),
 }
 
 export default movieListRequests

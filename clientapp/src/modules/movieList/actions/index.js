@@ -29,3 +29,7 @@ export const getBookmarksMoviesSuccess = createAction('GET_BOOKMARKS_MOVIES_SUCC
 export const getBookmarksMoviesFailure = createAction('GET_BOOKMARKS_MOVIES_FAILURE')
 
 export const getArchivedMovieBySearch = createApiActions('GET_ARCHIVED_MOVIE_BY_SEARCH')
+
+export const getAllMoviesForBackup = createApiActions('GET_ALL_MOVIES_FOR_BACKUP')
+
+export const restoreAllMovies = createApiActions('RESTORE_ALL_MOVIES')
