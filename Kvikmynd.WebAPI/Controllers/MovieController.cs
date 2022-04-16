@@ -14,6 +14,7 @@ using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Kvikmynd.Controllers
 {
@@ -367,8 +368,31 @@ namespace Kvikmynd.Controllers
             
             return NoContent();
         }
-        
 
+        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HttpGet("forBackup")]
+        public async Task<IActionResult> GetAllForBackup()
+        {
+            var movies = await _movieService.GetAll().ToListAsync();
+            return Ok(movies);
+        }
+        
+        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HttpPost("restore")]
+        public async Task<IActionResult> Restore([FromBody] AllMoviesJsonModel model)
+        {
+            var movies = JsonConvert.DeserializeObject<List<Movie>>(model.Json);
+            movies.ForEach(m => m.Id = 0);
+            
+            var result = await _movieService.CreateRangeAsync(movies);
+            if (!result.IsSucceeded)
+            {
+                return CustomBadRequest(result.Error);
+            }
+            
+            return Ok();
+        }
+        
         // call this endpoint when initializing the db
         [AllowAnonymous]
         [HttpGet("seed")]

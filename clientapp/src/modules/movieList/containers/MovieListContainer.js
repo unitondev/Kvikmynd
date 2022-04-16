@@ -1,8 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import AddIcon from '@mui/icons-material/Add'
-import { Button } from '@mui/material'
+import { Button, IconButton, Tooltip, Zoom } from '@mui/material'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore'
+import FileUploadIcon from '@mui/icons-material/FileUpload'
 
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
@@ -13,6 +16,7 @@ import * as movieActions from '@movie/modules/movie/actions'
 import { toBase64 } from '@movie/modules/account/helpers'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 import AddEditMovieDialog from '@movie/modules/movieList/components/AddEditMovieDialog'
+import { fromFileToText } from '@movie/modules/movieList/helpers'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -29,6 +33,8 @@ const MovieListContainer = () => {
   const PageSize = 5
   const pageNumber = location.query.page
   const searchQuery = location.query.query
+  const uploadInputRef = useRef(null)
+  const [jsonFile, setJsonFile] = useState(null)
 
   useEffect(() => {
     return () => { dispatch(rawActions.resetState()) }
@@ -88,6 +94,16 @@ const MovieListContainer = () => {
     message: 'Are you sure want to delete this movie?',
   }
 
+  const handleExportAllAsJson = useCallback(() => {
+    dispatch(rawActions.getAllMoviesForBackup.request())
+  }, [dispatch])
+
+  const handleRestoreFromJson = useCallback(async () => {
+    const json = await fromFileToText(jsonFile)
+    setJsonFile(null)
+    dispatch(rawActions.restoreAllMovies.request({ Json: json }))
+  }, [dispatch, jsonFile])
+
   return (
     <>
       <MovieList
@@ -101,11 +117,41 @@ const MovieListContainer = () => {
         handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
         handleClickDeleteMovie={handleClickDeleteMovie}
         action={
-          hasAddMoviePermission && (
-            <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />}>
-              Add movie
-            </Button>
-        )
+          <>
+            { hasAddMoviePermission && (
+              <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />} sx={{marginX: 1}} >
+                Add movie
+              </Button>
+            )}
+            {
+              hasAddMoviePermission && (
+                <>
+                  <Tooltip TransitionComponent={Zoom} title='Export all movies as json'>
+                    <IconButton onClick={handleExportAllAsJson}>
+                      <FileDownloadIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <input
+                    type='file'
+                    accept='application/json'
+                    onChange={(e) => setJsonFile(e.currentTarget.files[0])}
+                    hidden
+                    ref={uploadInputRef}
+                  />
+                  <Tooltip TransitionComponent={Zoom} title='Upload json'>
+                    <IconButton onClick={() => uploadInputRef.current && uploadInputRef.current.click()}>
+                      <FileUploadIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip TransitionComponent={Zoom} title='Restore movies'>
+                    <IconButton onClick={handleRestoreFromJson} disabled={jsonFile === null}>
+                      <SettingsBackupRestoreIcon />
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )
+            }
+          </>
         }
       />
       <AddEditMovieDialog
