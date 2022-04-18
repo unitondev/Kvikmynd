@@ -22,14 +22,14 @@ const Comment = ({
         subheader={`#${comment.commentId}`}
         action={
           comment.userName === currentUserUserName
-          ?
-          <IconButton
-            aria-label='delete'
-            onClick={() => handleDeleteCommentClick(comment.commentId)}
-            size="large">
-            <DeleteIcon />
-          </IconButton>
-          : <></>
+            ?
+            <IconButton
+              aria-label='delete'
+              onClick={() => handleDeleteCommentClick(comment.commentId)}
+              size="large">
+              <DeleteIcon />
+            </IconButton>
+            : <></>
         }
         titleTypographyProps={{ fontSize: 18 }}
       />

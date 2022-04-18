@@ -6,7 +6,7 @@ import { Field, Form, Formik } from 'formik'
 import { TextField } from 'formik-mui'
 import * as Yup from 'yup'
 import { Link } from 'react-router-dom'
-import { Avatar, Button, Container, Grid, IconButton, InputAdornment, Paper, Typography } from '@mui/material'
+import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Paper, Typography } from '@mui/material'
 import LockReset from '@mui/icons-material/LockReset'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import Visibility from '@mui/icons-material/Visibility'
@@ -88,62 +88,64 @@ const ResetPassword = ({
           </Grid>
         </LeftRightSlide>
         <LeftRightSlide in={!isResetPasswordSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
-          <Formik
-            initialValues={initial}
-            validationSchema={resetPasswordSchema}
-            onSubmit={handleSubmitResetPassword}
-          >
-            {({ dirty, isValid, values, setFieldValue }) => (
-              <Form>
-                <Grid container direction='column' spacing={2}>
-                  <Grid item>
-                    <Field
-                      name='newPassword'
-                      label='New password'
-                      type={values.showPassword ? 'text' : 'password'}
-                      color='primary'
-                      required
-                      component={TextField}
-                      fullWidth
-                      InputProps={{
-                        endAdornment: <InputAdornment position='end'>
-                          <IconButton
-                            onClick={() => setFieldValue('showPassword', !values.showPassword)}
-                            edge='end'
-                          >
-                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>,
-                      }}
-                    />
+          <Box>
+            <Formik
+              initialValues={initial}
+              validationSchema={resetPasswordSchema}
+              onSubmit={handleSubmitResetPassword}
+            >
+              {({ dirty, isValid, values, setFieldValue }) => (
+                <Form>
+                  <Grid container direction='column' spacing={2}>
+                    <Grid item>
+                      <Field
+                        name='newPassword'
+                        label='New password'
+                        type={values.showPassword ? 'text' : 'password'}
+                        color='primary'
+                        required
+                        component={TextField}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: <InputAdornment position='end'>
+                            <IconButton
+                              onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                              edge='end'
+                            >
+                              {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Field
+                        name='confirmPassword'
+                        label='Confirm your new password'
+                        type={values.showPassword ? 'text' : 'password'}
+                        color='primary'
+                        required
+                        component={TextField}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        disabled={!(isValid && dirty)}
+                        size='large'
+                        fullWidth
+                        color='primary'
+                        variant='contained'
+                        type='submit'
+                      >
+                        Reset password
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Field
-                      name='confirmPassword'
-                      label='Confirm your new password'
-                      type={values.showPassword ? 'text' : 'password'}
-                      color='primary'
-                      required
-                      component={TextField}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      disabled={!(isValid && dirty)}
-                      size='large'
-                      fullWidth
-                      color='primary'
-                      variant='contained'
-                      type='submit'
-                    >
-                      Reset password
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          </Box>
         </LeftRightSlide>
       </Paper>
     </Container>

@@ -115,10 +115,7 @@ namespace Kvikmynd
             });
             
             #endregion
-
-            services.AddDbContext<KvikmyndDbContext>(builder => 
-                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
-
+            
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -131,6 +128,9 @@ namespace Kvikmynd
             });
 
             #region Database and repositories
+
+            services.AddDbContext<KvikmyndDbContext>(builder => 
+                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
