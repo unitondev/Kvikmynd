@@ -158,7 +158,7 @@ namespace Kvikmynd.Application.Services
             }
 
             _mapper.Map<UpdateUserModel, User>(model, user);
-            if (model.Avatar.Length > 0)
+            if (model.Avatar?.Length > 0)
             {
                 user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(model.Avatar, "avatars");
             }

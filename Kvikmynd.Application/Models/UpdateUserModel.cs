@@ -5,9 +5,9 @@ namespace Kvikmynd.Application.Models
     public class UpdateUserModel
     {
         [Required]
-        [MaxLength(30)]
+        [MaxLength(256)]
         public string Email { get; set; }
-        [MaxLength(25)]
+        [MaxLength(256)]
         public string Username { get; set; }
         [MaxLength(25)]
         public string FullName { get; set; }
