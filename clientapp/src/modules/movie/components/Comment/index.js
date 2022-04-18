@@ -11,6 +11,7 @@ const Comment = ({
   comment,
   currentUserUserName,
   handleDeleteCommentClick,
+  hasDeleteCommentPermission,
 }) => (
   <div className={classes.commentBlock}>
     <Card>
@@ -21,7 +22,7 @@ const Comment = ({
         title={comment.userName}
         subheader={`#${comment.commentId}`}
         action={
-          comment.userName === currentUserUserName
+          hasDeleteCommentPermission || comment.userName === currentUserUserName
             ?
             <IconButton
               aria-label='delete'
@@ -51,6 +52,7 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   currentUserUserName: PropTypes.string.isRequired,
   handleDeleteCommentClick: PropTypes.func.isRequired,
+  hasDeleteCommentPermission: PropTypes.bool.isRequired,
 }
 
 export default withStyles(styles)(Comment)

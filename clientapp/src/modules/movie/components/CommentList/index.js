@@ -9,6 +9,9 @@ import { Field, Formik, Form } from 'formik'
 import Comment from '../Comment'
 import styles from './styles'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
+import { useSelector } from 'react-redux'
+import { hasPermission } from '@movie/modules/permissions/selectors'
+import { ApplicationPermissions } from '../../../../Enums'
 
 const writtenCommentSchema = Yup.object().shape({
   WrittenCommentText: Yup.string()
@@ -24,78 +27,83 @@ const CommentList = ({
   currentUser,
   handleDeleteCommentClick,
   dialogProps,
-}) => (
-  <div className={classes.commentsBlock}>
-    <Typography variant='h3'>Comments</Typography>
-    {
-      currentUser.id && (
-        <Formik
-          initialValues={{ WrittenCommentText: '' }}
-          enableReinitialize
-          validationSchema={writtenCommentSchema}
-          onSubmit={(values, formikBag) => {
-            handleCommentSet(values)
-            formikBag.resetForm()
-          }}
-        >
-          {({ dirty, isValid }) => (
-            <div className={classes.commentBlock}>
-              <Card>
-                <Form className={classes.form} autoComplete='off'>
-                  <CardHeader
-                    avatar={
-                      <Avatar src={currentUserAvatar} />
-                    }
-                    title={`As ${currentUser.userName}`}
-                    titleTypographyProps={{ fontSize: 18 }}
-                  />
-                  <CardContent>
-                    <Field
-                      multiline
-                      placeholder='Write your comment here'
-                      variant='outlined'
-                      name='WrittenCommentText'
-                      component={TextField}
-                      className={classes.writingCommentTextArea}
+}) => {
+  // TODO: temp solution, add new permission
+  const hasDeleteCommentPermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
+  return(
+    <div className={classes.commentsBlock}>
+      <Typography variant='h3'>Comments</Typography>
+      {
+        currentUser.id && (
+          <Formik
+            initialValues={{ WrittenCommentText: '' }}
+            enableReinitialize
+            validationSchema={writtenCommentSchema}
+            onSubmit={(values, formikBag) => {
+              handleCommentSet(values)
+              formikBag.resetForm()
+            }}
+          >
+            {({ dirty, isValid }) => (
+              <div className={classes.commentBlock}>
+                <Card>
+                  <Form className={classes.form} autoComplete='off'>
+                    <CardHeader
+                      avatar={
+                        <Avatar src={currentUserAvatar} />
+                      }
+                      title={`As ${currentUser.userName}`}
+                      titleTypographyProps={{ fontSize: 18 }}
                     />
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      disabled={!(isValid && dirty)}
-                      color='primary'
-                      size='large'
-                      fullWidth
-                      type='submit'
-                    >
-                      Send
-                    </Button>
-                  </CardActions>
-                </Form>
-              </Card>
-            </div>
-          )}
-        </Formik>
-      )
-    }
-    {
-      comments.length > 0
-        ? (
-          comments.slice().reverse().map((comment) => (
-            <Comment
-              key={comment.commentId}
-              comment={comment}
-              currentUserUserName={currentUser.userName}
-              handleDeleteCommentClick={handleDeleteCommentClick}
-            />
-          ))
+                    <CardContent>
+                      <Field
+                        multiline
+                        placeholder='Write your comment here'
+                        variant='outlined'
+                        name='WrittenCommentText'
+                        component={TextField}
+                        className={classes.writingCommentTextArea}
+                      />
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        disabled={!(isValid && dirty)}
+                        color='primary'
+                        size='large'
+                        fullWidth
+                        type='submit'
+                      >
+                        Send
+                      </Button>
+                    </CardActions>
+                  </Form>
+                </Card>
+              </div>
+            )}
+          </Formik>
         )
-        : (
-          <div className={classes.emptyCommentsBlock} />
-        )
-    }
-    <ConfirmationDialog {...dialogProps}/>
-  </div>
-)
+      }
+      {
+        comments.length > 0
+          ? (
+            comments.slice().reverse().map((comment) => (
+              <Comment
+                key={comment.commentId}
+                comment={comment}
+                currentUserUserName={currentUser.userName}
+                handleDeleteCommentClick={handleDeleteCommentClick}
+                hasDeleteCommentPermission={hasDeleteCommentPermission}
+              />
+            ))
+          )
+          : (
+            <div className={classes.emptyCommentsBlock} />
+          )
+      }
+      <ConfirmationDialog {...dialogProps}/>
+    </div>
+  )
+}
 
 CommentList.propTypes = {
   classes: PropTypes.object.isRequired,
