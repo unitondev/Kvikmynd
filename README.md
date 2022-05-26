@@ -15,5 +15,6 @@ A SPA with movies, ratings and comments
 - SQL Server as database
 - EntityFramework Core as ORM
 - Microsoft Identity for user managment
+- SendGrid as email sender
 - JWT Bearer token authentication
 - AutoMapper
