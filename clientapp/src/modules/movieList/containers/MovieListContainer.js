@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import AddIcon from '@mui/icons-material/Add'
@@ -17,6 +17,7 @@ import { toBase64 } from '@movie/modules/account/helpers'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
 import AddEditMovieDialog from '@movie/modules/movieList/components/AddEditMovieDialog'
 import { fromFileToText } from '@movie/modules/movieList/helpers'
+import Routes from '@movie/routes'
 
 const MovieListContainer = () => {
   const dispatch = useDispatch()
@@ -27,9 +28,13 @@ const MovieListContainer = () => {
   const movies = useSelector(getMovieList)
   const moviesTotalCount = useSelector(getMovieListTotalCount)
   const isLoading = useSelector(getIsMovieListLoading)
-  const location = useSelector(state => state.router.location)
-  const hasAddMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.AddMovie))
-  const hasEditMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
+  const location = useSelector((state) => state.router.location)
+  const hasAddMoviePermission = useSelector((state) =>
+    hasPermission(state, ApplicationPermissions.AddMovie)
+  )
+  const hasEditMoviePermission = useSelector((state) =>
+    hasPermission(state, ApplicationPermissions.EditMovie)
+  )
   const PageSize = 5
   const pageNumber = location.query.page
   const searchQuery = location.query.query
@@ -37,17 +42,23 @@ const MovieListContainer = () => {
   const [jsonFile, setJsonFile] = useState(null)
 
   useEffect(() => {
-    return () => { dispatch(rawActions.resetState()) }
+    return () => {
+      dispatch(rawActions.resetState())
+    }
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(rawActions.movieList.request({
-      PageNumber: pageNumber ?? 1,
-      PageSize,
-      ...searchQuery && { SearchQuery: searchQuery },
-    }))
+    dispatch(
+      rawActions.movieList.request({
+        PageNumber: pageNumber ?? 1,
+        PageSize,
+        ...(searchQuery && { SearchQuery: searchQuery }),
+      })
+    )
 
-    return () => { dispatch(rawActions.movieList.cancel()) }
+    return () => {
+      dispatch(rawActions.movieList.cancel())
+    }
   }, [dispatch, pageNumber, searchQuery])
 
   // add edit movie
@@ -61,14 +72,18 @@ const MovieListContainer = () => {
     setIsOpenAddMovie(false)
   }, [])
 
-  const handleAddEditMovieSubmit = useCallback(async (values) => {
-    if (values.cover && typeof values.cover === 'object') values.cover = await toBase64(values.cover)
-    values.id
-      ? dispatch(movieActions.updateMovieRequest(values))
-      : dispatch(movieActions.createMovieRequest(values))
+  const handleAddEditMovieSubmit = useCallback(
+    async (values) => {
+      if (values.cover && typeof values.cover === 'object')
+        values.cover = await toBase64(values.cover)
+      values.id
+        ? dispatch(movieActions.updateMovieRequest(values))
+        : dispatch(movieActions.createMovieRequest(values))
 
-    handleCloseAddEditMovieDialog()
-  }, [dispatch, handleCloseAddEditMovieDialog])
+      handleCloseAddEditMovieDialog()
+    },
+    [dispatch, handleCloseAddEditMovieDialog]
+  )
 
   // remove movie
   const handleClickDeleteMovie = useCallback((movieToDeleteId) => {
@@ -81,7 +96,7 @@ const MovieListContainer = () => {
     setOpenDeleteDialog(false)
   }, [])
 
-  const handleDeleteMovieSubmit = useCallback( () => {
+  const handleDeleteMovieSubmit = useCallback(() => {
     dispatch(movieActions.deleteMovieRequest({ id: movieToDeleteId }))
     handleCloseDeleteMovie()
   }, [dispatch, handleCloseDeleteMovie, movieToDeleteId])
@@ -104,6 +119,10 @@ const MovieListContainer = () => {
     dispatch(rawActions.restoreAllMovies.request({ Json: json }))
   }, [dispatch, jsonFile])
 
+  const showPromo = useMemo(() => {
+    return location.pathname === Routes.root && (!pageNumber || pageNumber === '1') && !searchQuery
+  }, [location.pathname, pageNumber, searchQuery])
+
   return (
     <>
       <MovieList
@@ -116,43 +135,50 @@ const MovieListContainer = () => {
         isShowDeleteMovie={hasEditMoviePermission}
         handleOpenAddEditMovieDialog={handleOpenAddEditMovieDialog}
         handleClickDeleteMovie={handleClickDeleteMovie}
+        showPromo={showPromo}
         action={
           <>
-            { hasAddMoviePermission && (
-              <Button variant='outlined' color='primary' onClick={handleOpenAddEditMovieDialog} startIcon={<AddIcon />} sx={{marginX: 1}} >
+            {hasAddMoviePermission && (
+              <Button
+                variant='outlined'
+                color='primary'
+                onClick={handleOpenAddEditMovieDialog}
+                startIcon={<AddIcon />}
+                sx={{ marginX: 1 }}
+              >
                 Add movie
               </Button>
             )}
-            {
-              hasAddMoviePermission && (
-                <>
-                  <Tooltip TransitionComponent={Zoom} title='Export all movies as json'>
-                    <IconButton onClick={handleExportAllAsJson}>
-                      <FileDownloadIcon />
+            {hasAddMoviePermission && (
+              <>
+                <Tooltip TransitionComponent={Zoom} title='Export all movies as json'>
+                  <IconButton onClick={handleExportAllAsJson}>
+                    <FileDownloadIcon />
+                  </IconButton>
+                </Tooltip>
+                <input
+                  type='file'
+                  accept='application/json'
+                  onChange={(e) => setJsonFile(e.currentTarget.files[0])}
+                  hidden
+                  ref={uploadInputRef}
+                />
+                <Tooltip TransitionComponent={Zoom} title='Upload json'>
+                  <IconButton
+                    onClick={() => uploadInputRef.current && uploadInputRef.current.click()}
+                  >
+                    <FileUploadIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip TransitionComponent={Zoom} title='Restore movies'>
+                  <span>
+                    <IconButton onClick={handleRestoreFromJson} disabled={jsonFile === null}>
+                      <SettingsBackupRestoreIcon />
                     </IconButton>
-                  </Tooltip>
-                  <input
-                    type='file'
-                    accept='application/json'
-                    onChange={(e) => setJsonFile(e.currentTarget.files[0])}
-                    hidden
-                    ref={uploadInputRef}
-                  />
-                  <Tooltip TransitionComponent={Zoom} title='Upload json'>
-                    <IconButton onClick={() => uploadInputRef.current && uploadInputRef.current.click()}>
-                      <FileUploadIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip TransitionComponent={Zoom} title='Restore movies'>
-                    <span>
-                      <IconButton onClick={handleRestoreFromJson} disabled={jsonFile === null}>
-                        <SettingsBackupRestoreIcon />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                </>
-              )
-            }
+                  </span>
+                </Tooltip>
+              </>
+            )}
           </>
         }
       />
@@ -167,7 +193,6 @@ const MovieListContainer = () => {
   )
 }
 
-MovieListContainer.propTypes = {
-}
+MovieListContainer.propTypes = {}
 
 export default MovieListContainer
