@@ -54,4 +54,3 @@ export const resetForgotPassword = createAction('RESET_FORGOT_PASSWORD_STATE')
 export const resetPasswordRequest = createAction('RESET_PASSWORD_REQUEST')
 export const resetPasswordSuccess = createAction('RESET_PASSWORD_SUCCESS')
 export const resetPasswordFailure = createAction('RESET_PASSWORD_FAILURE')
-

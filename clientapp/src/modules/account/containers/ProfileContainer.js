@@ -11,22 +11,28 @@ const ProfileContainer = () => {
   const user = useSelector(getUser)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-  const handleUpdateAccount = useCallback(async (values) => {
-    if (values.avatar !== user.avatar && values.avatar != null) {
-      values.avatar = await toBase64(values.avatar)
-    }
+  const handleUpdateAccount = useCallback(
+    async (values) => {
+      if (values.avatar !== user.avatar && values.avatar != null) {
+        values.avatar = await toBase64(values.avatar)
+      }
 
-    dispatch(rawActions.updateUserRequest(values))
-  }, [dispatch, user.avatar])
+      dispatch(rawActions.updateUserRequest(values))
+    },
+    [dispatch, user.avatar]
+  )
 
-  const handleChangePassword = useCallback((values) => {
-    const data = {
-      CurrentPassword: values.currentPassword,
-      NewPassword: values.newPassword,
-    }
+  const handleChangePassword = useCallback(
+    (values) => {
+      const data = {
+        CurrentPassword: values.currentPassword,
+        NewPassword: values.newPassword,
+      }
 
-    dispatch(rawActions.changePasswordRequest(data))
-  }, [dispatch])
+      dispatch(rawActions.changePasswordRequest(data))
+    },
+    [dispatch]
+  )
 
   const handleClickDeleteAccount = useCallback(() => {
     setOpenDeleteDialog(true)

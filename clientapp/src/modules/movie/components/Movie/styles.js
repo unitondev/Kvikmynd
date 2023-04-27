@@ -12,7 +12,7 @@ const styles = {
     width: 20,
     margin: '0px 10px',
     justifyContent: 'center',
-  }
+  },
 }
 
 export default styles

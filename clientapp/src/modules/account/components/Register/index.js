@@ -50,20 +50,15 @@ const registerSchema = Yup.object().shape({
     .max(128, 'Maximum length is 128 characters')
     .trim('There should be no spaces at the beginning and at the end of the password')
     .strict(true)
-    .matches(passwordRegex, 'Password must contain at least one upper case letter, one lower case letter, one digit and one special character'),
-  fullName: Yup.string()
-    .max(25, 'Maximum length is 25 characters')
-    .required('Required'),
-  userName: Yup.string()
-    .max(256, 'Maximum length is 256 characters')
-    .required('Required'),
+    .matches(
+      passwordRegex,
+      'Password must contain at least one upper case letter, one lower case letter, one digit and one special character'
+    ),
+  fullName: Yup.string().max(25, 'Maximum length is 25 characters').required('Required'),
+  userName: Yup.string().max(256, 'Maximum length is 256 characters').required('Required'),
 })
 
-const Register = ({
-  classes,
-  handleRegister,
-  isRegisterSucceeded,
-}) => {
+const Register = ({ classes, handleRegister, isRegisterSucceeded }) => {
   const uploadInputRef = useRef(null)
   const isLoading = useSelector(getIsUserLoading)
   const containerRef = useRef(null)
@@ -74,24 +69,34 @@ const Register = ({
       <Paper className={classes.rootPaper} ref={containerRef}>
         <Grid container direction='column' spacing={2}>
           <Grid item className={classes.cardHeader}>
-            <Avatar sx={{ m: 1 }} className={isRegisterSucceeded ? classes.avatarBlockSucceeded : classes.avatarBlock}>
-              {
-                isRegisterSucceeded
-                  ? <Done />
-                  : <AccountCircleIcon />
-              }
+            <Avatar
+              sx={{ m: 1 }}
+              className={isRegisterSucceeded ? classes.avatarBlockSucceeded : classes.avatarBlock}
+            >
+              {isRegisterSucceeded ? <Done /> : <AccountCircleIcon />}
             </Avatar>
             <Typography component='h1' variant='h5' align='center'>
               Register
             </Typography>
           </Grid>
         </Grid>
-        <LeftRightSlide in={isRegisterSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
+        <LeftRightSlide
+          in={isRegisterSucceeded}
+          mountOnEnter
+          unmountOnExit
+          container={containerRef.current}
+        >
           <Typography>
-            Registration completed successfully. Please, follow the link sent to your email to confirm register and login.
+            Registration completed successfully. Please, follow the link sent to your email to
+            confirm register and login.
           </Typography>
         </LeftRightSlide>
-        <LeftRightSlide in={!isRegisterSucceeded} mountOnEnter unmountOnExit container={containerRef.current}>
+        <LeftRightSlide
+          in={!isRegisterSucceeded}
+          mountOnEnter
+          unmountOnExit
+          container={containerRef.current}
+        >
           <div>
             <Formik
               initialValues={initial}
@@ -168,25 +173,22 @@ const Register = ({
                         component={TextField}
                         fullWidth
                         InputProps={{
-                          endAdornment: <InputAdornment position='end'>
-                            <IconButton
-                              onClick={() => setFieldValue('showPassword', !values.showPassword)}
-                              edge='end'
-                            >
-                              {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>,
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <IconButton
+                                onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                                edge='end'
+                              >
+                                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
                         }}
                       />
                     </Grid>
                     <Grid item container direction='row' spacing={4}>
                       <Grid item xs={6}>
-                        <Button
-                          color='primary'
-                          variant='text'
-                          component={Link}
-                          to={routes.login}
-                        >
+                        <Button color='primary' variant='text' component={Link} to={routes.login}>
                           Log in
                         </Button>
                       </Grid>

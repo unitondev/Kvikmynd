@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import withStyles from '@mui/styles/withStyles';
+import withStyles from '@mui/styles/withStyles'
 import YouTube from 'react-youtube'
 import {
   Button,
@@ -44,7 +44,9 @@ const Movie = ({
           <CardContent>
             <Grid container direction='column' spacing={2}>
               <Grid item>
-                <Typography variant='h2' align='center'>{movie.title} {movie.year && `(${movie.year})`}</Typography>
+                <Typography variant='h2' align='center'>
+                  {movie.title} {movie.year && `(${movie.year})`}
+                </Typography>
               </Grid>
               <Grid item container direction='row' spacing={2}>
                 <Grid item xs={3}>
@@ -60,53 +62,50 @@ const Movie = ({
                     <Grid item>
                       <Typography>
                         Rating:
-                        {
-                          movieRating === 0
+                        {movieRating === 0
                           ? 'No one has rated yet'
-                          : `${movieRating.toFixed(2)} / 10 (${ratings.length})`
-                        }
+                          : `${movieRating.toFixed(2)} / 10 (${ratings.length})`}
                       </Typography>
                     </Grid>
-                    {
-                      currentUser.id && (
-                        <Grid item container direction='row'>
-                          <Grid item xs={1.2}>
-                            <Typography>My rating:</Typography>
-                          </Grid>
-                          <Grid item xs={3.5}>
-                            <Rating
-                              max={10}
-                              value={settedRating ?? 0}
-                              onChange={onRatingChange}
-                              onChangeActive={(event, newHover) => {
-                                setRatingHover(newHover)
-                              }}
-                            />
-                          </Grid>
-                          { settedRating !== null && (
-                            <Grid item xs={0.5}>
-                              <Box className={classes.ratingBox}>
-                                <Typography align='center'>{ratingHover !== -1 ? ratingHover : settedRating}</Typography>
-                              </Box>
-                            </Grid>
-                          )}
-                          <Grid item xs={1}>
-                            <Button size='small' color='primary' onClick={handleRatingSet}>
-                              Rate
-                            </Button>
-                          </Grid>
+                    {currentUser.id && (
+                      <Grid item container direction='row'>
+                        <Grid item xs={1.2}>
+                          <Typography>My rating:</Typography>
                         </Grid>
-                      )
-                    }
+                        <Grid item xs={3.5}>
+                          <Rating
+                            max={10}
+                            value={settedRating ?? 0}
+                            onChange={onRatingChange}
+                            onChangeActive={(event, newHover) => {
+                              setRatingHover(newHover)
+                            }}
+                          />
+                        </Grid>
+                        {settedRating !== null && (
+                          <Grid item xs={0.5}>
+                            <Box className={classes.ratingBox}>
+                              <Typography align='center'>
+                                {ratingHover !== -1 ? ratingHover : settedRating}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        )}
+                        <Grid item xs={1}>
+                          <Button size='small' color='primary' onClick={handleRatingSet}>
+                            Rate
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    )}
                     <Grid item>
                       <Typography>
-                        Genres: {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
+                        Genres:{' '}
+                        {genres?.length > 0 ? genres.map((genre) => ` ${genre.name}, `) : null}
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography>
-                        {movie.description}
-                      </Typography>
+                      <Typography>{movie.description}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -117,10 +116,16 @@ const Movie = ({
       </Grid>
       <Grid item container direction='column' spacing={3}>
         <Grid item>
-          <Typography variant='h3' align='center'>Trailer</Typography>
+          <Typography variant='h3' align='center'>
+            Trailer
+          </Typography>
         </Grid>
         <Grid item className={classes.youtubeGrid}>
-          <YouTube videoId={movie.youtubeLink} className={classes.youtubePlayer} opts={youtubeOpts} />
+          <YouTube
+            videoId={movie.youtubeLink}
+            className={classes.youtubePlayer}
+            opts={youtubeOpts}
+          />
         </Grid>
       </Grid>
       <CommentsList

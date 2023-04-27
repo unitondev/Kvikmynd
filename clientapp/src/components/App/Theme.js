@@ -4,27 +4,33 @@ import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 
 export const ColorModeContext = React.createContext({
-  toggleColorMode: () => {
-  },
+  toggleColorMode: () => {},
 })
 
 const Theme = ({ children }) => {
   const [mode, setMode] = useState('light')
 
-  const colorMode = useMemo(() => ({
-    toggleColorMode: () => {
-      setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
-    },
-  }), [])
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
+      },
+    }),
+    []
+  )
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode,
-    },
-    shape: {
-      borderRadius: 10,
-    },
-  }), [mode])
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+        shape: {
+          borderRadius: 10,
+        },
+      }),
+    [mode]
+  )
 
   return (
     <StyledEngineProvider injectFirst>

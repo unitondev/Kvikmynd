@@ -6,10 +6,8 @@ import { getJwt } from '@movie/modules/account/selectors'
 import { RolePermissions } from '../../../Enums'
 
 export const hasPermission = createSelector(
-  [
-    getJwt,
-    (_, permission) => permission
-  ], (jwtToken, permission) => {
+  [getJwt, (_, permission) => permission],
+  (jwtToken, permission) => {
     if (!Boolean(permission)) return true
     if (_.isEmpty(jwtToken)) return false
     const jwtPayload = jwt_decode(jwtToken)
@@ -17,6 +15,10 @@ export const hasPermission = createSelector(
 
     return userRole === 'SystemAdmin'
       ? true
-      : Boolean(Object.entries(RolePermissions).find(([role, permissions]) => role === userRole && permissions.includes(permission)))
-  },
+      : Boolean(
+          Object.entries(RolePermissions).find(
+            ([role, permissions]) => role === userRole && permissions.includes(permission)
+          )
+        )
+  }
 )

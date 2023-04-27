@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import AddIcon from '@mui/icons-material/Add'
 import { Button, IconButton, Tooltip, Zoom } from '@mui/material'
@@ -74,8 +73,9 @@ const MovieListContainer = () => {
 
   const handleAddEditMovieSubmit = useCallback(
     async (values) => {
-      if (values.cover && typeof values.cover === 'object')
+      if (values.cover && typeof values.cover === 'object') {
         values.cover = await toBase64(values.cover)
+      }
       values.id
         ? dispatch(movieActions.updateMovieRequest(values))
         : dispatch(movieActions.createMovieRequest(values))
@@ -119,9 +119,10 @@ const MovieListContainer = () => {
     dispatch(rawActions.restoreAllMovies.request({ Json: json }))
   }, [dispatch, jsonFile])
 
-  const showPromo = useMemo(() => {
-    return location.pathname === Routes.root && (!pageNumber || pageNumber === '1') && !searchQuery
-  }, [location.pathname, pageNumber, searchQuery])
+  const showPromo = useMemo(
+    () => location.pathname === Routes.root && (!pageNumber || pageNumber === '1') && !searchQuery,
+    [location.pathname, pageNumber, searchQuery]
+  )
 
   return (
     <>

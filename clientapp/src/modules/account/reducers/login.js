@@ -12,8 +12,8 @@ export default handleActions(
       accountActions.updateUserSuccess,
       accountActions.deleteUserSuccess,
       accountActions.logoutSuccess,
-      accountActions.changePasswordSuccess,
-    )] (state, action) {
+      accountActions.changePasswordSuccess
+    )](state, action) {
       return defaultState
     },
   },

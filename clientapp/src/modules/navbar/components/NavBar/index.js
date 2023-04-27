@@ -32,7 +32,7 @@ import GradeIcon from '@mui/icons-material/Grade'
 import ArchiveIcon from '@mui/icons-material/Archive'
 
 import styles from './styles'
-import routes  from '@movie/routes'
+import routes from '@movie/routes'
 import NavbarTabs from '../NavbarTabs'
 import ElevationScroll from '../ElevationScroll'
 import { calculateMovieRating } from '@movie/modules/movie/helpers'
@@ -60,8 +60,7 @@ const Navbar = ({
 }) => (
   <ElevationScroll>
     <>
-      <AppBar color='transparent' className={classes.appbar}
-      >
+      <AppBar color='transparent' className={classes.appbar}>
         <Container maxWidth='lg'>
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -71,7 +70,7 @@ const Navbar = ({
               <Autocomplete
                 freeSolo
                 options={movieSearchList.items}
-                getOptionLabel={option => option.title}
+                getOptionLabel={(option) => option.title}
                 onClose={handleCloseSearch}
                 blurOnSelect
                 clearOnBlur
@@ -79,7 +78,7 @@ const Navbar = ({
                 classes={{
                   input: classes.input,
                 }}
-                filterOptions={((options, state) => {
+                filterOptions={(options, state) => {
                   if (options.length > 0 && movieSearchList.totalCount > pageSize) {
                     options.push({
                       id: 0,
@@ -87,11 +86,17 @@ const Navbar = ({
                     })
                   }
                   return options
-                })}
+                }}
                 renderOption={(props, option) => {
                   if (option.id === 0) {
                     return (
-                      <ListItemButton {...props} className={classes.centeredBlock} component={Link} to={generateUrlWithSearchQuery(searchQuery)} onClick={handleCloseSearch}>
+                      <ListItemButton
+                        {...props}
+                        className={classes.centeredBlock}
+                        component={Link}
+                        to={generateUrlWithSearchQuery(searchQuery)}
+                        onClick={handleCloseSearch}
+                      >
                         <ListItemIcon className={classes.centeredBlock}>
                           <MoreHorizIcon />
                         </ListItemIcon>
@@ -101,12 +106,23 @@ const Navbar = ({
 
                   const movieRating = calculateMovieRating(option.ratings)
                   return (
-                    <ListItem {...props} alignItems='flex-start' component={Link} to={routes.movie(option.id)} onClick={handleCloseSearch}>
+                    <ListItem
+                      {...props}
+                      alignItems='flex-start'
+                      component={Link}
+                      to={routes.movie(option.id)}
+                      onClick={handleCloseSearch}
+                    >
                       <ListItemAvatar>
-                        <Avatar alr={option.title} src={option.coverUrl} variant='square' style={{
-                          width: 36,
-                          height: 64,
-                        }} />
+                        <Avatar
+                          alr={option.title}
+                          src={option.coverUrl}
+                          variant='square'
+                          style={{
+                            width: 36,
+                            height: 64,
+                          }}
+                        />
                       </ListItemAvatar>
                       <ListItemText
                         primary={`${option.title} ${option.year ? `(${option.year})` : ''}`}
@@ -120,7 +136,8 @@ const Navbar = ({
                         }}
                       />
                     </ListItem>
-                )}}
+                  )
+                }}
                 inputValue={searchQuery}
                 onInputChange={(event, value) => handleChangeSearchValue(value)}
                 renderInput={(props) => (
@@ -145,91 +162,81 @@ const Navbar = ({
               />
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              {
-                isLogined
-                  ?
-                  <>
-                    <IconButton onClick={handleOpenUserMenu}>
-                      <Avatar src={avatar} className={classes.avatarBlock} />
-                    </IconButton>
-                    <Menu
-                      sx={{ mt: '45px' }}
-                      anchorEl={anchorUser}
-                      open={Boolean(anchorUser)}
-                      onClose={handleCloseUserMenu}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                    >
-                      <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
+              {isLogined ? (
+                <>
+                  <IconButton onClick={handleOpenUserMenu}>
+                    <Avatar src={avatar} className={classes.avatarBlock} />
+                  </IconButton>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    anchorEl={anchorUser}
+                    open={Boolean(anchorUser)}
+                    onClose={handleCloseUserMenu}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <MenuItem component={Link} to={routes.profile} onClick={handleCloseUserMenu}>
+                      <ListItemIcon>
+                        <Avatar src={avatar} className={classes.menuAvatar} />
+                      </ListItemIcon>
+                      <Typography textAlign='center'>Profile</Typography>
+                    </MenuItem>
+                    <MenuItem component={Link} to={routes.myRatings} onClick={handleCloseUserMenu}>
+                      <ListItemIcon>
+                        <GradeIcon />
+                      </ListItemIcon>
+                      <Typography textAlign='center'>My ratings</Typography>
+                    </MenuItem>
+                    <MenuItem component={Link} to={routes.bookmarks} onClick={handleCloseUserMenu}>
+                      <ListItemIcon>
+                        <BookmarkIcon />
+                      </ListItemIcon>
+                      <Typography textAlign='center'>Bookmarks</Typography>
+                    </MenuItem>
+                    {hasEditMoviePermission && (
+                      <MenuItem component={Link} to={routes.archived} onClick={handleCloseUserMenu}>
                         <ListItemIcon>
-                          <Avatar src={avatar} className={classes.menuAvatar} />
+                          <ArchiveIcon />
                         </ListItemIcon>
-                        <Typography textAlign='center'>Profile</Typography>
+                        <Typography textAlign='center'>Archive</Typography>
                       </MenuItem>
-                      <MenuItem component={Link} to={routes.myRatings} onClick={handleCloseUserMenu}>
-                        <ListItemIcon>
-                          <GradeIcon />
-                        </ListItemIcon>
-                        <Typography textAlign='center'>My ratings</Typography>
-                      </MenuItem>
-                      <MenuItem component={Link} to={routes.bookmarks} onClick={handleCloseUserMenu}>
-                        <ListItemIcon>
-                          <BookmarkIcon />
-                        </ListItemIcon>
-                        <Typography textAlign='center'>Bookmarks</Typography>
-                      </MenuItem>
-                      {
-                        hasEditMoviePermission && (
-                          <MenuItem component={Link} to={routes.archived} onClick={handleCloseUserMenu}>
-                            <ListItemIcon>
-                              <ArchiveIcon />
-                            </ListItemIcon>
-                            <Typography textAlign='center'>Archive</Typography>
-                          </MenuItem>
-                        )
-                      }
-                      <MenuItem onClick={() => {
+                    )}
+                    <MenuItem
+                      onClick={() => {
                         onClickLogout()
                         handleCloseUserMenu()
-                      }}>
-                        <ListItemIcon>
-                          <Logout />
-                        </ListItemIcon>
-                        <Typography textAlign='center'>Logout</Typography>
-                      </MenuItem>
-                    </Menu>
-                  </>
-                  :
-                  <>
-                    {
-                      !pathname.startsWith(routes.login) && (
-                        <Button component={Link} to={routes.login} color='primary'>
-                          Login
-                        </Button>
-                      )
-                    }
-                    {
-                      !pathname.startsWith(routes.register) && (
-                        <Button component={Link} to={routes.register} color='primary'>
-                          Register
-                        </Button>
-                      )
-                    }
-                  </>
-              }
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Logout />
+                      </ListItemIcon>
+                      <Typography textAlign='center'>Logout</Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  {!pathname.startsWith(routes.login) && (
+                    <Button component={Link} to={routes.login} color='primary'>
+                      Login
+                    </Button>
+                  )}
+                  {!pathname.startsWith(routes.register) && (
+                    <Button component={Link} to={routes.register} color='primary'>
+                      Register
+                    </Button>
+                  )}
+                </>
+              )}
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
-                {
-                  theme.palette.mode === 'dark'
-                    ? <Brightness7Icon />
-                    : <Brightness4Icon />
-                }
+                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
               </IconButton>
             </Box>
           </Toolbar>

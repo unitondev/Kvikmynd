@@ -11,22 +11,11 @@ import { AvatarPreview } from '@movie/modules/account/helpers'
 import ChipsGenres from '@movie/modules/movieList/components/ChipsGenres'
 
 const addMovieSchema = Yup.object().shape({
-  title: Yup.string()
-    .required('Required')
-    .max(256, 'Maximum length is 256 characters'),
-  description: Yup.string()
-    .required('Required')
-    .max(2048, 'Maximum length is 2048 characters'),
-  youtubeLink: Yup.string()
-    .required('Required')
-    .max(128, 'Maximum length is 128 characters'),
-  year: Yup.number()
-    .required('Required')
-    .min(0, 'Min 0')
-    .max(9999, 'Max 9999'),
-  genres: Yup.array()
-    .min(1, 'Min 1 genre')
-    .required('Required'),
+  title: Yup.string().required('Required').max(256, 'Maximum length is 256 characters'),
+  description: Yup.string().required('Required').max(2048, 'Maximum length is 2048 characters'),
+  youtubeLink: Yup.string().required('Required').max(128, 'Maximum length is 128 characters'),
+  year: Yup.number().required('Required').min(0, 'Min 0').max(9999, 'Max 9999'),
+  genres: Yup.array().min(1, 'Min 1 genre').required('Required'),
 })
 
 const initial = {
@@ -55,7 +44,11 @@ const AddEditMovieDialog = ({ classes, isOpen, onClose, onSubmit, movieToUpdate 
             <DialogContent>
               <Grid container direction='column' spacing={2}>
                 <Grid item alignSelf='center'>
-                  <AvatarPreview file={typeof values.cover === 'object' ? values.cover : values.coverUrl} className={classes.cover} variant='rounded' />
+                  <AvatarPreview
+                    file={typeof values.cover === 'object' ? values.cover : values.coverUrl}
+                    className={classes.cover}
+                    variant='rounded'
+                  />
                 </Grid>
                 <Grid item>
                   <input

@@ -50,7 +50,7 @@ const accountRequests = {
     url: 'api/account/confirmEmail',
     method: 'post',
     data,
-  })
+  }),
 }
 
 export default accountRequests

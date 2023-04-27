@@ -1,6 +1,6 @@
 const styles = {
   form: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   commentsBlock: {
     marginTop: '20px',

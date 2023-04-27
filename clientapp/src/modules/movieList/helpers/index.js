@@ -7,20 +7,18 @@ export const addQueryToUrl = (key, value, pathName, search, deletedKeys = []) =>
     }
   }
 
-  searchParams.has(key)
-    ? searchParams.set(key, value)
-    : searchParams.append(key, value)
+  searchParams.has(key) ? searchParams.set(key, value) : searchParams.append(key, value)
 
   return {
     pathname: pathName,
-    search: searchParams.toString()
+    search: searchParams.toString(),
   }
 }
 
-export const fromFileToText = (file) => new Promise(((resolve, reject) => {
-  const reader = new FileReader()
-  reader.readAsText(file)
-  reader.onload = () => resolve(reader.result)
-  reader.onerror = (error) => reject(error)
-}))
-
+export const fromFileToText = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })

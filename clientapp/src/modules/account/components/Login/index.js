@@ -30,10 +30,7 @@ const loginSchema = Yup.object().shape({
     .trim('There should be no spaces at the beginning and at the end of the password'),
 })
 
-const Login = ({
-  classes,
-  handleLogin,
-}) => (
+const Login = ({ classes, handleLogin }) => (
   <Formik
     initialValues={initial}
     validationSchema={loginSchema}
@@ -66,30 +63,33 @@ const Login = ({
               component={TextField}
               fullWidth
               InputProps={{
-                endAdornment: <InputAdornment position='end'>
-                  <IconButton
-                    onClick={() => setFieldValue('showPassword', !values.showPassword)}
-                    edge='end'
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      onClick={() => setFieldValue('showPassword', !values.showPassword)}
+                      edge='end'
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
           </Grid>
           <Grid item className={classes.forgotPasswordBlock}>
-            <Button size='small' variant='text' component={Link} to={routes.forgotPassword} color='primary'>
+            <Button
+              size='small'
+              variant='text'
+              component={Link}
+              to={routes.forgotPassword}
+              color='primary'
+            >
               Forgot password?
             </Button>
           </Grid>
           <Grid item container direction='row' spacing={4}>
             <Grid item xs={6}>
-              <Button
-                color='primary'
-                variant='text'
-                component={Link}
-                to={routes.register}
-              >
+              <Button color='primary' variant='text' component={Link} to={routes.register}>
                 Create account
               </Button>
             </Grid>

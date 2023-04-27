@@ -13,26 +13,32 @@ export default handleActions(
       return { ...action.response.data, isLoading: false }
     },
     [movieActions.getArchivedMovieBySearch.failure]: (state, action) => {
-      return {...state, isLoading: false }
+      return { ...state, isLoading: false }
     },
     [movieActions.getArchivedMovieBySearch.request]: (state, action) => {
-      return {...state, isLoading: true }
+      return { ...state, isLoading: true }
     },
     [movieActions.addMovieToBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
 
-      return {...state, items: state.items.map(i => {
+      return {
+        ...state,
+        items: state.items.map((i) => {
           if (i.id === MovieId) i.isBookmark = true
           return i
-        })}
+        }),
+      }
     },
     [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
 
-      return {...state, items: state.items.map(i => {
+      return {
+        ...state,
+        items: state.items.map((i) => {
           if (i.id === MovieId) i.isBookmark = false
           return i
-        })}
+        }),
+      }
     },
     [movieActions.resetState]: (state, action) => {
       return defaultState

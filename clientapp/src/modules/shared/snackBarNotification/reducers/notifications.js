@@ -5,7 +5,7 @@ const defaultState = []
 
 export default handleActions(
   {
-    [notificationActions.enqueueSnackbarSuccess]: (state, {payload}) => {
+    [notificationActions.enqueueSnackbarSuccess]: (state, { payload }) => {
       return [
         ...state,
         {
@@ -17,7 +17,7 @@ export default handleActions(
         },
       ]
     },
-    [notificationActions.enqueueSnackbarError]: (state, {payload}) => {
+    [notificationActions.enqueueSnackbarError]: (state, { payload }) => {
       return [
         ...state,
         {
@@ -29,7 +29,7 @@ export default handleActions(
         },
       ]
     },
-    [notificationActions.enqueueSnackbarInfo]: (state, {payload}) => {
+    [notificationActions.enqueueSnackbarInfo]: (state, { payload }) => {
       return [
         ...state,
         {
@@ -41,7 +41,7 @@ export default handleActions(
         },
       ]
     },
-    [notificationActions.removeSnackbar]: (state, {payload}) => {
+    [notificationActions.removeSnackbar]: (state, { payload }) => {
       return state.filter((i) => i.key !== payload)
     },
   },

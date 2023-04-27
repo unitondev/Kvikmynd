@@ -1,10 +1,16 @@
-import React  from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 import withStyles from '@mui/styles/withStyles'
 
 import styles from './styles'
-
 
 const ConfirmationDialog = ({
   classes,
@@ -17,20 +23,9 @@ const ConfirmationDialog = ({
   cancelButtonText = 'No',
 }) => {
   return (
-    <Dialog
-      className={classes.dialog}
-      open={open}
-    >
-      {title &&
-        <DialogTitle>{title}</DialogTitle>
-      }
-      <DialogContent>
-        {message &&
-          <DialogContentText>
-            {message}
-          </DialogContentText>
-        }
-      </DialogContent>
+    <Dialog className={classes.dialog} open={open}>
+      {title && <DialogTitle>{title}</DialogTitle>}
+      <DialogContent>{message && <DialogContentText>{message}</DialogContentText>}</DialogContent>
       <DialogActions>
         <Button onClick={onSubmit} color='primary'>
           {submitButtonText}

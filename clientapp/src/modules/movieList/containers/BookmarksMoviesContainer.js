@@ -14,7 +14,7 @@ import { exportAsXlsxFile } from '@movie/shared/utils/excelFileHandler'
 
 const BookmarksMoviesContainer = () => {
   const dispatch = useDispatch()
-  const location = useSelector(state => state.router.location)
+  const location = useSelector((state) => state.router.location)
   const movies = useSelector(getBookmarkMoviesList)
   const moviesTotalCount = useSelector(getBookmarkMoviesListTotalCount)
   const isLoading = useSelector(getBookmarkMoviesListLoading)
@@ -22,18 +22,22 @@ const BookmarksMoviesContainer = () => {
   const PageSize = 5
 
   useEffect(() => {
-    return () => { dispatch(rawActions.resetState()) }
+    return () => {
+      dispatch(rawActions.resetState())
+    }
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(rawActions.getBookmarksMoviesRequest({
-      PageNumber: pageNumber ?? 1,
-      PageSize,
-    }))
+    dispatch(
+      rawActions.getBookmarksMoviesRequest({
+        PageNumber: pageNumber ?? 1,
+        PageSize,
+      })
+    )
   }, [dispatch, pageNumber])
 
   const exportAsExcelFile = useCallback(() => {
-    const data = movies.map(e => {
+    const data = movies.map((e) => {
       delete e.coverUrl
       delete e.description
       delete e.youtubeLink

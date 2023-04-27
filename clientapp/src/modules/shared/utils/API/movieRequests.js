@@ -44,7 +44,7 @@ const movieRequests = {
       PageNumber,
       PageSize,
       SearchQuery,
-    }
+    },
   }),
   getArchivedMovieBySearchRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
     url: 'api/movie/archived',
@@ -53,7 +53,7 @@ const movieRequests = {
       PageNumber,
       PageSize,
       SearchQuery,
-    }
+    },
   }),
   createMovieRequest: (data) => ({
     url: 'api/movie',

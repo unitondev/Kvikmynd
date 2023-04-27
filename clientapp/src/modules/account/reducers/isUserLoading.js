@@ -11,4 +11,6 @@ export default handleActions(
     [accountActions.stopLoadingUser](state, action) {
       return false
     },
-}, defaultState)
+  },
+  defaultState
+)

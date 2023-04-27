@@ -24,7 +24,7 @@ const NotificationContainer = () => {
         onExited: (event, newKey) => {
           dispatch(rawActions.removeSnackbar(newKey))
           removeDisplayed(newKey)
-        }
+        },
       })
 
       storeDisplayed(key)

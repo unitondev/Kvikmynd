@@ -1,11 +1,11 @@
 import { all, put, takeLatest } from 'redux-saga/effects'
 import * as movieActions from '../actions'
 
-function * needToUpdateMovie(action) {
+function* needToUpdateMovie(action) {
   yield put(movieActions.needToUpdateMovie())
 }
 
-function * needToUpdateSaga() {
+function* needToUpdateSaga() {
   yield all([
     takeLatest(
       [

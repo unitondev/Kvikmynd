@@ -5,7 +5,7 @@ const styles = (theme) => ({
   },
   avatarGrid: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   avatarBig: {
     minWidth: '100px',

@@ -19,9 +19,7 @@ const NavbarTabs = ({ classes }) => {
     <>
       {tabs.map((tab) => (
         <Button key={tab.label} component={Link} to={tab.route} color='primary'>
-          <Typography variant='h6'>
-            {tab.label}
-          </Typography>
+          <Typography variant='h6'>{tab.label}</Typography>
         </Button>
       ))}
     </>

@@ -53,4 +53,3 @@ export const updateMovieFailure = createAction('UPDATE_MOVIE_FAILURE')
 export const deleteMoviePermanently = createApiActions('DELETE_MOVIE_PERMANENTLY')
 
 export const restoreMovie = createApiActions('RESTORE_MOVIE')
-

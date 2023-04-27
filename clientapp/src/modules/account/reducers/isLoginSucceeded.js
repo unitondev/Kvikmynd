@@ -10,15 +10,15 @@ export default handleActions(
       accountActions.refreshTokensFailure,
       accountActions.updateUserSuccess,
       accountActions.deleteUserSuccess,
-      accountActions.changePasswordSuccess,
-    )] (state, action) {
+      accountActions.changePasswordSuccess
+    )](state, action) {
       return false
     },
     [combineActions(
       accountActions.getTokenSuccess,
       accountActions.refreshTokensSuccess,
-      accountActions.confirmEmailSuccess,
-    )] (state, action) {
+      accountActions.confirmEmailSuccess
+    )](state, action) {
       return true
     },
   },

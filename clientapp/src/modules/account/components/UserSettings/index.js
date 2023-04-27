@@ -43,28 +43,27 @@ const UserSettings = ({
             <Grid container direction='column'>
               <Grid item>
                 <div className={classes.avatarBlock}>
-                  <Avatar src={user.avatarUrl} className={classes.avatarPicture}/>
+                  <Avatar src={user.avatarUrl} className={classes.avatarPicture} />
                 </div>
               </Grid>
               <Grid item>
                 <List>
-                  {
-                    tabs.map(elem => (
-                      <ListItemButton key={elem.id} selected={selectedTab === elem.id} onClick={(e) => handleSelectedTab(elem.id)}>
-                        <ListItemIcon>
-                          {elem.icon}
-                        </ListItemIcon>
-                        <Typography>{elem.label}</Typography>
-                      </ListItemButton>
-                    ))
-                  }
+                  {tabs.map((elem) => (
+                    <ListItemButton
+                      key={elem.id}
+                      selected={selectedTab === elem.id}
+                      onClick={(e) => handleSelectedTab(elem.id)}
+                    >
+                      <ListItemIcon>{elem.icon}</ListItemIcon>
+                      <Typography>{elem.label}</Typography>
+                    </ListItemButton>
+                  ))}
                 </List>
               </Grid>
             </Grid>
           </Grid>
 
-          {
-            selectedTab === 0 &&
+          {selectedTab === 0 && (
             <Fade in>
               <Grid item xs={9}>
                 <AccountInfo
@@ -74,15 +73,14 @@ const UserSettings = ({
                 />
               </Grid>
             </Fade>
-          }
-          {
-            selectedTab === 1 &&
+          )}
+          {selectedTab === 1 && (
             <Fade in>
               <Grid item xs={9}>
                 <ChangePassword handleChangePassword={handleChangePassword} />
               </Grid>
             </Fade>
-          }
+          )}
         </Grid>
       </Paper>
       <ConfirmationDialog {...dialogProps} />

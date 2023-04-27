@@ -5,23 +5,23 @@ const defaultState = {}
 
 export default handleActions(
   {
-    [accountActions.getTokenSuccess] (state, action) {
+    [accountActions.getTokenSuccess](state, action) {
       return action.response.data.accessToken
     },
     [combineActions(
       accountActions.logoutSuccess,
       accountActions.updateUserSuccess,
       accountActions.deleteUserSuccess,
-      accountActions.changePasswordSuccess,
-      )] (state, action) {
+      accountActions.changePasswordSuccess
+    )](state, action) {
       return defaultState
     },
-    [accountActions.refreshTokensSuccess] (state, action) {
+    [accountActions.refreshTokensSuccess](state, action) {
       return action.response.data.accessToken
     },
-    [accountActions.confirmEmailSuccess] (state, action) {
+    [accountActions.confirmEmailSuccess](state, action) {
       return action.response.data.accessToken
-    }
+    },
   },
   defaultState
 )

@@ -14,19 +14,17 @@ export default handleActions(
       return { ...action.response.data, isLoading: false }
     },
     [rawActions.getBookmarksMoviesFailure]: (state, action) => {
-      return {...state, isLoading: false }
+      return { ...state, isLoading: false }
     },
     [rawActions.getBookmarksMoviesRequest]: (state, action) => {
-      return {...state, isLoading: true }
+      return { ...state, isLoading: true }
     },
     [movieActions.deleteMovieBookmarkSuccess]: (state, action) => {
       const { MovieId } = action.payload
 
-      return {...state, items: state.items.filter(i => i.id !== MovieId)}
+      return { ...state, items: state.items.filter((i) => i.id !== MovieId) }
     },
-    [combineActions(
-      rawActions.resetState,
-    )]: (state, action) => {
+    [combineActions(rawActions.resetState)]: (state, action) => {
       return defaultState
     },
   },

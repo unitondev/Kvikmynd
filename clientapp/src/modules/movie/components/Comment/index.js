@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import withStyles from '@mui/styles/withStyles';
+import withStyles from '@mui/styles/withStyles'
 import { Avatar, Card, CardContent, CardHeader, IconButton, TextField } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
@@ -16,21 +16,21 @@ const Comment = ({
   <div className={classes.commentBlock}>
     <Card>
       <CardHeader
-        avatar={
-          <Avatar src={comment.userAvatar} />
-        }
+        avatar={<Avatar src={comment.userAvatar} />}
         title={comment.userName}
         subheader={`#${comment.commentId}`}
         action={
-          hasDeleteCommentPermission || comment.userName === currentUserUserName
-            ?
+          hasDeleteCommentPermission || comment.userName === currentUserUserName ? (
             <IconButton
               aria-label='delete'
               onClick={() => handleDeleteCommentClick(comment.commentId)}
-              size="large">
+              size='large'
+            >
               <DeleteIcon />
             </IconButton>
-            : <></>
+          ) : (
+            <></>
+          )
         }
         titleTypographyProps={{ fontSize: 18 }}
       />

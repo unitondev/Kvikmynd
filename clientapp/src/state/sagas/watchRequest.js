@@ -38,7 +38,7 @@ export function* callApi(action) {
   }
 }
 
-function * cancellableCallApi (action) {
+function* cancellableCallApi(action) {
   const forkedCallApi = yield fork(callApi, action)
   const cancelledType = action.type.replace('_REQUEST', '_CANCEL')
 
