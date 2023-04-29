@@ -10,7 +10,7 @@ A SPA with movies, ratings and comments
 - Axios as http client
 
 ### Web API
-- Web API developed on .NET 5, RESTful.
+- .NET Web API, RESTful.
 - SignalR
 - SQL Server as database
 - EntityFramework Core as ORM
