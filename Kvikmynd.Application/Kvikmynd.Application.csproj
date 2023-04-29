@@ -5,18 +5,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Kvikmynd.Domain\Kvikmynd.Domain.csproj" />
+        <ProjectReference Include="..\Kvikmynd.Domain\Kvikmynd.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="10.1.1" />
-      <PackageReference Include="Firebase.Auth" Version="1.0.0" />
-      <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
-      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
-      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.30.0" />
-      <PackageReference Include="SendGrid" Version="9.26.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="Firebase.Auth" Version="1.0.0" />
+        <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.30.0" />
+        <PackageReference Include="SendGrid" Version="9.26.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
     </ItemGroup>
 
 </Project>
