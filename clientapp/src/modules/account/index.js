@@ -6,11 +6,4 @@ import accountSagas from './sagas'
 import * as accountActions from './actions'
 import * as accountSelectors from './selectors'
 
-export {
-  LoginPage,
-  ProfilePage,
-  RegisterPage,
-  accountSagas,
-  accountActions,
-  accountSelectors,
-}
+export { LoginPage, ProfilePage, RegisterPage, accountSagas, accountActions, accountSelectors }

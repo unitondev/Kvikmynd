@@ -24,18 +24,13 @@ const forgotPasswordSchema = Yup.object().shape({
     .email('Invalid email'),
 })
 
-const ForgotPassword = ({
-  classes,
-  handleForgotPassword,
-}) => {
+const ForgotPassword = ({ classes, handleForgotPassword }) => {
   const isForgotPasswordSucceeded = useSelector(getIsForgotPasswordSucceeded)
 
   return (
     <>
       <LeftRightSlide in={isForgotPasswordSucceeded} mountOnEnter unmountOnExit>
-        <Typography>
-          To reset your password, follow the link sent to your email.
-        </Typography>
+        <Typography>To reset your password, follow the link sent to your email.</Typography>
       </LeftRightSlide>
       <LeftRightSlide in={!isForgotPasswordSucceeded} mountOnEnter unmountOnExit>
         <div>

@@ -4,12 +4,7 @@ import withStyles from '@mui/styles/withStyles'
 
 import styles from './styles'
 
-const NotFound = ({
-  classes,
-}) => (
-  <div className={classes.gifBlock}>
-  </div>
-)
+const NotFound = ({ classes }) => <div className={classes.gifBlock}></div>
 
 NotFound.propTypes = {
   classes: PropTypes.object.isRequired,

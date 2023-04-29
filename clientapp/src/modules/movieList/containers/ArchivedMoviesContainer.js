@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import MovieList from '../components/MovieList'
 import * as rawActions from '../actions'
 import {
-  getArchivedMoviesList, getArchivedMoviesListLoading, getArchivedMoviesListTotalCount,
+  getArchivedMoviesList,
+  getArchivedMoviesListLoading,
+  getArchivedMoviesListTotalCount,
 } from '@movie/modules/movieList/selectors'
 import { deleteMoviePermanently, restoreMovie } from '@movie/modules/movie/actions'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
@@ -13,7 +15,7 @@ import { ApplicationPermissions } from '../../../Enums'
 
 const ArchivedMoviesContainer = () => {
   const dispatch = useDispatch()
-  const location = useSelector(state => state.router.location)
+  const location = useSelector((state) => state.router.location)
   const movies = useSelector(getArchivedMoviesList)
   const moviesTotalCount = useSelector(getArchivedMoviesListTotalCount)
   const isLoading = useSelector(getArchivedMoviesListLoading)
@@ -21,19 +23,27 @@ const ArchivedMoviesContainer = () => {
   const PageSize = 5
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [movieToDeleteId, setMovieToDeleteId] = useState(null)
-  const hasEditMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
+  const hasEditMoviePermission = useSelector((state) =>
+    hasPermission(state, ApplicationPermissions.EditMovie)
+  )
 
   useEffect(() => {
-    return () => { dispatch(rawActions.resetState()) }
+    return () => {
+      dispatch(rawActions.resetState())
+    }
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(rawActions.getArchivedMovieBySearch.request({
-      PageNumber: pageNumber ?? 1,
-      PageSize,
-    }))
+    dispatch(
+      rawActions.getArchivedMovieBySearch.request({
+        PageNumber: pageNumber ?? 1,
+        PageSize,
+      })
+    )
 
-    return () => { dispatch(rawActions.getArchivedMovieBySearch.cancel()) }
+    return () => {
+      dispatch(rawActions.getArchivedMovieBySearch.cancel())
+    }
   }, [dispatch, pageNumber])
 
   const handleClickDeleteMovie = useCallback((movieToDeleteId) => {
@@ -45,9 +55,9 @@ const ArchivedMoviesContainer = () => {
     setMovieToDeleteId(null)
     setOpenDeleteDialog(false)
   }, [])
-  
+
   const handleDeleteMoviePermanentlySubmit = useCallback(() => {
-    dispatch(deleteMoviePermanently.request({ id: movieToDeleteId}))
+    dispatch(deleteMoviePermanently.request({ id: movieToDeleteId }))
     handleCloseDeleteMovie()
   }, [dispatch, handleCloseDeleteMovie, movieToDeleteId])
 
@@ -59,9 +69,12 @@ const ArchivedMoviesContainer = () => {
     message: 'Are you sure want to delete this movie permanently?',
   }
 
-  const handleClickRestoreMovie = useCallback((movieToRestoreId) => {
-    dispatch(restoreMovie.request({ id: movieToRestoreId}))
-  }, [dispatch])
+  const handleClickRestoreMovie = useCallback(
+    (movieToRestoreId) => {
+      dispatch(restoreMovie.request({ id: movieToRestoreId }))
+    },
+    [dispatch]
+  )
 
   return (
     <>

@@ -5,10 +5,10 @@ namespace Kvikmynd.Application.Models
     public class UserRegistrationModel
     {
         [Required]
-        [MaxLength(30)]
+        [MaxLength(256)]
         public string Email { get; set; }
         [Required]
-        [MaxLength(25)]
+        [MaxLength(256)]
         public string Username { get; set; }
         [Required]
         [MaxLength(25)]

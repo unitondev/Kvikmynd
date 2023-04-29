@@ -115,10 +115,7 @@ namespace Kvikmynd
             });
             
             #endregion
-
-            services.AddDbContext<KvikmyndDbContext>(builder => 
-                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
-
+            
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -131,6 +128,9 @@ namespace Kvikmynd
             });
 
             #region Database and repositories
+
+            services.AddDbContext<KvikmyndDbContext>(builder => 
+                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -154,8 +154,6 @@ namespace Kvikmynd
             services.AddHttpContextAccessor();
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());;
-            
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "clientApp/build"; });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -173,8 +171,7 @@ namespace Kvikmynd
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
-            app.UseSpaStaticFiles();
-            
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -184,15 +181,6 @@ namespace Kvikmynd
             {
                 endpoints.MapHub<SignalRHub>("/moviePage");
                 endpoints.MapControllers();
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "clientapp";
-                if (env.IsDevelopment())
-                {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000/");
-                }
             });
         }
     }

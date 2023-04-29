@@ -11,22 +11,22 @@ import { hasPermission } from '@movie/modules/permissions/selectors'
 const PrivateRoute = ({ component: Component, permission, ...rest }) => {
   const isAuthorized = useSelector(getIsLoginSucceeded)
 
-  const hasPermissions = useSelector(state => hasPermission(state, permission))
+  const hasPermissions = useSelector((state) => hasPermission(state, permission))
 
   const isAuthenticated = isAuthorized && hasPermissions
 
-  const redirectUrl = useMemo(() => isAuthorized ? routes.root : routes.login, [isAuthorized])
+  const redirectUrl = useMemo(() => (isAuthorized ? routes.root : routes.login), [isAuthorized])
 
-  return isAuthorized === null
-    ? <CircularProgress />
-    : <Route
+  return isAuthorized === null ? (
+    <CircularProgress />
+  ) : (
+    <Route
       {...rest}
-      render={props => (
-        isAuthenticated
-          ? <Component {...props} />
-          : <Redirect to={redirectUrl} />
-      )}
+      render={(props) =>
+        isAuthenticated ? <Component {...props} /> : <Redirect to={redirectUrl} />
+      }
     />
+  )
 }
 
 PrivateRoute.propTypes = {

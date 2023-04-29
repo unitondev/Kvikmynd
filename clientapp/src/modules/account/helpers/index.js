@@ -26,7 +26,7 @@ export const AvatarPreview = ({ file, ...props }) => {
     }
   }, [file])
 
-  return <Avatar src={previewString && previewString} {...props}/>
+  return <Avatar src={previewString && previewString} {...props} />
 }
 
 export const getUserSettingsTabs = () => [

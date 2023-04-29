@@ -11,7 +11,7 @@ const styles = {
   avatarPicture: {
     width: 150,
     height: 150,
-  }
+  },
 }
 
 export default styles

@@ -7,14 +7,13 @@ import styles from './styles'
 const StickyFooter = ({ classes, hideFooter, children }) => (
   <Box className={!hideFooter ? classes.rootBox : null}>
     {children}
-    <Box
-      hidden={hideFooter}
-      className={classes.footerBlock}
-      component='footer'
-    >
+    <Box hidden={hideFooter} className={classes.footerBlock} component='footer'>
       <Container maxWidth='sm'>
         <Typography variant='body1' align='center'>
-          View source code on <Link color='inherit' href='https://github.com/unitondev/Kvikmynd'>Github</Link>
+          View source code on{' '}
+          <Link color='inherit' href='https://github.com/unitondev/Kvikmynd'>
+            Github
+          </Link>
         </Typography>
         <Copyright />
       </Container>

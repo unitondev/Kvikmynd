@@ -9,14 +9,8 @@ import { Button, Divider, Grid } from '@mui/material'
 import { TextField } from 'formik-mui'
 
 const accountInfoSchema = Yup.object().shape({
-  fullName: Yup.string()
-    .trim()
-    .required('Required')
-    .max(25, 'Maximum length is 25 characters'),
-  userName: Yup.string()
-    .trim()
-    .required('Required')
-    .max(256, 'Maximum length is 256 characters'),
+  fullName: Yup.string().trim().required('Required').max(25, 'Maximum length is 25 characters'),
+  userName: Yup.string().trim().required('Required').max(256, 'Maximum length is 256 characters'),
   email: Yup.string()
     .trim()
     .required('Required')
@@ -24,13 +18,7 @@ const accountInfoSchema = Yup.object().shape({
     .max(256, 'Maximum length is 256 characters'),
 })
 
-const AccountInfo = ({
-  classes,
-  user,
-  handleUpdateAccount,
-  handleDeleteAccount,
-}) => {
-
+const AccountInfo = ({ classes, user, handleUpdateAccount, handleDeleteAccount }) => {
   return (
     <Formik
       initialValues={user}
@@ -89,7 +77,7 @@ const AccountInfo = ({
                 </Button>
               </Grid>
               <Grid item>
-                <Divider className={classes.divider}/>
+                <Divider className={classes.divider} />
               </Grid>
               <Grid item>
                 <Button

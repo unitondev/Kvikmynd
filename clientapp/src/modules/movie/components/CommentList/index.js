@@ -1,7 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material'
+import {
+  Avatar,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Typography,
+} from '@mui/material'
 import * as Yup from 'yup'
 import { TextField } from 'formik-mui'
 import { Field, Formik, Form } from 'formik'
@@ -9,11 +17,12 @@ import { Field, Formik, Form } from 'formik'
 import Comment from '../Comment'
 import styles from './styles'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
+import { useSelector } from 'react-redux'
+import { hasPermission } from '@movie/modules/permissions/selectors'
+import { ApplicationPermissions } from '../../../../Enums'
 
 const writtenCommentSchema = Yup.object().shape({
-  WrittenCommentText: Yup.string()
-    .trim()
-    .max(1024, 'Maximum length is 1024 characters'),
+  WrittenCommentText: Yup.string().trim().max(1024, 'Maximum length is 1024 characters'),
 })
 
 const CommentList = ({
@@ -24,11 +33,15 @@ const CommentList = ({
   currentUser,
   handleDeleteCommentClick,
   dialogProps,
-}) => (
-  <div className={classes.commentsBlock}>
-    <Typography variant='h3'>Comments</Typography>
-    {
-      currentUser.id && (
+}) => {
+  // TODO: temp solution, add new permission
+  const hasDeleteCommentPermission = useSelector((state) =>
+    hasPermission(state, ApplicationPermissions.EditMovie)
+  )
+  return (
+    <div className={classes.commentsBlock}>
+      <Typography variant='h3'>Comments</Typography>
+      {currentUser.id && (
         <Formik
           initialValues={{ WrittenCommentText: '' }}
           enableReinitialize
@@ -43,9 +56,7 @@ const CommentList = ({
               <Card>
                 <Form className={classes.form} autoComplete='off'>
                   <CardHeader
-                    avatar={
-                      <Avatar src={currentUserAvatar} />
-                    }
+                    avatar={<Avatar src={currentUserAvatar} />}
                     title={`As ${currentUser.userName}`}
                     titleTypographyProps={{ fontSize: 18 }}
                   />
@@ -75,27 +86,27 @@ const CommentList = ({
             </div>
           )}
         </Formik>
-      )
-    }
-    {
-      comments.length > 0
-        ? (
-          comments.slice().reverse().map((comment) => (
+      )}
+      {comments.length > 0 ? (
+        comments
+          .slice()
+          .reverse()
+          .map((comment) => (
             <Comment
               key={comment.commentId}
               comment={comment}
               currentUserUserName={currentUser.userName}
               handleDeleteCommentClick={handleDeleteCommentClick}
+              hasDeleteCommentPermission={hasDeleteCommentPermission}
             />
           ))
-        )
-        : (
-          <div className={classes.emptyCommentsBlock} />
-        )
-    }
-    <ConfirmationDialog {...dialogProps}/>
-  </div>
-)
+      ) : (
+        <div className={classes.emptyCommentsBlock} />
+      )}
+      <ConfirmationDialog {...dialogProps} />
+    </div>
+  )
+}
 
 CommentList.propTypes = {
   classes: PropTypes.object.isRequired,

@@ -11,17 +11,12 @@ import Login from '@movie/modules/account/components/Login'
 import { Box } from '@mui/system'
 import LeftRightSlide from '@movie/shared/slides/LeftRightSlide'
 
-const LoginWrapper = ({
-  classes,
-  isForgotPasswordOpen,
-  handleForgotPassword,
-  handleLogin,
-}) => {
+const LoginWrapper = ({ classes, isForgotPasswordOpen, handleForgotPassword, handleLogin }) => {
   const containerRef = useRef(null)
 
   return (
     <Container maxWidth='xs'>
-      <Paper className={classes.rootPaper} ref={containerRef} sx={{overflow: 'hidden'}}>
+      <Paper className={classes.rootPaper} ref={containerRef} sx={{ overflow: 'hidden' }}>
         <Grid container direction='column' spacing={2}>
           <Grid item className={classes.cardHeader}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -32,18 +27,24 @@ const LoginWrapper = ({
             </Typography>
           </Grid>
         </Grid>
-        <LeftRightSlide in={isForgotPasswordOpen} mountOnEnter unmountOnExit container={containerRef.current}>
+        <LeftRightSlide
+          in={isForgotPasswordOpen}
+          mountOnEnter
+          unmountOnExit
+          container={containerRef.current}
+        >
           <Box>
-            <ForgotPassword
-              handleForgotPassword={handleForgotPassword}
-            />
+            <ForgotPassword handleForgotPassword={handleForgotPassword} />
           </Box>
         </LeftRightSlide>
-        <LeftRightSlide in={!isForgotPasswordOpen} mountOnEnter unmountOnExit container={containerRef.current}>
+        <LeftRightSlide
+          in={!isForgotPasswordOpen}
+          mountOnEnter
+          unmountOnExit
+          container={containerRef.current}
+        >
           <Box>
-            <Login
-              handleLogin={handleLogin}
-            />
+            <Login handleLogin={handleLogin} />
           </Box>
         </LeftRightSlide>
       </Paper>

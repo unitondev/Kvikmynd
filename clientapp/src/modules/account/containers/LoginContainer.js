@@ -20,13 +20,19 @@ const LoginContainer = () => {
     if (isLoading === false && isLogined === true) history.push(routes.root)
   }, [isLoading, isLogined])
 
-  const handleLogin = useCallback((values) => {
-    dispatch(rawActions.onLogin(values))
-  }, [dispatch])
+  const handleLogin = useCallback(
+    (values) => {
+      dispatch(rawActions.onLogin(values))
+    },
+    [dispatch]
+  )
 
-  const handleForgotPassword = useCallback((values) => {
-    dispatch(rawActions.onForgotPassword(values))
-  }, [dispatch])
+  const handleForgotPassword = useCallback(
+    (values) => {
+      dispatch(rawActions.onForgotPassword(values))
+    },
+    [dispatch]
+  )
 
   return (
     <LoginWrapper

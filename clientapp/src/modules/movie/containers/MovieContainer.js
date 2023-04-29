@@ -27,11 +27,13 @@ const MovieContainer = () => {
     dispatch(rawActions.selectedMovieRequest(id))
     dispatch(rawActions.movieCommentsRequest(id))
     dispatch(rawActions.movieRatingsRequest(id))
-    user.id && dispatch(rawActions.userRatingRequest({
-      userId: user.id,
-      movieId: id,
-      })
-    )
+    user.id &&
+      dispatch(
+        rawActions.userRatingRequest({
+          userId: user.id,
+          movieId: id,
+        })
+      )
     joinMoviePage(user.userName, id)
     return () => {
       closeSignalRConnection()
@@ -81,37 +83,41 @@ const MovieContainer = () => {
 
   const handleRatingSet = useCallback(() => {
     settedRating === null
-    ? dispatch(rawActions.deleteUserRatingRequest({
-      userId: user.id,
-      movieId: movie.id,
-    }))
-    : dispatch(rawActions.setUserRatingRequest({
-      value: settedRating,
-      userId: user.id,
-      movieId: movie.id,
-    })
-    )
+      ? dispatch(
+          rawActions.deleteUserRatingRequest({
+            userId: user.id,
+            movieId: movie.id,
+          })
+        )
+      : dispatch(
+          rawActions.setUserRatingRequest({
+            value: settedRating,
+            userId: user.id,
+            movieId: movie.id,
+          })
+        )
   }, [dispatch, movie.id, settedRating, user.id])
 
-  const handleCommentSet = useCallback((values) => {
-    const { WrittenCommentText } = values
-    const data = {
-      text: WrittenCommentText,
-      userId: user.id,
-      movieId: movie.id,
-    }
+  const handleCommentSet = useCallback(
+    (values) => {
+      const { WrittenCommentText } = values
+      const data = {
+        text: WrittenCommentText,
+        userId: user.id,
+        movieId: movie.id,
+      }
 
-    dispatch(
-      rawActions.userCommentRequest(data)
-    )
-  }, [dispatch, movie.id, user.id])
+      dispatch(rawActions.userCommentRequest(data))
+    },
+    [dispatch, movie.id, user.id]
+  )
 
   const handleDeleteCommentCancel = useCallback(() => {
     setOpenDeleteDialog(false)
   }, [])
 
   const handleDeleteCommentSubmit = useCallback(() => {
-    dispatch(rawActions.deleteCommentRequest({id: deletedComment}))
+    dispatch(rawActions.deleteCommentRequest({ id: deletedComment }))
     setDeletedComment(null)
     handleDeleteCommentCancel()
   }, [deletedComment, dispatch, handleDeleteCommentCancel])

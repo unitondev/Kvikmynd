@@ -10,7 +10,8 @@ const styles = (theme) => ({
     paddingLeft: 16,
     paddingRight: 16,
     marginTop: 'auto',
-    backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+    backgroundColor:
+      theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
   },
 })
 

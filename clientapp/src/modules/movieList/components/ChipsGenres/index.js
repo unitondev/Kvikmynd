@@ -12,20 +12,18 @@ const ChipsGenres = ({ selectedGenres }) => {
     <Autocomplete
       multiple
       options={Genres}
-      getOptionLabel={option => option.name}
+      getOptionLabel={(option) => option.name}
       disableCloseOnSelect
       renderInput={(props) => <TextField {...props} label='Genres' />}
-      renderOption={((props, option, { selected }) => (
+      renderOption={(props, option, { selected }) => (
         <li {...props}>
-          <Checkbox
-            checked={selected}
-          />
+          <Checkbox checked={selected} />
           {option.name}
         </li>
-      ))}
+      )}
       value={selectedGenres}
-      isOptionEqualToValue={((option, value) => option.name === value.name)}
-      onChange={((event, value) => setFieldValue('genres', value))}
+      isOptionEqualToValue={(option, value) => option.name === value.name}
+      onChange={(event, value) => setFieldValue('genres', value)}
     />
   )
 }

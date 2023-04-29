@@ -3,20 +3,20 @@ import { all, put, takeLatest } from 'redux-saga/effects'
 import * as accountActions from '../actions'
 import * as notificationActions from '../../shared/snackBarNotification/actions'
 
-function * startLoadingUser(action) {
+function* startLoadingUser(action) {
   yield put(accountActions.startLoadingUser())
 }
 
-function * stopLoadingUser(action) {
+function* stopLoadingUser(action) {
   yield put(accountActions.stopLoadingUser())
 }
 
-function * getTokenFailure(action) {
+function* getTokenFailure(action) {
   const message = 'Login failure'
   yield put(notificationActions.enqueueSnackbarError({ message }))
 }
 
-function * userLoadingSaga() {
+function* userLoadingSaga() {
   yield all([
     takeLatest(
       [

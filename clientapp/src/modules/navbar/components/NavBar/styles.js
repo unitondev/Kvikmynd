@@ -1,7 +1,7 @@
 const styles = (theme) => ({
   appbar: {
     backgroundColor: theme.palette.mode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(0,0,0,0.72)',
-    backdropFilter:'saturate(180%) blur(20px)'
+    backdropFilter: 'saturate(180%) blur(20px)',
   },
   avatarBlock: {
     width: 24,
@@ -15,7 +15,8 @@ const styles = (theme) => ({
     marginRight: 15,
     borderRadius: theme.shape.borderRadius,
     '&:hover': {
-      backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.1)'
+      backgroundColor:
+        theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.1)',
     },
   },
   input: {
@@ -26,8 +27,8 @@ const styles = (theme) => ({
     },
   },
   centeredBlock: {
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 })
 
 export default styles

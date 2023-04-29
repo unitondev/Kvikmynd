@@ -6,7 +6,7 @@ const movieListRequests = {
       PageNumber,
       PageSize,
       SearchQuery,
-    }
+    },
   }),
   getMyMoviesRatingsListRequest: (data) => ({
     url: 'api/movie/getMyMoviesRatings',
@@ -23,13 +23,13 @@ const movieListRequests = {
     method: 'delete',
     data,
   }),
-  getBookmarksMoviesRequest: ({ PageNumber, PageSize, }) => ({
+  getBookmarksMoviesRequest: ({ PageNumber, PageSize }) => ({
     url: 'api/movie/getBookmarks',
     method: 'get',
     params: {
       PageNumber,
       PageSize,
-    }
+    },
   }),
   getAllMoviesForBackupRequest: () => ({
     url: 'api/movie/forBackup',

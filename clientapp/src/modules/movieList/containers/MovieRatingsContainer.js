@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListIcon from '@mui/icons-material/FilterList'
 import { IconButton } from '@mui/material'
 
 import MovieList from '../components/MovieList'
@@ -13,7 +13,7 @@ import {
 
 const MovieRatingsContainer = () => {
   const dispatch = useDispatch()
-  const location = useSelector(state => state.router.location)
+  const location = useSelector((state) => state.router.location)
   const movies = useSelector(getFavoritesMoviesList)
   const moviesTotalCount = useSelector(getFavoritesMoviesListTotalCount)
   const isLoading = useSelector(getIsFavoritesMoviesListLoading)
@@ -22,15 +22,19 @@ const MovieRatingsContainer = () => {
   const [order, setOrder] = useState('desc')
 
   useEffect(() => {
-    return () => { dispatch(rawActions.resetMoviesRatingsList()) }
+    return () => {
+      dispatch(rawActions.resetMoviesRatingsList())
+    }
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(rawActions.onGetMyMoviesRatingsList({
-      PageNumber: pageNumber ?? 1,
-      PageSize,
-      Order: order,
-    }))
+    dispatch(
+      rawActions.onGetMyMoviesRatingsList({
+        PageNumber: pageNumber ?? 1,
+        PageSize,
+        Order: order,
+      })
+    )
   }, [dispatch, pageNumber, order])
 
   const changeOrder = useCallback(() => {
@@ -49,7 +53,9 @@ const MovieRatingsContainer = () => {
       title='My ratings'
       action={
         <IconButton onClick={changeOrder}>
-          <FilterListIcon sx={{ transform: `${order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'}` }} />
+          <FilterListIcon
+            sx={{ transform: `${order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'}` }}
+          />
         </IconButton>
       }
     />

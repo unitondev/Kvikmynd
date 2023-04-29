@@ -21,17 +21,15 @@ const RegisterContainer = () => {
     }
   }, [idLoading, isLogined])
 
-  const handleRegister = useCallback(async (values) => {
-    if (!!values.avatar) values.avatar = await toBase64(values.avatar)
-    dispatch(rawActions.onRegister(values))
-  }, [dispatch])
-
-  return (
-    <Register
-      handleRegister={handleRegister}
-      isRegisterSucceeded={isRegisterSucceeded}
-    />
+  const handleRegister = useCallback(
+    async (values) => {
+      if (!!values.avatar) values.avatar = await toBase64(values.avatar)
+      dispatch(rawActions.onRegister(values))
+    },
+    [dispatch]
   )
+
+  return <Register handleRegister={handleRegister} isRegisterSucceeded={isRegisterSucceeded} />
 }
 
 export default RegisterContainer

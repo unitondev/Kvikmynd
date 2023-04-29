@@ -21,9 +21,11 @@ const NavBarContainer = () => {
   const isLogined = useSelector(getIsLoginSucceeded)
   const avatar = useSelector(getUserAvatar)
   const movieSearchList = useSelector(getMovieSearchList)
-  const location = useSelector(state => state.router.location)
+  const location = useSelector((state) => state.router.location)
   const PageSize = 5
-  const hasEditMoviePermission = useSelector(state => hasPermission(state, ApplicationPermissions.EditMovie))
+  const hasEditMoviePermission = useSelector((state) =>
+    hasPermission(state, ApplicationPermissions.EditMovie)
+  )
 
   const onClickLogout = () => {
     dispatch(logoutRequest())
@@ -46,10 +48,12 @@ const NavBarContainer = () => {
 
   const debouncedSearchQuery = useRef(
     _.debounce((searchQuery) => {
-      dispatch(movieListActions.getMovieBySearchRequest({
-        SearchQuery: searchQuery,
-        PageSize,
-      }))
+      dispatch(
+        movieListActions.getMovieBySearchRequest({
+          SearchQuery: searchQuery,
+          PageSize,
+        })
+      )
     }, 1000)
   ).current
 
@@ -63,9 +67,12 @@ const NavBarContainer = () => {
     inputRef.current.blur()
   }
 
-  const generateUrlWithSearchQuery = useCallback((query) => {
-    return addQueryToUrl('query', query, routes.search, location.search, ['page'])
-  }, [location])
+  const generateUrlWithSearchQuery = useCallback(
+    (query) => {
+      return addQueryToUrl('query', query, routes.search, location.search, ['page'])
+    },
+    [location]
+  )
 
   return (
     <Navbar

@@ -9,7 +9,7 @@ import { MoviePage } from '@movie/modules/movie'
 import { NavBar } from '@movie/modules/navbar'
 import { Notifications } from '@movie/modules/shared/snackBarNotification'
 import Footer from '@movie/modules/shared/footers/components/StickyFooter'
-import routes, { archived } from '@movie/routes'
+import routes from '@movie/routes'
 import NotFoundPage from '@movie/shared/components/NotFound'
 import ScrollToTop from '@movie/services/ScrollToTop'
 import ResetPasswordPage from '@movie/modules/account/components/ResetPassword'
@@ -20,21 +20,18 @@ import ArchivedMoviesContainer from '@movie/modules/movieList/containers/Archive
 import { ApplicationPermissions } from '../../Enums'
 
 const hideNavbarOn = []
-const hideFooterOn = [
-  routes.login,
-  routes.register,
-]
+const hideFooterOn = [routes.login, routes.register]
 
 const App = ({ location }) => {
-  const hideNavbar = hideNavbarOn.some(i => location.pathname.startsWith(i))
-  const hideFooter = hideFooterOn.some(i => location.pathname.startsWith(i))
+  const hideNavbar = hideNavbarOn.some((i) => location.pathname.startsWith(i))
+  const hideFooter = hideFooterOn.some((i) => location.pathname.startsWith(i))
 
   return (
     <>
       <ScrollToTop />
       <Footer hideFooter={hideFooter}>
         <Notifications />
-        { !hideNavbar && <NavBar /> }
+        {!hideNavbar && <NavBar />}
         <Container maxWidth='lg' sx={{ marginTop: '64px' }}>
           <Switch>
             <Route exact path={routes.root}>
@@ -64,8 +61,12 @@ const App = ({ location }) => {
             </Route>
             <PrivateRoute path={routes.myRatings} component={MovieRatingsContainer} />
             <PrivateRoute path={routes.bookmarks} component={BookmarksMoviesContainer} />
-            <PrivateRoute path={routes.archived} component={ArchivedMoviesContainer} permission={ApplicationPermissions.EditMovie} />
-            <Route path="*">
+            <PrivateRoute
+              path={routes.archived}
+              component={ArchivedMoviesContainer}
+              permission={ApplicationPermissions.EditMovie}
+            />
+            <Route path='*'>
               <NotFoundPage />
             </Route>
           </Switch>

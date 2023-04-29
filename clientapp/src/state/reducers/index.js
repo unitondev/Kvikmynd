@@ -6,10 +6,11 @@ import movieList from '@movie/modules/movieList/reducers'
 import movie from '@movie/modules/movie/reducers'
 import notifications from '@movie/shared/snackBarNotification/reducers'
 
-export const createRootReducer = (history) => combineReducers({
-  router: connectRouter(history),
-  account,
-  notifications,
-  movieList,
-  currentMovie: movie,
-})
+export const createRootReducer = (history) =>
+  combineReducers({
+    router: connectRouter(history),
+    account,
+    notifications,
+    movieList,
+    currentMovie: movie,
+  })

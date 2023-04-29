@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Button, Card,
+  Button,
+  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -55,87 +56,62 @@ const MovieListItem = ({
           title={`${movie.title} ${movie.year ? `(${movie.year})` : ''}`}
           action={
             <>
-              {
-                !movie.isDeleted && userId && (
-                  <IconButton onClick={() => handleChangeBookmark(movie)}>
-                    {movie.isBookmark ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                  </IconButton>
-                )
-              }
-              {
-                isShowEditMovie && (
-                  <IconButton onClick={() => handleOpenAddEditMovieDialog(movie)}>
-                    <EditIcon />
-                  </IconButton>
-                )
-              }
-              {
-                isShowDeleteMovie && (
-                  <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
-                    { movie.isDeleted ? <DeleteForeverIcon /> : <DeleteIcon /> }
-                  </IconButton>
-                )
-              }
-              {
-                movie.isDeleted && (
-                  <IconButton onClick={() => handleClickRestoreMovie(movie.id)}>
-                    <RestoreFromTrashIcon />
-                  </IconButton>
-                )
-              }
+              {!movie.isDeleted && userId && (
+                <IconButton onClick={() => handleChangeBookmark(movie)}>
+                  {movie.isBookmark ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                </IconButton>
+              )}
+              {isShowEditMovie && (
+                <IconButton onClick={() => handleOpenAddEditMovieDialog(movie)}>
+                  <EditIcon />
+                </IconButton>
+              )}
+              {isShowDeleteMovie && (
+                <IconButton onClick={() => handleClickDeleteMovie(movie.id)}>
+                  {movie.isDeleted ? <DeleteForeverIcon /> : <DeleteIcon />}
+                </IconButton>
+              )}
+              {movie.isDeleted && (
+                <IconButton onClick={() => handleClickRestoreMovie(movie.id)}>
+                  <RestoreFromTrashIcon />
+                </IconButton>
+              )}
             </>
           }
         />
         <CardContent>
           <Grid container direction='row' spacing={2}>
             <Grid item xs={3}>
-              <CardMedia
-                component='img'
-                height='400'
-                image={movie.coverUrl}
-                alt={movie.title}
-              />
+              <CardMedia component='img' height='400' image={movie.coverUrl} alt={movie.title} />
             </Grid>
             <Grid item xs={9}>
               <Grid container direction='column'>
-                {
-                  movie.ratings && (
-                    <Grid item>
-                      <Rating
-                        value={calculateMovieRating(movie.ratings) ?? 0}
-                        readOnly
-                        max={10}
-                        precision={0.5}
-                      />
-                    </Grid>
-                  )
-                }
-                {
-                  movie.rating && (
-                    <Grid item>
-                      <Rating
-                        value={movie.rating.value}
-                        readOnly
-                        max={10}
-                        precision={0.5}
-                      />
-                      <Typography sx={{ display: 'inline', verticalAlign: 'super' }}> - your rating</Typography>
-                    </Grid>
-                  )
-                }
-                {
-                  movie.genres?.length > 0 && (
-                    <Grid item>
-                      <Typography>
-                        Genres: {movie.genres.map((g) => ` ${g.name}, `)}
-                      </Typography>
-                    </Grid>
-                  )
-                }
+                {movie.ratings && (
+                  <Grid item>
+                    <Rating
+                      value={calculateMovieRating(movie.ratings) ?? 0}
+                      readOnly
+                      max={10}
+                      precision={0.5}
+                    />
+                  </Grid>
+                )}
+                {movie.rating && (
+                  <Grid item>
+                    <Rating value={movie.rating.value} readOnly max={10} precision={0.5} />
+                    <Typography sx={{ display: 'inline', verticalAlign: 'super' }}>
+                      {' '}
+                      - your rating
+                    </Typography>
+                  </Grid>
+                )}
+                {movie.genres?.length > 0 && (
+                  <Grid item>
+                    <Typography>Genres: {movie.genres.map((g) => ` ${g.name}, `)}</Typography>
+                  </Grid>
+                )}
                 <Grid item>
-                  <Typography>
-                    {movie.description}
-                  </Typography>
+                  <Typography>{movie.description}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -155,10 +131,13 @@ MovieListItem.propTypes = {
   movie: PropTypes.object.isRequired,
   isShowEditMovie: PropTypes.bool.isRequired,
   isShowDeleteMovie: PropTypes.bool.isRequired,
-  handleOpenAddEditMovieDialog: conditionalPropType((props, propName) =>
-    (props['isShowEditMovie'] === true && typeof(props[propName]) !== 'function')),
-  handleClickDeleteMovie: conditionalPropType((props, propName) =>
-    (props['isShowDeleteMovie'] === true && typeof(props[propName]) !== 'function')),
+  handleOpenAddEditMovieDialog: conditionalPropType(
+    (props, propName) => props['isShowEditMovie'] === true && typeof props[propName] !== 'function'
+  ),
+  handleClickDeleteMovie: conditionalPropType(
+    (props, propName) =>
+      props['isShowDeleteMovie'] === true && typeof props[propName] !== 'function'
+  ),
   handleClickRestoreMovie: PropTypes.func,
 }
 
