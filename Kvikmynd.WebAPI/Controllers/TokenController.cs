@@ -40,7 +40,7 @@ namespace Kvikmynd.Controllers
 
             var jwtResponseModel = _tokenService.GetJwtResponseModel(claims);
 
-            var refreshTokenResult = await _accountService.GenerateAndSetRefreshToken(result.Result.Id);
+            var refreshTokenResult = await _accountService.GenerateAndSetRefreshTokenAsync(result.Result.Id);
             if (!refreshTokenResult.IsSucceeded) return CustomBadRequest(refreshTokenResult.Error);
 
             var setRefreshTokenResult = SetRefreshTokenCookie(refreshTokenResult.Result.Token);

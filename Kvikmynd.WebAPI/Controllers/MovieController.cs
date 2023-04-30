@@ -234,7 +234,7 @@ namespace Kvikmynd.Controllers
         }
 
         [HasPermission(ApplicationPermission.EditMovie)]
-        [HttpDelete("permanently/{id}")]
+        [HttpDelete("{id}/permanently")]
         public async Task<IActionResult> DeleteMoviePermanentlyById(int id)
         {
             var movie = await _movieService.GetByKeyAsync(id);
@@ -254,8 +254,8 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [HttpPost("getMyMoviesRatings")]
-        public async Task<IActionResult> GetMoviesRatings([FromBody] GetMoviesRatingsModel model)
+        [HttpGet("myRatings")]
+        public async Task<IActionResult> GetMyRatings([FromQuery] GetMoviesRatingsModel model)
         {
             var result = await _movieService.GetMoviesWithRatingByUserIdAsync(model);
 
@@ -268,7 +268,7 @@ namespace Kvikmynd.Controllers
             });
         }
 
-        [HttpPost("addBookmark")]
+        [HttpPost("bookmark")]
         public async Task<IActionResult> AddBookmark([FromBody] BookmarkMovieModel model)
         {
             var bookmarkMovie = new BookmarkMovie
@@ -286,7 +286,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
         
-        [HttpDelete("deleteBookmark")]
+        [HttpDelete("bookmark")]
         public async Task<IActionResult> DeleteBookmark([FromBody] BookmarkMovieModel model)
         {
             var bookmarkMovie = await _bookmarkMovieService.FindAsync(i => i.MovieId == model.MovieId && i.UserId == model.UserId);
@@ -301,7 +301,7 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpGet("getBookmarks")]
+        [HttpGet("bookmark")]
         public async Task<IActionResult> GetBookmarks([FromQuery] PagintaionModel model)
         {
             var currentUserId = await GetUserIdAsync();
@@ -350,7 +350,7 @@ namespace Kvikmynd.Controllers
         }
 
         [HasPermission(ApplicationPermission.EditMovie)]
-        [HttpPut("restore/{id}")]
+        [HttpPut("{id}/restore")]
         public async Task<IActionResult> RestoreById(int id)
         {
             var movie = await _movieService.GetByKeyAsync(id);
@@ -371,7 +371,7 @@ namespace Kvikmynd.Controllers
         }
 
         [HasPermission(ApplicationPermission.EditMovie)]
-        [HttpGet("forBackup")]
+        [HttpGet("backup")]
         public async Task<IActionResult> GetAllForBackup()
         {
             var movies = await _movieService.GetAll().ToListAsync();

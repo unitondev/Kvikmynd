@@ -58,7 +58,7 @@ namespace Kvikmynd.Controllers
         }
         
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
             if (model.Password.Trim().Length != model.Password.Length)
@@ -96,7 +96,7 @@ namespace Kvikmynd.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("confirmEmail")]
+        [HttpPost("email/confirm")]
         public async Task<IActionResult>ConfirmEmail([FromBody] ConfirmEmailModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -119,16 +119,11 @@ namespace Kvikmynd.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("logout")]
+        [HttpPost("logout")]
         public async Task<IActionResult> LogOut()
         {
             var userId = await GetUserIdAsync();
-
-            var result = await _accountService.LogOut(userId.ToString());
-            if (!result.IsSucceeded)
-            {
-                return CustomBadRequest(result.Error);
-            }
+            await _accountService.LogOutAsync(userId.ToString());
 
             return Ok();
         }
@@ -161,7 +156,7 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpGet("revokeToken")]
+        [HttpPost("token/revoke")]
         public async Task<IActionResult> RevokeTokenAsync()
         {
             var revokedToken = Request.Cookies["refresh_token"];
@@ -174,7 +169,7 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpGet("me")]
+        [HttpGet]
         public async Task<IActionResult> GetMe()
         {
             var user = await GetUserAsync();
@@ -183,7 +178,7 @@ namespace Kvikmynd.Controllers
             return Ok(userViewModel);
         }
 
-        [HttpPost("changePassword")]
+        [HttpPut("password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPasswordModel model)
         {
             if (model.NewPassword.Trim().Length != model.NewPassword.Length)
@@ -216,7 +211,7 @@ namespace Kvikmynd.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("forgotPassword")]
+        [HttpPut("password/forgot")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -246,7 +241,7 @@ namespace Kvikmynd.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("resetPassword")]
+        [HttpPut("password/reset")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);

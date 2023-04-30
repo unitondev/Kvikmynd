@@ -119,7 +119,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(createdUser);
         }
         
-        public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId)
+        public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshTokenAsync(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null) return new ServiceResult<RefreshToken>(ErrorCode.UserNotFound);
@@ -133,7 +133,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<RefreshToken>(refreshToken);
         }
 
-        public async Task<ServiceResult> LogOut(string userId)
+        public async Task<ServiceResult> LogOutAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -143,7 +143,10 @@ namespace Kvikmynd.Application.Services
             
             foreach (var refreshToken in user.RefreshTokens)
             {
-                if (refreshToken.IsActive) await RevokeTokenAsync(user, refreshToken);
+                if (refreshToken.IsActive)
+                {
+                    await RevokeTokenAsync(user, refreshToken);
+                }
             }
 
             return new ServiceResult();
@@ -254,6 +257,7 @@ namespace Kvikmynd.Application.Services
 
         public async Task<int> GetCurrentUserIdAsync()
         {
+            //TODO
             var result = await GetCurrentUserAsync();
             return result.Result?.Id ?? -1;
         }
