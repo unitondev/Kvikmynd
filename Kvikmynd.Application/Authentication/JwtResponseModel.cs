@@ -2,7 +2,7 @@
 
 namespace Kvikmynd.Application.Authentication
 {
-    public class JwtToken
+    public class JwtResponseModel
     {
         [Required]
         public string AccessToken { get; set; }

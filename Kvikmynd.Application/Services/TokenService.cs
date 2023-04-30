@@ -22,7 +22,7 @@ namespace Kvikmynd.Application.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public JwtToken GetJwtToken(IEnumerable<Claim> claims)
+        public JwtResponseModel GetJwtResponseModel(IEnumerable<Claim> claims)
         {
             var tokenLifetime = DateTime.Now.AddHours(1);
                 
@@ -37,14 +37,14 @@ namespace Kvikmynd.Application.Services
                     SecurityAlgorithms.HmacSha256)
             );
 
-            var jwtToken = new JwtToken
+            var jwtResponseModel = new JwtResponseModel
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                 TokenType = "Bearer",
                 ExpiresIn = (long) tokenLifetime.TimeOfDay.TotalSeconds
             };
 
-            return jwtToken;
+            return jwtResponseModel;
         }
 
         public RefreshToken GenerateRefreshToken()

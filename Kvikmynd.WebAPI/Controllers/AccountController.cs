@@ -113,9 +113,9 @@ namespace Kvikmynd.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
             };
             
-            var jwtToken = _tokenService.GetJwtToken(claims);
+            var jwtResponseModel = _tokenService.GetJwtResponseModel(claims);
 
-            return Ok(jwtToken);
+            return Ok(jwtResponseModel);
         }
 
         [AllowAnonymous]

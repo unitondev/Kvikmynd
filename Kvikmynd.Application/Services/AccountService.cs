@@ -199,7 +199,7 @@ namespace Kvikmynd.Application.Services
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(refreshedUser.Id))
             };
 
-            var newJwtToken = _tokenService.GetJwtToken(claims);
+            var newJwtResponseModel = _tokenService.GetJwtResponseModel(claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
             
             refreshedUser.RefreshTokens.Add(newRefreshToken);
@@ -209,7 +209,7 @@ namespace Kvikmynd.Application.Services
             var result = new RefreshAndJwtTokenModel
             {
                 RefreshToken = newRefreshToken,
-                JwtToken = newJwtToken
+                JwtResponseModel = newJwtResponseModel
             };
 
             return new ServiceResult<RefreshAndJwtTokenModel>(result);

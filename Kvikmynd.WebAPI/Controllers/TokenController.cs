@@ -38,7 +38,7 @@ namespace Kvikmynd.Controllers
             
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(result.Result.Id)));
 
-            var jwtToken = _tokenService.GetJwtToken(claims);
+            var jwtResponseModel = _tokenService.GetJwtResponseModel(claims);
 
             var refreshTokenResult = await _accountService.GenerateAndSetRefreshToken(result.Result.Id);
             if (!refreshTokenResult.IsSucceeded) return CustomBadRequest(refreshTokenResult.Error);
@@ -49,7 +49,7 @@ namespace Kvikmynd.Controllers
                 return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
-            return Ok(jwtToken);
+            return Ok(jwtResponseModel);
         }
         
         [HttpGet("api/refreshToken")]
@@ -70,7 +70,7 @@ namespace Kvikmynd.Controllers
                 return CustomBadRequest(ErrorCode.ErrorWhileSettingRefreshToken);
             }
             
-            return Ok(result.Result.JwtToken);
+            return Ok(result.Result.JwtResponseModel);
         }
         
         private bool SetRefreshTokenCookie(string refreshToken)
