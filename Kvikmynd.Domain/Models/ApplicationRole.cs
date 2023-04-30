@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kvikmynd.Domain.Models
 {
@@ -6,6 +7,8 @@ namespace Kvikmynd.Domain.Models
     {
         public ApplicationRole() : base() { }
         public ApplicationRole(string roleName) : base(roleName) { }
+        
+        public virtual ICollection<ApplicationPermissionEntity> Permissions { get; set; }
     }
     
 }

@@ -40,7 +40,7 @@ namespace Kvikmynd.Application.Services
                 var result = await _userManager.CreateAsync(admin, defaultPassword);
                 if (!result.Succeeded) return new ServiceResult(ErrorCode.UserNotCreated);
 
-                var roleResult = await _userManager.AddToRoleAsync(admin, Roles.SystemAdmin.ToString());
+                var roleResult = await _userManager.AddToRoleAsync(admin, Role.SystemAdmin.ToString());
                 if (!roleResult.Succeeded) return new ServiceResult(ErrorCode.UserNotCreated);
             }
 

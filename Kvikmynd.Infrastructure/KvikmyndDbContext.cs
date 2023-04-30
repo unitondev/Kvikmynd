@@ -659,5 +659,6 @@ namespace Kvikmynd.Infrastructure
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<BookmarkMovie> BookmarkMovies { get; set; }
+        public DbSet<ApplicationPermissionEntity> Permissions { get; set; }
     }
 }

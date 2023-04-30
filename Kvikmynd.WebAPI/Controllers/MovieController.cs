@@ -9,8 +9,9 @@ using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
 using Kvikmynd.Application.Services;
 using Kvikmynd.Application.ViewModels;
-using Kvikmynd.Authorization;
+using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
+using Kvikmynd.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -93,7 +94,7 @@ namespace Kvikmynd.Controllers
             return Ok(movieWithGenres);
         }
 
-        [Authorize(Policy = PolicyTypes.AddMovie)]
+        [HasPermission(ApplicationPermission.AddMovie)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
@@ -134,7 +135,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
@@ -211,7 +212,7 @@ namespace Kvikmynd.Controllers
             return Ok(movieRatings);
         }
         
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
@@ -232,7 +233,7 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpDelete("permanently/{id}")]
         public async Task<IActionResult> DeleteMoviePermanentlyById(int id)
         {
@@ -348,7 +349,7 @@ namespace Kvikmynd.Controllers
             return Ok(final);
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpPut("restore/{id}")]
         public async Task<IActionResult> RestoreById(int id)
         {
@@ -369,7 +370,7 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpGet("forBackup")]
         public async Task<IActionResult> GetAllForBackup()
         {
@@ -377,7 +378,7 @@ namespace Kvikmynd.Controllers
             return Ok(movies);
         }
         
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpPost("restore")]
         public async Task<IActionResult> Restore([FromBody] AllMoviesJsonModel model)
         {

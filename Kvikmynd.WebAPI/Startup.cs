@@ -1,12 +1,9 @@
 using System;
-using System.Security.Claims;
 using System.Text;
 using Kvikmynd.Application.Common.Models;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Services;
-using Kvikmynd.Authorization;
-using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
 using Kvikmynd.Infrastructure;
@@ -92,27 +89,7 @@ namespace Kvikmynd
                     };
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(PolicyTypes.All, builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString());
-                });
-                options.AddPolicy(PolicyTypes.AddMovie, builder =>
-                {
-                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
-                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
-                    );
-                    // leaving here for possible future enhancement
-                    // builder.RequireClaim(CustomClaimTypes.Permission, ApplicationPermissions.AddMovie.ToString());
-                });
-                options.AddPolicy(PolicyTypes.EditMovie, builder =>
-                {
-                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
-                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
-                    );
-                });
-            });
+            services.AddAuthorization();
             
             #endregion
             
