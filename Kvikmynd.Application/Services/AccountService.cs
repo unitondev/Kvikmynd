@@ -255,11 +255,18 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(user);
         }
 
-        public async Task<int> GetCurrentUserIdAsync()
+        public int GetCurrentUserId()
         {
-            //TODO
-            var result = await GetCurrentUserAsync();
-            return result.Result?.Id ?? -1;
+            var userIdString = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c => 
+                c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+
+            var parsed = int.TryParse(userIdString, out int userId);
+            if (!parsed)
+            {
+                return -1;
+            }
+            
+            return userId;
         }
 
         public void Dispose()

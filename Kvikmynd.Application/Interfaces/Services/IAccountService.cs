@@ -19,6 +19,6 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel model);
         Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshTokenAsync(int userId);
         Task<ServiceResult<User>> GetCurrentUserAsync();
-        Task<int> GetCurrentUserIdAsync();
+        int GetCurrentUserId();
     }
 }

@@ -50,7 +50,7 @@ namespace Kvikmynd.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
         {
-            var userId = await GetUserIdAsync();
+            var userId = GetUserId();
             if (userId > 0) model.UserId = userId;
             var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
@@ -70,7 +70,7 @@ namespace Kvikmynd.Controllers
         [HttpGet("archived")]
         public async Task<IActionResult> GetAllArchived([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
         {
-            var userId = await GetUserIdAsync();
+            var userId = GetUserId();
             if (userId > 0) model.UserId = userId;
             model.AreDeletedMovies = true;
             var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
@@ -304,7 +304,7 @@ namespace Kvikmynd.Controllers
         [HttpGet("bookmark")]
         public async Task<IActionResult> GetBookmarks([FromQuery] PagintaionModel model)
         {
-            var currentUserId = await GetUserIdAsync();
+            var currentUserId = GetUserId();
             var query = _bookmarkMovieService
                 .GetAll()
                 .Include(b => b.Movie)

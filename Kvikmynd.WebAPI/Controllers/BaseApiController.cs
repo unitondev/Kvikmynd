@@ -35,9 +35,9 @@ namespace Kvikmynd.Controllers
         }
 
         [NonAction]
-        protected async Task<int> GetUserIdAsync()
+        protected int GetUserId()
         {
-            _userId ??= await _accountService.GetCurrentUserIdAsync();
+            _userId ??= _accountService.GetCurrentUserId();
             return _userId.Value;
         }
         

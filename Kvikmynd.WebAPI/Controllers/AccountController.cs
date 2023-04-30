@@ -122,7 +122,7 @@ namespace Kvikmynd.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> LogOut()
         {
-            var userId = await GetUserIdAsync();
+            var userId = GetUserId();
             await _accountService.LogOutAsync(userId.ToString());
 
             return Ok();
