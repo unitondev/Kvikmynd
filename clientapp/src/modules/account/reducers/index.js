@@ -8,6 +8,7 @@ import isForgotPasswordSucceeded from './isForgotPasswordSucceeded'
 import isResetPasswordSucceeded from './isResetPasswordSucceeded'
 import isRegisterSucceeded from './isRegisterSucceeded'
 import isConfirmEmailSucceeded from './isConfirmEmailSucceeded'
+import subscriptions from './subscriptions'
 
 export default combineReducers({
   me,
@@ -18,4 +19,5 @@ export default combineReducers({
   isResetPasswordSucceeded,
   isRegisterSucceeded,
   isConfirmEmailSucceeded,
+  subscriptions,
 })

@@ -38,5 +38,6 @@ namespace Kvikmynd.Infrastructure
         public DbSet<Comment> Comments { get; set; }
         public DbSet<BookmarkMovie> BookmarkMovies { get; set; }
         public DbSet<ApplicationPermissionEntity> Permissions { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
     }
 }

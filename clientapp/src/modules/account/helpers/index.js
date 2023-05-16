@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Avatar } from '@mui/material'
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import PasswordIcon from '@mui/icons-material/Password'
+import { ManageAccounts, Password, Subscriptions } from '@mui/icons-material'
 
 export const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -30,6 +29,7 @@ export const AvatarPreview = ({ file, ...props }) => {
 }
 
 export const getUserSettingsTabs = () => [
-  { id: 0, label: 'Account', icon: <ManageAccountsIcon /> },
-  { id: 1, label: 'Password', icon: <PasswordIcon /> },
+  { id: 0, label: 'Account', icon: <ManageAccounts /> },
+  { id: 1, label: 'Subscriptions', icon: <Subscriptions /> },
+  { id: 2, label: 'Password', icon: <Password /> },
 ]

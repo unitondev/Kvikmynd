@@ -4,6 +4,18 @@ export const Roles = {
   User: 3,
 }
 
+export const SubscriptionType = {
+  Premium: 1,
+}
+
+export const SubscriptionTypeDisplayName = {
+  [SubscriptionType.Premium]: 'Premium',
+}
+
+export const SubscriptionTypeDescription = {
+  [SubscriptionType.Premium]: 'Cool subscription that give you absolutely nothing! Buy it only for $ 9.99'
+}
+
 export const RolesString = {
   SystemAdmin: 'SystemAdmin',
   Admin: 'Admin',

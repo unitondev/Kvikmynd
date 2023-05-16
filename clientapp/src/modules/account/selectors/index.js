@@ -12,3 +12,5 @@ export const getUserAvatar = (state) => state.account.me?.avatarUrl
 export const getFullName = (state) => state.account.me?.fullName
 export const getJwt = (state) => state.account.token
 export const getUserId = (state) => state.account.me.id
+
+export const getMySubscriptionsSelector = (state) => state.account.subscriptions.list

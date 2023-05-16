@@ -18,6 +18,7 @@ import { getUserSettingsTabs } from '../../helpers'
 import AccountInfo from '../AccountInfo'
 import ChangePassword from '../ChangePassword'
 import ConfirmationDialog from '@movie/shared/dialogs/components/ConfirmationDialog'
+import Subscriptions from '@movie/modules/account/components/Subscriptions'
 
 const UserSettings = ({
   classes,
@@ -75,6 +76,13 @@ const UserSettings = ({
             </Fade>
           )}
           {selectedTab === 1 && (
+            <Fade in>
+              <Grid item xs={9}>
+                <Subscriptions />
+              </Grid>
+            </Fade>
+          )}
+          {selectedTab === 2 && (
             <Fade in>
               <Grid item xs={9}>
                 <ChangePassword handleChangePassword={handleChangePassword} />

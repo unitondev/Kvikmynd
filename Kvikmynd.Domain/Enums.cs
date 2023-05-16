@@ -13,4 +13,9 @@
         AddMovie,
         EditMovie,
     }
+
+    public enum SubscriptionType
+    {
+        Premium = 1,
+    }
 }
