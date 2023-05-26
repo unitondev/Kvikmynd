@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect'
+
 export const getIsUserLoading = (state) => state.account.isLoading
 
 export const getIsLoginSucceeded = (state) => state.account.isLoginSucceeded
@@ -14,3 +16,13 @@ export const getJwt = (state) => state.account.token
 export const getUserId = (state) => state.account.me.id
 
 export const getMySubscriptionsSelector = (state) => state.account.subscriptions.list
+
+export const hasActiveSubscriptionsByType = createSelector(
+  [getMySubscriptionsSelector, (_, subscriptionType) => subscriptionType],
+  (mySubscriptions, subscriptionType) => {
+    const activeSubscriptions = mySubscriptions.filter(
+      (s) => s.active === true && s.type === subscriptionType
+    )
+    return activeSubscriptions.length !== 0
+  }
+)

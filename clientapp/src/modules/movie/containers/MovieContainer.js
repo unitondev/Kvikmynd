@@ -5,9 +5,10 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 
 import Movie from '../components/Movie'
 import * as rawActions from '../actions'
-import { getUser, getUserAvatar } from '../../account/selectors'
+import { getUser, getUserAvatar, hasActiveSubscriptionsByType } from '../../account/selectors'
 import { getComments, getMovie, getMovieGenres, getRatings, getUserRating } from '../selectors'
 import { calculateMovieRating } from '../helpers'
+import { SubscriptionType } from '../../../Enums'
 
 const MovieContainer = () => {
   const dispatch = useDispatch()
@@ -20,6 +21,9 @@ const MovieContainer = () => {
   const userRating = useSelector(getUserRating)
   const user = useSelector(getUser)
   const avatar = useSelector(getUserAvatar)
+  const hasActiveSubscription = useSelector((state) =>
+    hasActiveSubscriptionsByType(state, SubscriptionType.Premium)
+  )
   // TODO signalr temporarily disabled
   // const updateMovieNeed = useSelector(getNeedToUpdateMovie)
 
@@ -205,6 +209,7 @@ const MovieContainer = () => {
       ratingHover={ratingHover}
       setRatingHover={setRatingHover}
       dialogProps={dialogProps}
+      hasActiveSubscription={hasActiveSubscription}
     />
   )
 }
