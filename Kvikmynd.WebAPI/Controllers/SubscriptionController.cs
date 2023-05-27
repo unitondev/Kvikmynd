@@ -18,12 +18,12 @@ namespace Kvikmynd.Controllers;
 [Route("api/[controller]")]
 public class SubscriptionController : BaseApiController
 {
-    private readonly IService<Subscription> _subscriptionService;
+    private readonly ISubscriptionService _subscriptionService;
     private readonly IMapper _mapper;
 
     public SubscriptionController(
         IAccountService accountService,
-        IService<Subscription> subscriptionService,
+        ISubscriptionService subscriptionService,
         IMapper mapper
         ) : base(accountService)
     {
@@ -35,10 +35,24 @@ public class SubscriptionController : BaseApiController
     public async Task<IActionResult> GetByUser()
     {
         var userId = GetUserId();
-        var subscriptions = await _subscriptionService.GetAll().Where(s => s.UserId == userId).ToListAsync();
+        var subscriptions = await _subscriptionService.GetAll().Where(s => s.UserId == userId)
+            .OrderByDescending(s => s.To).ToListAsync();
 
         var returnModels = _mapper.Map<List<Subscription>, List<SubscriptionResponseModel>>(subscriptions);
         return Ok(returnModels);
+    }
+    
+    [HttpGet("user/specialOffer")]
+    public async Task<IActionResult> GetSpecialOfferByUser()
+    {
+        var userId = GetUserId();
+        var specialOrderResult = await _subscriptionService.GetSpecialOrderByUserIdAsync(userId);
+        if (!specialOrderResult.IsSucceeded)
+        {
+            return CustomBadRequest(specialOrderResult.Error);
+        }
+
+        return Ok(specialOrderResult);
     }
     
     [HttpGet("{id}")]

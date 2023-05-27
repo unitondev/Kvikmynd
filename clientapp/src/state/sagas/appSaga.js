@@ -1,10 +1,10 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 import _ from 'lodash'
 
-import { onAppMounted as onAppMountedAction } from '../actions'
 import { getUser } from '@movie/modules/account/selectors'
 import * as accountActions from '@movie/modules/account/actions'
 import { getMySubscriptions } from '@movie/modules/account/actions'
+import { onAppMounted as onAppMountedAction } from '../actions'
 
 function* onAppMounted() {
   const user = yield select(getUser)

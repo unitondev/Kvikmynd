@@ -15,6 +15,7 @@ namespace Kvikmynd.Infrastructure.Repositories
         private IRepository<MovieRating> _ratingRepository;
         private IRepository<Comment> _commentRepository;
         private IRepository<ApplicationPermissionEntity> _permissionRepository;
+        private IRepository<Subscription> _subscriptionRepository;
 
         public UnitOfWork(DbContext dbContext)
         {
@@ -30,6 +31,9 @@ namespace Kvikmynd.Infrastructure.Repositories
             _commentRepository ??= new GenericRepository<Comment>(_dbContext);
         public IRepository<ApplicationPermissionEntity> PermissionRepository => _permissionRepository ??=
             new GenericRepository<ApplicationPermissionEntity>(_dbContext);
+
+        public IRepository<Subscription> SubscriptionRepository =>
+            _subscriptionRepository ??= new GenericRepository<Subscription>(_dbContext);
 
         public async Task<int> CommitAsync()
         {

@@ -21,6 +21,10 @@ const subscriptionRequests = {
     url: `api/subscription/${id}`,
     method: 'delete',
   }),
+  getMySpecialOrdersRequest: () => ({
+    url: 'api/subscription/user/specialOffer',
+    method: 'get',
+  }),
 }
 
 export default subscriptionRequests

@@ -13,7 +13,7 @@ export const SubscriptionTypeDisplayName = {
 }
 
 export const SubscriptionTypeDescription = {
-  [SubscriptionType.Premium]: 'Cool subscription that give you absolutely nothing! Buy it only for $ 9.99'
+  [SubscriptionType.Premium]: 'Cool subscription that give you absolutely nothing!'
 }
 
 export const RolesString = {

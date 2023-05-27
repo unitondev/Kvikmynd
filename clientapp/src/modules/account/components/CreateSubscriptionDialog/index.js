@@ -20,6 +20,7 @@ import useStyles from './styles'
 const initial = {
   Type: '',
   CreditCardNumber: '',
+  Price: 9.99,
 }
 
 const subscriptionSchema = Yup.object().shape({
@@ -29,24 +30,33 @@ const subscriptionSchema = Yup.object().shape({
     .required('Required'),
 })
 
-const CreateSubscriptionDialog = ({ open, onClose, onSubmit }) => {
+const CreateSubscriptionDialog = ({
+  open,
+  onClose,
+  onSubmit,
+  specialOrderSubscriptionType,
+  specialOrderSubscriptionPrice,
+}) => {
   const classes = useStyles()
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
       <Formik
-        initialValues={initial}
+        initialValues={{
+          ...initial,
+          ...(specialOrderSubscriptionType ? { Type: specialOrderSubscriptionType } : {}),
+          ...(specialOrderSubscriptionPrice ? { Price: specialOrderSubscriptionPrice } : {}),
+        }}
         onSubmit={(data) => {
           onSubmit({
             Paid: true,
             From: moment.utc(),
-            Price: 9.99,
             To: moment.utc().add(30, 'd').endOf('day'),
             ...data,
           })
         }}
         validationSchema={subscriptionSchema}
       >
-        {({ dirty, isValid, values }) => (
+        {({ dirty, isValid, values, initialValues }) => (
           <Form autoComplete='off'>
             <DialogTitle>Subscription</DialogTitle>
             <DialogContent>
@@ -59,6 +69,7 @@ const CreateSubscriptionDialog = ({ open, onClose, onSubmit }) => {
                     required
                     fullWidth
                     component={Select}
+                    disabled={Boolean(specialOrderSubscriptionType)}
                     formControl={{
                       className: classes.select,
                     }}
@@ -72,7 +83,10 @@ const CreateSubscriptionDialog = ({ open, onClose, onSubmit }) => {
                 </Grid>
                 {values.Type && (
                   <Grid item>
-                    <Typography>{SubscriptionTypeDescription[values.Type]}</Typography>
+                    <Typography>
+                      {SubscriptionTypeDescription[values.Type]}
+                      {` Buy it only for $${initialValues.Price}`}
+                    </Typography>
                   </Grid>
                 )}
                 {values.Type && (
@@ -100,10 +114,17 @@ const CreateSubscriptionDialog = ({ open, onClose, onSubmit }) => {
   )
 }
 
+CreateSubscriptionDialog.defaultProps = {
+  specialOrderSubscriptionType: 0,
+  specialOrderSubscriptionPrice: 0,
+}
+
 CreateSubscriptionDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  specialOrderSubscriptionType: PropTypes.number,
+  specialOrderSubscriptionPrice: PropTypes.number,
 }
 
 export default CreateSubscriptionDialog

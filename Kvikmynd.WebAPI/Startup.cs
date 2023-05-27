@@ -125,6 +125,7 @@ namespace Kvikmynd
             services.AddSingleton<ITokenService, TokenService>();
             services.AddScoped(typeof(SeedService));
             services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
 
             #endregion
 
