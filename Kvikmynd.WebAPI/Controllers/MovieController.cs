@@ -7,6 +7,7 @@ using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Application.Models.Request;
 using Kvikmynd.Application.Services;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain;
@@ -210,6 +211,19 @@ namespace Kvikmynd.Controllers
                 .FirstOrDefaultAsync();
 
             return Ok(movieRatings);
+        }
+
+        [HttpGet("{id}/similar")]
+        public async Task<IActionResult> GetSimilarMovies([FromQuery] GetSimilarMoviesRequestModel model)
+        {
+            if (!await _movieService.ExistsAsync(model.MovieId))
+            {
+                return CustomNotFound(ErrorCode.MovieNotFound);
+            }
+            
+            var userId = GetUserId();
+            var returnModels = await _movieService.GetSimilarMoviesAsync(model, userId);
+            return Ok(returnModels);
         }
         
         [HasPermission(ApplicationPermission.EditMovie)]

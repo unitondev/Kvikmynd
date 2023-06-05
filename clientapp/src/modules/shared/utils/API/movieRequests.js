@@ -1,3 +1,5 @@
+import qs from 'qs'
+
 const movieRequests = {
   selectedMovieRequest: (data) => ({
     url: `api/movie/${data}/withGenres`,
@@ -105,6 +107,16 @@ const movieRequests = {
   deleteCommentRequest: ({ id }) => ({
     url: `api/comment/${id}`,
     method: 'delete',
+  }),
+  getSimilarMoviesRequest: (model) => ({
+    url: `api/movie/${model.movieId}/similar`,
+    method: 'get',
+    params: {
+      MovieId: model.movieId,
+      Title: model.title,
+      GenreIds: model.genreIds,
+    },
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
   }),
 }
 

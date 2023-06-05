@@ -20,6 +20,7 @@ import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
 import routes from '@movie/routes'
 import CommentsList from '../CommentList'
 import styles from './styles'
+import SimilarMovies from '@movie/modules/movie/components/SimilarMovies'
 
 const Movie = ({
   classes,
@@ -40,6 +41,7 @@ const Movie = ({
   setRatingHover,
   dialogProps,
   hasActiveSubscription,
+  similarMovies,
 }) => (
   <Paper className={classes.rootPaper}>
     <Grid container direction='column' spacing={4}>
@@ -163,6 +165,18 @@ const Movie = ({
           </Grid>
         </Grid>
       )}
+      {similarMovies.length > 0 && (
+        <>
+          <Grid item>
+            <Typography variant='h3' align='center'>
+              More like this
+            </Typography>
+          </Grid>
+          <Grid item>
+            <SimilarMovies similarMovies={similarMovies} />
+          </Grid>
+        </>
+      )}
       <ScrollTopFab />
     </Grid>
   </Paper>
@@ -187,6 +201,14 @@ Movie.propTypes = {
   setRatingHover: PropTypes.func.isRequired,
   dialogProps: PropTypes.object.isRequired,
   hasActiveSubscription: PropTypes.bool.isRequired,
+  similarMovies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      cover: PropTypes.string.isRequired,
+      year: PropTypes.number.isRequired,
+    })
+  ),
 }
 
 export default withStyles(styles)(Movie)

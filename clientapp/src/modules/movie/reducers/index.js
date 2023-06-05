@@ -6,6 +6,7 @@ import comments from './comments'
 import ratings from './ratings'
 import userRating from './userRating'
 import genres from './genres'
+import similarMovies from './similarMovies'
 
 export default combineReducers({
   movie,
@@ -14,4 +15,5 @@ export default combineReducers({
   ratings,
   userRating,
   genres,
+  similarMovies,
 })

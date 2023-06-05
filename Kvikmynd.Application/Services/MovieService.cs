@@ -9,6 +9,8 @@ using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Application.Models.Request;
+using Kvikmynd.Application.Models.Response;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -89,6 +91,69 @@ namespace Kvikmynd.Application.Services
                     IsBookmark = rating.Movie.BookmarkMovies?.Count > 0, 
                 }).ToList()
             };
+        }
+
+        public async Task<IEnumerable<GetSimilarMovieModel>> GetSimilarMoviesAsync(GetSimilarMoviesRequestModel model, int userId)
+        {
+            // var models = await _work.MovieRepository
+            //     .All()
+            //     .Where(m => m.GenreMovies.Any(g => model.GenreIds.Contains(g.GenreId)))
+            //     .Select(_ => new GetSimilarMovieModel
+            //     {
+            //         Id = _.Id,
+            //         Title = _.Title,
+            //         Cover = _.CoverUrl,
+            //         Year = _.Year
+            //     })
+            //     .Take(5)
+            //     .ToListAsync();
+            //
+            // if (models.Count < 5)
+            // {
+            //     var random = new Random();
+            //     var idk = new List<int>();
+            //     for (int i = 0; i < 5 - models.Count + 1; i++)
+            //     {
+            //         idk.Add(random.Next(1, 30));
+            //     }
+            //     
+            //     var ids = models.Select(_ => _.Id);
+            //     var additionalModels = await _work.MovieRepository
+            //         .All()
+            //         .Where(m => idk.Any(i => i == m.Id) && !ids.Contains(m.Id))
+            //         .Select(_ => new GetSimilarMovieModel
+            //         {
+            //             Id = _.Id,
+            //             Title = _.Title,
+            //             Cover = _.CoverUrl,
+            //             Year = _.Year
+            //         })
+            //         .ToListAsync();
+            //     
+            //     models.AddRange(additionalModels);
+            // }
+            
+            // super logic
+            var random = new Random();
+            var idk = new List<int>();
+            for (int i = 0; i < 5; i++)
+            {
+                idk.Add(random.Next(1, 30));
+            }
+            
+            var additionalModels = await _work.MovieRepository
+                .All()
+                .Where(m => idk.Any(i => i == m.Id))
+                .Select(_ => new GetSimilarMovieModel
+                {
+                    Id = _.Id,
+                    Title = _.Title,
+                    Cover = _.CoverUrl,
+                    Year = _.Year
+                })
+                .ToListAsync();
+
+            return additionalModels;
         }
 
         public void Dispose()

@@ -112,6 +112,17 @@ function* updateArchivedMovieList() {
   )
 }
 
+function* onSelectedMovieSuccess({ response: { data } }) {
+  const { movie, genreNames } = data
+  yield put(
+    movieActions.getSimilarMovies.request({
+      movieId: movie.id,
+      title: movie.title,
+      genreIds: genreNames.map((g) => g.id),
+    })
+  )
+}
+
 function* movieSaga() {
   yield all([
     takeLatest(movieActions.userCommentSuccess, onPostedComment),
@@ -131,6 +142,7 @@ function* movieSaga() {
     takeLatest(movieActions.deleteMoviePermanently.failure, deleteMoviePermanentlyFailure),
     takeLatest(movieActions.restoreMovie.success, restoreMovieSuccess),
     takeLatest(movieActions.restoreMovie.failure, restoreMovieFailure),
+    takeLatest(movieActions.selectedMovieSuccess, onSelectedMovieSuccess),
   ])
 }
 
