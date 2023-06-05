@@ -100,7 +100,7 @@ namespace Kvikmynd.Application.Services
             var idk = new List<int>();
             for (int i = 0; i < 5; i++)
             {
-                idk.Add(random.Next(1, 30));
+                idk.Add(random.Next(1, 23));
             }
             
             var additionalModels = await _work.MovieRepository

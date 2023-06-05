@@ -30,6 +30,10 @@ public class SubscriptionService : GenericService<Subscription>, ISubscriptionSe
             .ToListAsync();
         
         IList<SpecialSubscriptionOrder> subscriptionOrders = groupedSubscriptionTypes.Select(GenerateSpecialOrder).ToList();
+        if (subscriptionOrders.All(s => !s.Exists))
+        {
+            return new ServiceResult<IList<SpecialSubscriptionOrder>>(Array.Empty<SpecialSubscriptionOrder>());
+        }
 
         return new ServiceResult<IList<SpecialSubscriptionOrder>>(subscriptionOrders);
     }
