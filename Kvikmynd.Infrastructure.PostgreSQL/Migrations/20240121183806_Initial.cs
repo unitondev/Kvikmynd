@@ -1,4 +1,6 @@
 ﻿using System;
+using Kvikmynd.Domain;
+using Kvikmynd.Infrastructure.Shared.Extensions;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -452,6 +454,22 @@ namespace Kvikmynd.Infrastructure.PostgreSQL.Migrations
                 name: "IX_Subscriptions_UserId",
                 table: "Subscriptions",
                 column: "UserId");
+            
+            migrationBuilder.InsertData(table: "AspNetRoles", columns: new string[] { "Id", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    {(int) Role.SystemAdmin, Role.SystemAdmin.ToString(), Role.SystemAdmin.ToString().ToUpper()},
+                    {(int) Role.Admin, Role.Admin.ToString(), Role.Admin.ToString().ToUpper()},
+                    {(int) Role.User, Role.User.ToString(), Role.User.ToString().ToUpper()},
+                });
+            
+            migrationBuilder.CreatePermissionsRange(new List<ApplicationPermission>()
+                { ApplicationPermission.All, ApplicationPermission.AddMovie, ApplicationPermission.EditMovie });
+            
+            migrationBuilder.GrantPermission(ApplicationPermission.All, Role.SystemAdmin);
+            migrationBuilder.GrantPermissionsRange(
+                new List<ApplicationPermission>() { ApplicationPermission.AddMovie, ApplicationPermission.EditMovie },
+                Role.Admin);
         }
 
         /// <inheritdoc />

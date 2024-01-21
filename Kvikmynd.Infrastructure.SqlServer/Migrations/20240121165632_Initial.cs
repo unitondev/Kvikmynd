@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kvikmynd.Domain;
-using Kvikmynd.Infrastructure.SqlServer.Extensions;
+using Kvikmynd.Infrastructure.Shared.Extensions;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

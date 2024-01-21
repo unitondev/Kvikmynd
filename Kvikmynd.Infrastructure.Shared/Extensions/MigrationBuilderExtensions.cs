@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Kvikmynd.Domain;
+﻿using Kvikmynd.Domain;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.SqlServer.Extensions;
+namespace Kvikmynd.Infrastructure.Shared.Extensions;
 
 public static class MigrationBuilderExtensions
 {
