@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
     public partial class All_varbinary_fields_replaced_with_strings_with_url : Migration
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
-    public partial class AddedSeedingData : Migration
+    public partial class AddedNewSeedingData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder) {}
 

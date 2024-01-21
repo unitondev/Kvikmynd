@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
-    public partial class Update_movie_entity_add_IsDeleted_field : Migration
+    public partial class AddedYearsForMovie : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsDeleted",
+            migrationBuilder.AddColumn<int>(
+                name: "Year",
                 table: "Movies",
-                type: "bit",
+                type: "int",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsDeleted",
+                name: "Year",
                 table: "Movies");
         }
     }

@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvikmynd.WebAPI", "Kvikmynd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvikmynd.Domain", "Kvikmynd.Domain\Kvikmynd.Domain.csproj", "{CE656A52-1977-4B4A-A405-188D417029BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvikmynd.Infrastructure", "Kvikmynd.Infrastructure\Kvikmynd.Infrastructure.csproj", "{93FBAE89-E203-4BF5-8F1B-B8A3E0512F18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvikmynd.Infrastructure.SqlServer", "Kvikmynd.Infrastructure.SqlServer\Kvikmynd.Infrastructure.SqlServer.csproj", "{93FBAE89-E203-4BF5-8F1B-B8A3E0512F18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kvikmynd.Application", "Kvikmynd.Application\Kvikmynd.Application.csproj", "{31A51A51-5E7A-4818-8877-4297EBCF346C}"
 EndProject

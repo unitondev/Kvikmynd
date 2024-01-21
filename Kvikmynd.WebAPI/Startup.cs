@@ -109,7 +109,7 @@ namespace Kvikmynd
             services.AddDbContext<KvikmyndDbContext>(builder => 
                 builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"), optionsBuilder =>
                 {
-                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure");
+                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.SqlServer");
                 }));
 
             // services.AddDbContext<KvikmyndDbContext>(builder =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
     /// <inheritdoc />
     public partial class Add_subscriptions : Migration

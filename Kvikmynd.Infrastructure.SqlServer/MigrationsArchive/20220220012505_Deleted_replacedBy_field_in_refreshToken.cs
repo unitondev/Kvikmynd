@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
     public partial class Deleted_replacedBy_field_in_refreshToken : Migration
     {

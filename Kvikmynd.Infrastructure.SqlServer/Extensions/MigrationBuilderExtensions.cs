@@ -4,7 +4,7 @@ using System.Linq;
 using Kvikmynd.Domain;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Extensions;
+namespace Kvikmynd.Infrastructure.SqlServer.Extensions;
 
 public static class MigrationBuilderExtensions
 {

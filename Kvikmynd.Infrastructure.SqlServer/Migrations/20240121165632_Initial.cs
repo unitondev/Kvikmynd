@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kvikmynd.Domain;
-using Kvikmynd.Infrastructure.Extensions;
+using Kvikmynd.Infrastructure.SqlServer.Extensions;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(KvikmyndDbContext))]
-    [Migration("20210715082018_AddedAllObjects")]
-    partial class AddedAllObjects
+    [Migration("20210714202321_InitialMigrations")]
+    partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,115 +151,6 @@ namespace Kvikmynd.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genres");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.GenreMovie", b =>
-                {
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GenreId", "MovieId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("GenreMovie");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Movie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Cover")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("YoutubeLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Movies");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.MovieRating", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RatingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "RatingId");
-
-                    b.HasIndex("RatingId");
-
-                    b.ToTable("MovieRating");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("Kvikmynd.Domain.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -335,21 +226,6 @@ namespace Kvikmynd.Infrastructure.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Kvikmynd.Domain.Models.UserRating", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RatingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RatingId");
-
-                    b.HasIndex("RatingId");
-
-                    b.ToTable("UserRating");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -401,63 +277,6 @@ namespace Kvikmynd.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Comment", b =>
-                {
-                    b.HasOne("Kvikmynd.Domain.Models.Movie", "Movie")
-                        .WithMany("Comments")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kvikmynd.Domain.Models.User", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.GenreMovie", b =>
-                {
-                    b.HasOne("Kvikmynd.Domain.Models.Genre", "Genre")
-                        .WithMany("GenreMovies")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kvikmynd.Domain.Models.Movie", "Movie")
-                        .WithMany("GenreMovies")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.MovieRating", b =>
-                {
-                    b.HasOne("Kvikmynd.Domain.Models.Movie", "Movie")
-                        .WithMany("MovieRatings")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kvikmynd.Domain.Models.Rating", "Rating")
-                        .WithMany("MovieRatings")
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("Rating");
-                });
-
             modelBuilder.Entity("Kvikmynd.Domain.Models.User", b =>
                 {
                     b.OwnsMany("Kvikmynd.Domain.Models.RefreshToken", "RefreshTokens", b1 =>
@@ -496,53 +315,6 @@ namespace Kvikmynd.Infrastructure.Migrations
                         });
 
                     b.Navigation("RefreshTokens");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.UserRating", b =>
-                {
-                    b.HasOne("Kvikmynd.Domain.Models.Rating", "Rating")
-                        .WithMany("UserRatings")
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Kvikmynd.Domain.Models.User", "User")
-                        .WithMany("UserRatings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rating");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Genre", b =>
-                {
-                    b.Navigation("GenreMovies");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Movie", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("GenreMovies");
-
-                    b.Navigation("MovieRatings");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.Rating", b =>
-                {
-                    b.Navigation("MovieRatings");
-
-                    b.Navigation("UserRatings");
-                });
-
-            modelBuilder.Entity("Kvikmynd.Domain.Models.User", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("UserRatings");
                 });
 #pragma warning restore 612, 618
         }

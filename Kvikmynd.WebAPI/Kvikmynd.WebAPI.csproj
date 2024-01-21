@@ -22,7 +22,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Kvikmynd.Infrastructure.PostgreSQL\Kvikmynd.Infrastructure.PostgreSQL.csproj" />
         <ProjectReference Include="..\Kvikmynd.Infrastructure.Shared\Kvikmynd.Infrastructure.Shared.csproj" />
-        <ProjectReference Include="..\Kvikmynd.Infrastructure\Kvikmynd.Infrastructure.csproj" />
+        <ProjectReference Include="..\Kvikmynd.Infrastructure.SqlServer\Kvikmynd.Infrastructure.SqlServer.csproj" />
         <ProjectReference Include="..\Kvikmynd.Application\Kvikmynd.Application.csproj" />
     </ItemGroup>
 

@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Kvikmynd.Infrastructure.Migrations
+namespace Kvikmynd.Infrastructure.SqlServer.Migrations
 {
-    public partial class AddedYearsForMovie : Migration
+    public partial class AddedRatingFieldInMovie : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Year",
+            migrationBuilder.AddColumn<double>(
+                name: "Rating",
                 table: "Movies",
-                type: "int",
+                type: "float",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0.0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Year",
+                name: "Rating",
                 table: "Movies");
         }
     }
