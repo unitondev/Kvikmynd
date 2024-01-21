@@ -100,7 +100,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure.Shared/Covers/defaultUserAvatar.png");
                 createdUser.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 
@@ -167,7 +167,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure.Shared/Covers/defaultUserAvatar.png");
                 user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 

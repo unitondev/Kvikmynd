@@ -6,8 +6,8 @@ using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Services;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
-using Kvikmynd.Infrastructure;
-using Kvikmynd.Infrastructure.Repositories;
+using Kvikmynd.Infrastructure.Shared;
+using Kvikmynd.Infrastructure.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -107,7 +107,16 @@ namespace Kvikmynd
             #region Database and repositories
 
             services.AddDbContext<KvikmyndDbContext>(builder => 
-                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"), optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure");
+                }));
+
+            // services.AddDbContext<KvikmyndDbContext>(builder =>
+            //     builder.UseNpgsql(Configuration.GetConnectionString("PostgreSQL"), optionsBuilder =>
+            //     {
+            //         optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.PostgreSQL");
+            //     }));
 
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

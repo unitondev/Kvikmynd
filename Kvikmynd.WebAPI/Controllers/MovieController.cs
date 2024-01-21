@@ -114,7 +114,7 @@ namespace Kvikmynd.Controllers
             }
             else
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure.Shared/Covers/defaultMovieCover.png");
                 movieToCreate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             
@@ -160,7 +160,7 @@ namespace Kvikmynd.Controllers
             }
             else if (model.CoverUrl?.Length == 0)
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure.Shared/Covers/defaultMovieCover.png");
                 movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Kvikmynd.Domain.Models;
+﻿using Kvikmynd.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kvikmynd.Infrastructure
+namespace Kvikmynd.Infrastructure.Shared
 {
     public class KvikmyndDbContext : IdentityDbContext<User, ApplicationRole, int>
     {

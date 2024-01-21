@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using Kvikmynd.Application.Interfaces.Repositories;
+﻿using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kvikmynd.Infrastructure.Repositories
+namespace Kvikmynd.Infrastructure.Shared.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

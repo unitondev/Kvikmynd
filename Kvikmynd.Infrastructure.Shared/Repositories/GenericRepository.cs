@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kvikmynd.Infrastructure.Repositories
+namespace Kvikmynd.Infrastructure.Shared.Repositories
 {
     public class GenericRepository<T> : IRepository<T> where T : class 
     {
