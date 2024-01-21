@@ -409,12 +409,12 @@ namespace Kvikmynd.Controllers
         }
         
         // call this endpoint when initializing the db
+        [ApiExplorerSettings(IgnoreApi = false)]
         [AllowAnonymous]
         [HttpGet("seed")]
-        public async Task<IActionResult> PopulateMoviesCovers()
+        public async Task<IActionResult> PopulateData()
         {
-            await _seedService.SeedMoviesCoversAsync();
-            await _seedService.SeedAdmin();
+            await _seedService.SeedAllAsync();
             return Ok();
         }
     }
