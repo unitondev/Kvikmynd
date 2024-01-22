@@ -12,12 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./clientapp
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Change dir
-        run: cd clientapp
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
