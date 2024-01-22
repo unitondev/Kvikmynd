@@ -31,7 +31,7 @@ import movieListSagas from '../modules/movieList/sagas'
 export const history = createBrowserHistory()
 // eslint-disable-next-line import/no-mutable-exports
 export let reduxStore
-const apiHostName = 'https://localhost:5001/'
+const apiHostName = process.env.REACT_APP_API_HOST_NAME
 
 // call api section
 

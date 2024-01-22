@@ -151,7 +151,7 @@ const MovieContainer = () => {
   const joinMoviePage = async (userName, movieId) => {
     try {
       const connection = new HubConnectionBuilder()
-        .withUrl('https://localhost:5001/moviePage')
+        .withUrl(`${process.env.REACT_APP_API_HOST_NAME}moviePage`)
         .configureLogging(LogLevel.Information)
         .build()
 
