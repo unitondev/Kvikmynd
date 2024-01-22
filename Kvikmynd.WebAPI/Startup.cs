@@ -8,6 +8,7 @@ using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
 using Kvikmynd.Infrastructure.Shared;
 using Kvikmynd.Infrastructure.Shared.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -87,7 +88,8 @@ namespace Kvikmynd
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
                     };
-                });
+                })
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("Basic", null);
 
             services.AddAuthorization();
             
@@ -99,9 +101,32 @@ namespace Kvikmynd
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
             
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
+                options.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
+                options.AddSecurityDefinition("Basic", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Basic",
+                    In = ParameterLocation.Header,
+                    Description = "Basic authentication header"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Basic"
+                            }
+                        },
+                        new string[] { "Basic" }
+                    }
+                });
             });
 
             #region Database and repositories

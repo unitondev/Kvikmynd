@@ -39,7 +39,6 @@ namespace Kvikmynd.Application.Services
             await SeedMoviesAsync();
             await SeedGenresAsync();
             await SeedGenreMoviesAsync();
-            await SeedMoviesCoversAsync();
         }
         public async Task SeedGenresAsync()
         {
