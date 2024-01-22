@@ -132,17 +132,17 @@ namespace Kvikmynd
 
             #region Database and repositories
 
-            services.AddDbContext<KvikmyndDbContext>(builder => 
-                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"), optionsBuilder =>
-                {
-                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.SqlServer");
-                }));
-
-            // services.AddDbContext<KvikmyndDbContext>(builder =>
-            //     builder.UseNpgsql(Configuration.GetConnectionString("PostgreSQL"), optionsBuilder =>
+            // services.AddDbContext<KvikmyndDbContext>(builder => 
+            //     builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"), optionsBuilder =>
             //     {
-            //         optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.PostgreSQL");
+            //         optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.SqlServer");
             //     }));
+
+            services.AddDbContext<KvikmyndDbContext>(builder =>
+                builder.UseNpgsql(Configuration.GetConnectionString("PostgreSQLAzureServer"), optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.PostgreSQL");
+                }));
 
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -174,13 +174,14 @@ namespace Kvikmynd
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Kvikmynd.WebAPI v2"));
             }
             else
             {
                 app.UseHsts();
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Kvikmynd.WebAPI v2"));
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
