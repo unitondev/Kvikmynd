@@ -26,32 +26,4 @@
         <ProjectReference Include="..\Kvikmynd.Application\Kvikmynd.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Include="wwwroot\images\12AngryMen.jpg" />
-      <None Include="wwwroot\images\2001.jpg" />
-      <None Include="wwwroot\images\28DaysLater.jpg" />
-      <None Include="wwwroot\images\AmericanHistoryX.jpg" />
-      <None Include="wwwroot\images\americanPsycho.jpg" />
-      <None Include="wwwroot\images\CatchMeIfYouCan.jpg" />
-      <None Include="wwwroot\images\defaultMovieCover.png" />
-      <None Include="wwwroot\images\defaultUserAvatar.png" />
-      <None Include="wwwroot\images\Dunkirk.jpg" />
-      <None Include="wwwroot\images\fightClub.jpg" />
-      <None Include="wwwroot\images\LockStockandTwoSmokingBarrels.jpg" />
-      <None Include="wwwroot\images\memento.jpg" />
-      <None Include="wwwroot\images\NoCountryForOldMen.jpg" />
-      <None Include="wwwroot\images\OneFlewOvertheCuckoosNest.jpg" />
-      <None Include="wwwroot\images\PulpFiction.jpg" />
-      <None Include="wwwroot\images\Scarface.jpg" />
-      <None Include="wwwroot\images\Se7en.jpg" />
-      <None Include="wwwroot\images\TaxiDriver.jpg" />
-      <None Include="wwwroot\images\TheGirlWithTheDragonTattoo.jpg" />
-      <None Include="wwwroot\images\TheMatrix.jpg" />
-      <None Include="wwwroot\images\ThereWillBeBlood.jpg" />
-      <None Include="wwwroot\images\TheShining.jpg" />
-      <None Include="wwwroot\images\TheThing.jpg" />
-      <None Include="wwwroot\images\Thursday.jpg" />
-      <None Include="wwwroot\images\WhoAmI.jpg" />
-    </ItemGroup>
-
 </Project>
