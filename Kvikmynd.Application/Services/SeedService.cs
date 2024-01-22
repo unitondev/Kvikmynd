@@ -21,14 +21,14 @@ namespace Kvikmynd.Application.Services
         private readonly IMovieService _movieService;
         private readonly IService<Genre> _genreService;
         private readonly IService<GenreMovie> _genreMoviesService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHostingEnvironment  _webHostEnvironment;
 
         public SeedService(UserManager<User> userManager,
             IFileUploadService fileUploadService,
             IMovieService movieService, 
             IService<Genre> genreService, 
             IService<GenreMovie> genreMoviesService,
-            IWebHostEnvironment webHostEnvironment)
+            IHostingEnvironment  webHostEnvironment)
         {
             _userManager = userManager;
             _fileUploadService = fileUploadService;

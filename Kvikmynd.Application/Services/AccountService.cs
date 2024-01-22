@@ -27,7 +27,7 @@ namespace Kvikmynd.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IFileUploadService _fileUploadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHostingEnvironment  _webHostEnvironment;
 
         public AccountService(
             IUnitOfWork work,
@@ -36,7 +36,7 @@ namespace Kvikmynd.Application.Services
             ITokenService tokenService,
             IFileUploadService fileUploadService,
             IHttpContextAccessor httpContextAccessor,
-            IWebHostEnvironment webHostEnvironment
+            IHostingEnvironment  webHostEnvironment
             )
         {
             _work = work;
