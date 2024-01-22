@@ -185,6 +185,7 @@ namespace Kvikmynd
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
