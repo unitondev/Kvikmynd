@@ -196,6 +196,8 @@ namespace Kvikmynd
                 endpoints.MapHub<SignalRHub>("/moviePage");
                 endpoints.MapControllers();
             });
+            
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
     }
 }
