@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -30,6 +32,7 @@ namespace Kvikmynd.Controllers
         private readonly SeedService _seedService;
         private readonly IFileUploadService _fileUploadService;
         private readonly IService<BookmarkMovie> _bookmarkMovieService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public MovieController(
             IAccountService accountService,
@@ -37,7 +40,8 @@ namespace Kvikmynd.Controllers
             IMapper mapper,
             SeedService seedService,
             IFileUploadService fileUploadService,
-            IService<BookmarkMovie> bookmarkMovieService
+            IService<BookmarkMovie> bookmarkMovieService,
+            IWebHostEnvironment webHostEnvironment
             ) : base(accountService)
         {
             _movieService = movieService;
@@ -45,6 +49,7 @@ namespace Kvikmynd.Controllers
             _seedService = seedService;
             _fileUploadService = fileUploadService;
             _bookmarkMovieService = bookmarkMovieService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [AllowAnonymous]
@@ -114,7 +119,7 @@ namespace Kvikmynd.Controllers
             }
             else
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"~/images/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultMovieCover.png"));
                 movieToCreate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             
@@ -160,7 +165,7 @@ namespace Kvikmynd.Controllers
             }
             else if (model.CoverUrl?.Length == 0)
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"~/images/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultMovieCover.png"));
                 movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             
