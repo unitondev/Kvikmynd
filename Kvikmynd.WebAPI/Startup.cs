@@ -4,6 +4,7 @@ using Kvikmynd.Application.Common.Models;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Services;
+using Kvikmynd.Authentication;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
 using Kvikmynd.Infrastructure.Shared;
