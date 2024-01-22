@@ -13,6 +13,7 @@ using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 
@@ -26,6 +27,7 @@ namespace Kvikmynd.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IFileUploadService _fileUploadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AccountService(
             IUnitOfWork work,
@@ -33,7 +35,8 @@ namespace Kvikmynd.Application.Services
             IMapper mapper,
             ITokenService tokenService,
             IFileUploadService fileUploadService,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IWebHostEnvironment webHostEnvironment
             )
         {
             _work = work;
@@ -42,6 +45,7 @@ namespace Kvikmynd.Application.Services
             _tokenService = tokenService;
             _fileUploadService = fileUploadService;
             _httpContextAccessor = httpContextAccessor;
+            _webHostEnvironment = webHostEnvironment;
         }
         
         public async Task<User> FindByIdAsync(int userId)
@@ -100,7 +104,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"~/images/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultUserAvatar.png"));
                 createdUser.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 
@@ -167,7 +171,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"~/images/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultUserAvatar.png"));
                 user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 

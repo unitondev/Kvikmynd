@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Kvikmynd.Application.Common.Enums;
@@ -7,6 +8,7 @@ using Kvikmynd.Application.Common.Services;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,18 +21,21 @@ namespace Kvikmynd.Application.Services
         private readonly IMovieService _movieService;
         private readonly IService<Genre> _genreService;
         private readonly IService<GenreMovie> _genreMoviesService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public SeedService(UserManager<User> userManager,
             IFileUploadService fileUploadService,
             IMovieService movieService, 
             IService<Genre> genreService, 
-            IService<GenreMovie> genreMoviesService)
+            IService<GenreMovie> genreMoviesService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _fileUploadService = fileUploadService;
             _movieService = movieService;
             _genreService = genreService;
             _genreMoviesService = genreMoviesService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task SeedAllAsync()
@@ -661,29 +666,29 @@ namespace Kvikmynd.Application.Services
         {
             var coversPaths = new[]
             {
-                @"../Kvikmynd.Infrastructure.Shared/Covers/fightClub.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/americanPsycho.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/PulpFiction.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/memento.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/2001.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/NoCountryForOldMen.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/28DaysLater.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/TheGirlWithTheDragonTattoo.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/Dunkirk.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/Thursday.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/Scarface.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/TheMatrix.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/CatchMeIfYouCan.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/Se7en.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/TheShining.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/12AngryMen.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/AmericanHistoryX.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/OneFlewOvertheCuckoosNest.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/LockStockandTwoSmokingBarrels.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/WhoAmI.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/ThereWillBeBlood.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/TaxiDriver.jpg",
-                @"../Kvikmynd.Infrastructure.Shared/Covers/TheThing.jpg"
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "fightClub.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "americanPsycho.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "PulpFiction.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "memento.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "2001.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "NoCountryForOldMen.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "28DaysLater.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "TheGirlWithTheDragonTattoo.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "Dunkirk.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "Thursday.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "Scarface.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "TheMatrix.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "CatchMeIfYouCan.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "Se7en.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "TheShining.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "12AngryMen.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "AmericanHistoryX.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "OneFlewOvertheCuckoosNest.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "LockStockandTwoSmokingBarrels.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "WhoAmI.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "ThereWillBeBlood.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "TaxiDriver.jpg"),
+                Path.Combine(_webHostEnvironment.WebRootPath, "images", "TheThing.jpg"),
             };
 
             var movies = await _movieService.Filter(_ => _.Id < coversPaths.Length + 1).OrderBy(_ => _.Id).ToListAsync();

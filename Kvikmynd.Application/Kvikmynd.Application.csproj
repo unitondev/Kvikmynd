@@ -15,9 +15,16 @@
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.15" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.15" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.35.0" />
         <PackageReference Include="SendGrid" Version="9.26.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.15\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
