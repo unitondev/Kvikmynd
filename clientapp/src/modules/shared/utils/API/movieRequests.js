@@ -1,4 +1,4 @@
-import { restoreMovie } from '@movie/modules/movie/actions'
+import qs from 'qs'
 
 const movieRequests = {
   selectedMovieRequest: (data) => ({
@@ -12,30 +12,6 @@ const movieRequests = {
   movieRatingsRequest: (data) => ({
     url: `api/movie/${data}/ratings`,
     method: 'get',
-  }),
-  userRatingRequest: (data) => ({
-    url: 'api/rating/get',
-    method: 'post',
-    data,
-  }),
-  setUserRatingRequest: (data) => ({
-    url: 'api/rating',
-    method: 'post',
-    data,
-  }),
-  deleteUserRatingRequest: (data) => ({
-    url: 'api/rating',
-    method: 'delete',
-    data,
-  }),
-  userCommentRequest: (data) => ({
-    url: 'api/comment',
-    method: 'post',
-    data,
-  }),
-  deleteCommentRequest: ({ id }) => ({
-    url: `api/comment/${id}`,
-    method: 'delete',
   }),
   getMovieBySearchRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
     url: 'api/movie',
@@ -65,7 +41,7 @@ const movieRequests = {
     method: 'delete',
   }),
   deleteMoviePermanentlyRequest: ({ id }) => ({
-    url: `api/movie/permanently/${id}`,
+    url: `api/movie/${id}/permanently`,
     method: 'delete',
   }),
   updateMovieRequest: (data) => ({
@@ -74,8 +50,73 @@ const movieRequests = {
     data,
   }),
   restoreMovieRequest: ({ id }) => ({
-    url: `api/movie/restore/${id}`,
+    url: `api/movie/${id}/restore`,
     method: 'put',
+  }),
+  movieListRequest: ({ PageNumber, PageSize, SearchQuery }) => ({
+    url: 'api/movie',
+    method: 'get',
+    params: {
+      PageNumber,
+      PageSize,
+      SearchQuery,
+    },
+  }),
+  getMyMoviesRatingsListRequest: ({ PageNumber, PageSize, UserId, Order }) => ({
+    url: 'api/movie/myRatings',
+    method: 'get',
+    params: {
+      UserId,
+      Order,
+      PageNumber,
+      PageSize,
+    },
+  }),
+  addMovieToBookmarkRequest: (data) => ({
+    url: 'api/movie/bookmark',
+    method: 'post',
+    data,
+  }),
+  deleteMovieBookmarkRequest: (data) => ({
+    url: 'api/movie/bookmark',
+    method: 'delete',
+    data,
+  }),
+  getBookmarksMoviesRequest: ({ PageNumber, PageSize }) => ({
+    url: 'api/movie/bookmark',
+    method: 'get',
+    params: {
+      PageNumber,
+      PageSize,
+    },
+  }),
+  getAllMoviesForBackupRequest: () => ({
+    url: 'api/movie/backup',
+    method: 'get',
+  }),
+  restoreAllMoviesRequest: (data) => ({
+    url: 'api/movie/restore',
+    method: 'post',
+    data,
+  }),
+  userCommentRequest: (data) => ({
+    url: 'api/comment',
+    method: 'post',
+    data,
+  }),
+  deleteCommentRequest: ({ id }) => ({
+    url: `api/comment/${id}`,
+    method: 'delete',
+  }),
+  getSimilarMoviesRequest: (model) => ({
+    url: `api/movie/${model.movieId}/similar`,
+    method: 'get',
+    params: {
+      MovieId: model.movieId,
+      Title: model.title,
+      GenreIds: model.genreIds,
+    },
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
   }),
 }
 

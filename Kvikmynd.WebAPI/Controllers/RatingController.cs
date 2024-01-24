@@ -24,8 +24,8 @@ namespace Kvikmynd.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("get")]
-        public async Task<IActionResult> GetRating([FromBody] RatingModel model)
+        [HttpGet]
+        public async Task<IActionResult> GetRating([FromQuery] RatingModel model)
         {
             var result = await _ratingService.GetByUserAndMovieIdAsync(model.UserId, model.MovieId);
             if (!result.IsSucceeded)

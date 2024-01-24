@@ -1,16 +1,15 @@
 using System;
-using System.Security.Claims;
 using System.Text;
 using Kvikmynd.Application.Common.Models;
 using Kvikmynd.Application.Interfaces.Repositories;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Services;
-using Kvikmynd.Authorization;
-using Kvikmynd.Domain;
+using Kvikmynd.Authentication;
 using Kvikmynd.Domain.Models;
 using Kvikmynd.Hubs;
-using Kvikmynd.Infrastructure;
-using Kvikmynd.Infrastructure.Repositories;
+using Kvikmynd.Infrastructure.Shared;
+using Kvikmynd.Infrastructure.Shared.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -90,29 +89,10 @@ namespace Kvikmynd
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
                     };
-                });
+                })
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("Basic", null);
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(PolicyTypes.All, builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString());
-                });
-                options.AddPolicy(PolicyTypes.AddMovie, builder =>
-                {
-                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
-                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
-                    );
-                    // leaving here for possible future enhancement
-                    // builder.RequireClaim(CustomClaimTypes.Permission, ApplicationPermissions.AddMovie.ToString());
-                });
-                options.AddPolicy(PolicyTypes.EditMovie, builder =>
-                {
-                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, Roles.SystemAdmin.ToString())
-                                                  || c.User.HasClaim(ClaimTypes.Role, Roles.Admin.ToString())
-                    );
-                });
-            });
+            services.AddAuthorization();
             
             #endregion
             
@@ -122,15 +102,47 @@ namespace Kvikmynd
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
             
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
+                options.SwaggerDoc("v2", new OpenApiInfo {Title = "Kvikmynd.WebAPI", Version = "v2"});
+                options.AddSecurityDefinition("Basic", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Basic",
+                    In = ParameterLocation.Header,
+                    Description = "Basic authentication header"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Basic"
+                            }
+                        },
+                        new string[] { "Basic" }
+                    }
+                });
             });
 
             #region Database and repositories
 
             services.AddDbContext<KvikmyndDbContext>(builder => 
-                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+                builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"), optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.SqlServer");
+                }));
+
+            // services.AddDbContext<KvikmyndDbContext>(builder =>
+            //     builder.UseNpgsql(Configuration.GetConnectionString("PostgreSQL"), optionsBuilder =>
+            //     {
+            //         optionsBuilder.MigrationsAssembly("Kvikmynd.Infrastructure.PostgreSQL");
+            //     }));
 
             services.AddScoped<DbContext, KvikmyndDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -148,6 +160,7 @@ namespace Kvikmynd
             services.AddSingleton<ITokenService, TokenService>();
             services.AddScoped(typeof(SeedService));
             services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
 
             #endregion
 
@@ -171,6 +184,7 @@ namespace Kvikmynd
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 

@@ -72,5 +72,15 @@
         CommentNotFound = 1352,
 
         #endregion
+
+        #region Subscription errors. Codes 1400-1459
+
+        SubscriptionNotCreated = 1400,
+        SubscriptionNotDeleted = 1401,
+        SubscriptionNotFound = 1402,
+        SubscriptionNotUpdated = 1403,
+        SubscriptionWasNotCanceled = 1404,
+
+        #endregion
     }
 }

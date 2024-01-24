@@ -11,7 +11,9 @@ namespace Kvikmynd.Application.Interfaces.Repositories
         IMovieRepository MovieRepository { get; }
         IRepository<MovieRating> RatingRepository { get; }
         IRepository<Comment> CommentRepository { get; }
-        
+        IRepository<ApplicationPermissionEntity> PermissionRepository { get; }
+        IRepository<Subscription> SubscriptionRepository { get; }
+
         Task<int> CommitAsync();
     }
 }

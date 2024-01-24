@@ -13,6 +13,7 @@ using Kvikmynd.Application.Models;
 using Kvikmynd.Application.ViewModels;
 using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 
@@ -26,6 +27,7 @@ namespace Kvikmynd.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IFileUploadService _fileUploadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHostingEnvironment  _webHostEnvironment;
 
         public AccountService(
             IUnitOfWork work,
@@ -33,7 +35,8 @@ namespace Kvikmynd.Application.Services
             IMapper mapper,
             ITokenService tokenService,
             IFileUploadService fileUploadService,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment  webHostEnvironment
             )
         {
             _work = work;
@@ -42,6 +45,7 @@ namespace Kvikmynd.Application.Services
             _tokenService = tokenService;
             _fileUploadService = fileUploadService;
             _httpContextAccessor = httpContextAccessor;
+            _webHostEnvironment = webHostEnvironment;
         }
         
         public async Task<User> FindByIdAsync(int userId)
@@ -100,7 +104,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultUserAvatar.png"));
                 createdUser.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 
@@ -110,7 +114,7 @@ namespace Kvikmynd.Application.Services
                 return new ServiceResult<User>(ErrorCode.UserNotCreated);
             }
 
-            var roleResult = await _userManager.AddToRoleAsync(createdUser, Roles.User.ToString());
+            var roleResult = await _userManager.AddToRoleAsync(createdUser, Role.User.ToString());
             if (!roleResult.Succeeded)
             {
                 return new ServiceResult<User>(ErrorCode.UserNotCreated);
@@ -119,7 +123,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(createdUser);
         }
         
-        public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId)
+        public async Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshTokenAsync(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null) return new ServiceResult<RefreshToken>(ErrorCode.UserNotFound);
@@ -133,7 +137,7 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<RefreshToken>(refreshToken);
         }
 
-        public async Task<ServiceResult> LogOut(string userId)
+        public async Task<ServiceResult> LogOutAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -143,7 +147,10 @@ namespace Kvikmynd.Application.Services
             
             foreach (var refreshToken in user.RefreshTokens)
             {
-                if (refreshToken.IsActive) await RevokeTokenAsync(user, refreshToken);
+                if (refreshToken.IsActive)
+                {
+                    await RevokeTokenAsync(user, refreshToken);
+                }
             }
 
             return new ServiceResult();
@@ -164,7 +171,7 @@ namespace Kvikmynd.Application.Services
             }
             else
             {
-                var defaultAvatarBytes = await File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultUserAvatar.png");
+                var defaultAvatarBytes = await File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultUserAvatar.png"));
                 user.AvatarUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultAvatarBytes), "avatars");
             }
 
@@ -199,7 +206,7 @@ namespace Kvikmynd.Application.Services
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(refreshedUser.Id))
             };
 
-            var newJwtToken = _tokenService.GetJwtToken(claims);
+            var newJwtResponseModel = _tokenService.GetJwtResponseModel(claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
             
             refreshedUser.RefreshTokens.Add(newRefreshToken);
@@ -209,7 +216,7 @@ namespace Kvikmynd.Application.Services
             var result = new RefreshAndJwtTokenModel
             {
                 RefreshToken = newRefreshToken,
-                JwtToken = newJwtToken
+                JwtResponseModel = newJwtResponseModel
             };
 
             return new ServiceResult<RefreshAndJwtTokenModel>(result);
@@ -252,10 +259,18 @@ namespace Kvikmynd.Application.Services
             return new ServiceResult<User>(user);
         }
 
-        public async Task<int> GetCurrentUserIdAsync()
+        public int GetCurrentUserId()
         {
-            var result = await GetCurrentUserAsync();
-            return result.Result?.Id ?? -1;
+            var userIdString = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c => 
+                c.Properties.Values.Contains(JwtRegisteredClaimNames.Sub))?.Value;
+
+            var parsed = int.TryParse(userIdString, out int userId);
+            if (!parsed)
+            {
+                return -1;
+            }
+            
+            return userId;
         }
 
         public void Dispose()

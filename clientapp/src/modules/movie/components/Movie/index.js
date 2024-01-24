@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@mui/styles/withStyles'
 import YouTube from 'react-youtube'
+import { Link } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -12,11 +13,14 @@ import {
   Box,
   Paper,
   Grid,
+  CardActions,
 } from '@mui/material'
 
+import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
+import routes from '@movie/routes'
 import CommentsList from '../CommentList'
 import styles from './styles'
-import ScrollTopFab from '@movie/modules/navbar/components/ScrollTopFab'
+import SimilarMovies from '@movie/modules/movie/components/SimilarMovies'
 
 const Movie = ({
   classes,
@@ -36,9 +40,11 @@ const Movie = ({
   ratingHover,
   setRatingHover,
   dialogProps,
+  hasActiveSubscription,
+  similarMovies,
 }) => (
   <Paper className={classes.rootPaper}>
-    <Grid container direction='column' spacing={2}>
+    <Grid container direction='column' spacing={4}>
       <Grid item>
         <Card>
           <CardContent>
@@ -128,14 +134,49 @@ const Movie = ({
           />
         </Grid>
       </Grid>
-      <CommentsList
-        currentUserAvatar={currentUserAvatar}
-        handleCommentSet={handleCommentSet}
-        comments={comments}
-        currentUser={currentUser}
-        handleDeleteCommentClick={handleDeleteCommentClick}
-        dialogProps={dialogProps}
-      />
+      {hasActiveSubscription ? (
+        <CommentsList
+          currentUserAvatar={currentUserAvatar}
+          handleCommentSet={handleCommentSet}
+          comments={comments}
+          currentUser={currentUser}
+          handleDeleteCommentClick={handleDeleteCommentClick}
+          dialogProps={dialogProps}
+        />
+      ) : (
+        <Grid item container direction='column' alignContent='center' sx={{ pb: 5 }}>
+          <Grid item>
+            <Card>
+              <CardContent>
+                <Typography variant='h5' component='div'>
+                  Oh, you don't have active subscription to see and post comments :(
+                </Typography>
+                <Typography variant='body2'>
+                  If you want to see the terms and details of subscription activation, please go to
+                  your profile using the button below
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: 'flex-end' }}>
+                <Button component={Link} to={routes.profile} size='small'>
+                  Go to profile
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
+      {similarMovies.length > 0 && (
+        <>
+          <Grid item>
+            <Typography variant='h3' align='center'>
+              More like this
+            </Typography>
+          </Grid>
+          <Grid item>
+            <SimilarMovies similarMovies={similarMovies} />
+          </Grid>
+        </>
+      )}
       <ScrollTopFab />
     </Grid>
   </Paper>
@@ -159,6 +200,15 @@ Movie.propTypes = {
   ratingHover: PropTypes.number.isRequired,
   setRatingHover: PropTypes.func.isRequired,
   dialogProps: PropTypes.object.isRequired,
+  hasActiveSubscription: PropTypes.bool.isRequired,
+  similarMovies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      cover: PropTypes.string.isRequired,
+      year: PropTypes.number.isRequired,
+    })
+  ),
 }
 
 export default withStyles(styles)(Movie)

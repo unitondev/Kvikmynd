@@ -19,5 +19,7 @@ namespace Kvikmynd.Domain.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual IList<BookmarkMovie> BookmarkMovies { get; set; }
+        [JsonIgnore]
+        public virtual IList<Subscription> Subscriptions { get; set; }
     }
 }

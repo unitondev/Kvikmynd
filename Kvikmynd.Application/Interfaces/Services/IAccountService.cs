@@ -15,10 +15,10 @@ namespace Kvikmynd.Application.Interfaces.Services
         Task<ServiceResult<RefreshAndJwtTokenModel>> RefreshTokenAsync(string token);
         Task<ServiceResult> RevokeTokenAsync(User user, RefreshToken token);
         Task<ServiceResult> RevokeTokenAsync(string revokedTokenPlainText);
-        Task<ServiceResult> LogOut(string userId);
+        Task<ServiceResult> LogOutAsync(string userId);
         Task<ServiceResult<UpdatedUserViewModel>> UpdateUserAsync(UpdateUserModel model);
-        Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshToken(int userId);
+        Task<ServiceResult<RefreshToken>> GenerateAndSetRefreshTokenAsync(int userId);
         Task<ServiceResult<User>> GetCurrentUserAsync();
-        Task<int> GetCurrentUserIdAsync();
+        int GetCurrentUserId();
     }
 }

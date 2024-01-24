@@ -1,7 +1,7 @@
 const accountRequests = {
   logoutRequest: (data) => ({
     url: 'api/account/logout',
-    method: 'get',
+    method: 'post',
     data,
   }),
   refreshTokensRequest: () => ({
@@ -18,7 +18,7 @@ const accountRequests = {
     method: 'delete',
   }),
   registerRequest: (data) => ({
-    url: 'api/account/register',
+    url: 'api/account',
     method: 'post',
     data,
   }),
@@ -28,26 +28,26 @@ const accountRequests = {
     data,
   }),
   getMeRequest: () => ({
-    url: 'api/account/me',
+    url: 'api/account',
     method: 'get',
   }),
   changePasswordRequest: (data) => ({
-    url: 'api/account/changePassword',
-    method: 'post',
+    url: 'api/account/password',
+    method: 'put',
     data,
   }),
   forgotPasswordRequest: (data) => ({
-    url: 'api/account/forgotPassword',
-    method: 'post',
+    url: 'api/account/password/forgot',
+    method: 'put',
     data,
   }),
   resetPasswordRequest: (data) => ({
-    url: 'api/account/resetPassword',
-    method: 'post',
+    url: 'api/account/password/reset',
+    method: 'put',
     data,
   }),
   confirmEmailRequest: (data) => ({
-    url: 'api/account/confirmEmail',
+    url: 'api/account/email/confirm',
     method: 'post',
     data,
   }),

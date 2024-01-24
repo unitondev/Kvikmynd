@@ -32,6 +32,7 @@
     ],
     "comma-dangle": "off",
     "react/jsx-wrap-multilines": "off",
+    "react/react-in-jsx-scope": "off",
     "no-param-reassign": "off",
     "no-unused-expressions": "off",
     "function-paren-newline": "off",

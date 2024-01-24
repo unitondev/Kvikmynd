@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,11 +8,14 @@ using AutoMapper;
 using Kvikmynd.Application.Common.Enums;
 using Kvikmynd.Application.Interfaces.Services;
 using Kvikmynd.Application.Models;
+using Kvikmynd.Application.Models.Request;
 using Kvikmynd.Application.Services;
 using Kvikmynd.Application.ViewModels;
-using Kvikmynd.Authorization;
+using Kvikmynd.Domain;
 using Kvikmynd.Domain.Models;
+using Kvikmynd.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -28,6 +32,7 @@ namespace Kvikmynd.Controllers
         private readonly SeedService _seedService;
         private readonly IFileUploadService _fileUploadService;
         private readonly IService<BookmarkMovie> _bookmarkMovieService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public MovieController(
             IAccountService accountService,
@@ -35,7 +40,8 @@ namespace Kvikmynd.Controllers
             IMapper mapper,
             SeedService seedService,
             IFileUploadService fileUploadService,
-            IService<BookmarkMovie> bookmarkMovieService
+            IService<BookmarkMovie> bookmarkMovieService,
+            IWebHostEnvironment webHostEnvironment
             ) : base(accountService)
         {
             _movieService = movieService;
@@ -43,13 +49,14 @@ namespace Kvikmynd.Controllers
             _seedService = seedService;
             _fileUploadService = fileUploadService;
             _bookmarkMovieService = bookmarkMovieService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
         {
-            var userId = await GetUserIdAsync();
+            var userId = GetUserId();
             if (userId > 0) model.UserId = userId;
             var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
             if (result == null) return CustomNotFound(ErrorCode.MovieNotFound);
@@ -69,7 +76,7 @@ namespace Kvikmynd.Controllers
         [HttpGet("archived")]
         public async Task<IActionResult> GetAllArchived([FromQuery] SearchQueryModel model, CancellationToken cancellationToken)
         {
-            var userId = await GetUserIdAsync();
+            var userId = GetUserId();
             if (userId > 0) model.UserId = userId;
             model.AreDeletedMovies = true;
             var result = await _movieService.GetAllMoviesAsync(model, cancellationToken);
@@ -93,7 +100,7 @@ namespace Kvikmynd.Controllers
             return Ok(movieWithGenres);
         }
 
-        [Authorize(Policy = PolicyTypes.AddMovie)]
+        [HasPermission(ApplicationPermission.AddMovie)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MovieModel model)
         {
@@ -112,7 +119,7 @@ namespace Kvikmynd.Controllers
             }
             else
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultMovieCover.png"));
                 movieToCreate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             
@@ -134,7 +141,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] EditMovieModel model)
         {
@@ -158,7 +165,7 @@ namespace Kvikmynd.Controllers
             }
             else if (model.CoverUrl?.Length == 0)
             {
-                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(@"../Kvikmynd.Infrastructure/Covers/defaultMovieCover.png");
+                var defaultCoverBytes = await System.IO.File.ReadAllBytesAsync(Path.Combine(_webHostEnvironment.WebRootPath, "images", "defaultMovieCover.png"));
                 movieToUpdate.CoverUrl = await _fileUploadService.UploadImageToFirebaseAsync(Convert.ToBase64String(defaultCoverBytes), "covers");
             }
             
@@ -210,8 +217,21 @@ namespace Kvikmynd.Controllers
 
             return Ok(movieRatings);
         }
+
+        [HttpGet("{id}/similar")]
+        public async Task<IActionResult> GetSimilarMovies([FromQuery] GetSimilarMoviesRequestModel model)
+        {
+            if (!await _movieService.ExistsAsync(model.MovieId))
+            {
+                return CustomNotFound(ErrorCode.MovieNotFound);
+            }
+            
+            var userId = GetUserId();
+            var returnModels = await _movieService.GetSimilarMoviesAsync(model, userId);
+            return Ok(returnModels);
+        }
         
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovieById(int id)
         {
@@ -232,8 +252,8 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
-        [HttpDelete("permanently/{id}")]
+        [HasPermission(ApplicationPermission.EditMovie)]
+        [HttpDelete("{id}/permanently")]
         public async Task<IActionResult> DeleteMoviePermanentlyById(int id)
         {
             var movie = await _movieService.GetByKeyAsync(id);
@@ -253,8 +273,8 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [HttpPost("getMyMoviesRatings")]
-        public async Task<IActionResult> GetMoviesRatings([FromBody] GetMoviesRatingsModel model)
+        [HttpGet("myRatings")]
+        public async Task<IActionResult> GetMyRatings([FromQuery] GetMoviesRatingsModel model)
         {
             var result = await _movieService.GetMoviesWithRatingByUserIdAsync(model);
 
@@ -267,7 +287,7 @@ namespace Kvikmynd.Controllers
             });
         }
 
-        [HttpPost("addBookmark")]
+        [HttpPost("bookmark")]
         public async Task<IActionResult> AddBookmark([FromBody] BookmarkMovieModel model)
         {
             var bookmarkMovie = new BookmarkMovie
@@ -285,7 +305,7 @@ namespace Kvikmynd.Controllers
             return Ok(result.Result);
         }
         
-        [HttpDelete("deleteBookmark")]
+        [HttpDelete("bookmark")]
         public async Task<IActionResult> DeleteBookmark([FromBody] BookmarkMovieModel model)
         {
             var bookmarkMovie = await _bookmarkMovieService.FindAsync(i => i.MovieId == model.MovieId && i.UserId == model.UserId);
@@ -300,10 +320,10 @@ namespace Kvikmynd.Controllers
             return Ok();
         }
 
-        [HttpGet("getBookmarks")]
+        [HttpGet("bookmark")]
         public async Task<IActionResult> GetBookmarks([FromQuery] PagintaionModel model)
         {
-            var currentUserId = await GetUserIdAsync();
+            var currentUserId = GetUserId();
             var query = _bookmarkMovieService
                 .GetAll()
                 .Include(b => b.Movie)
@@ -348,8 +368,8 @@ namespace Kvikmynd.Controllers
             return Ok(final);
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
-        [HttpPut("restore/{id}")]
+        [HasPermission(ApplicationPermission.EditMovie)]
+        [HttpPut("{id}/restore")]
         public async Task<IActionResult> RestoreById(int id)
         {
             var movie = await _movieService.GetByKeyAsync(id);
@@ -369,15 +389,15 @@ namespace Kvikmynd.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = PolicyTypes.EditMovie)]
-        [HttpGet("forBackup")]
+        [HasPermission(ApplicationPermission.EditMovie)]
+        [HttpGet("backup")]
         public async Task<IActionResult> GetAllForBackup()
         {
             var movies = await _movieService.GetAll().ToListAsync();
             return Ok(movies);
         }
         
-        [Authorize(Policy = PolicyTypes.EditMovie)]
+        [HasPermission(ApplicationPermission.EditMovie)]
         [HttpPost("restore")]
         public async Task<IActionResult> Restore([FromBody] AllMoviesJsonModel model)
         {
@@ -394,12 +414,20 @@ namespace Kvikmynd.Controllers
         }
         
         // call this endpoint when initializing the db
-        [AllowAnonymous]
+        [BasicAuthorization]
         [HttpGet("seed")]
-        public async Task<IActionResult> PopulateMoviesCovers()
+        public async Task<IActionResult> PopulateData()
+        {
+            await _seedService.SeedAllAsync();
+            return Ok();
+        }
+        
+        // call this endpoint when initializing the db
+        [BasicAuthorization]
+        [HttpGet("seedCovers")]
+        public async Task<IActionResult> PopulateCovers()
         {
             await _seedService.SeedMoviesCoversAsync();
-            await _seedService.SeedAdmin();
             return Ok();
         }
     }

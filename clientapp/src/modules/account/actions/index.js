@@ -1,4 +1,5 @@
 import { createAction } from 'redux-actions'
+import { createApiActions } from '@movie/shared/utils/actions'
 
 export const logoutRequest = createAction('LOGOUT_REQUEST')
 export const logoutSuccess = createAction('LOGOUT_SUCCESS')
@@ -54,3 +55,10 @@ export const resetForgotPassword = createAction('RESET_FORGOT_PASSWORD_STATE')
 export const resetPasswordRequest = createAction('RESET_PASSWORD_REQUEST')
 export const resetPasswordSuccess = createAction('RESET_PASSWORD_SUCCESS')
 export const resetPasswordFailure = createAction('RESET_PASSWORD_FAILURE')
+
+export const getMySubscriptions = createApiActions('GET_MY_SUBSCRIPTIONS')
+export const getSubscriptionsById = createApiActions('GET_SUBSCRIPTIONS_BY_ID')
+export const createSubscription = createApiActions('CREATE_SUBSCRIPTION')
+export const updateSubscription = createApiActions('UPDATE_SUBSCRIPTION')
+export const cancelSubscription = createApiActions('CANCEL_SUBSCRIPTION')
+export const getMySpecialOrders = createApiActions('GET_MY_SPECIAL_ORDERS')

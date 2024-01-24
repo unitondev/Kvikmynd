@@ -1,11 +1,13 @@
 import accountRequests from './accountRequests'
 import movieRequests from './movieRequests'
-import movieListRequests from './movieListRequests'
+import ratingRequests from './ratingRequests'
+import subscriptionRequests from './subscriptionRequests'
 
 const APIRequests = {
   ...accountRequests,
   ...movieRequests,
-  ...movieListRequests,
+  ...ratingRequests,
+  ...subscriptionRequests,
 }
 
 export default APIRequests

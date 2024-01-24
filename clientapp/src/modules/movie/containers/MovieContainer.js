@@ -5,9 +5,17 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 
 import Movie from '../components/Movie'
 import * as rawActions from '../actions'
-import { getUser, getUserAvatar } from '../../account/selectors'
-import { getComments, getMovie, getMovieGenres, getRatings, getUserRating } from '../selectors'
+import { getUser, getUserAvatar, hasActiveSubscriptionsByType } from '../../account/selectors'
+import {
+  getComments,
+  getMovie,
+  getMovieGenres,
+  getRatings,
+  getSimilarMoviesSelector,
+  getUserRating,
+} from '../selectors'
 import { calculateMovieRating } from '../helpers'
+import { SubscriptionType } from '../../../Enums'
 
 const MovieContainer = () => {
   const dispatch = useDispatch()
@@ -20,6 +28,10 @@ const MovieContainer = () => {
   const userRating = useSelector(getUserRating)
   const user = useSelector(getUser)
   const avatar = useSelector(getUserAvatar)
+  const hasActiveSubscription = useSelector((state) =>
+    hasActiveSubscriptionsByType(state, SubscriptionType.Premium)
+  )
+  const similarMovies = useSelector(getSimilarMoviesSelector)
   // TODO signalr temporarily disabled
   // const updateMovieNeed = useSelector(getNeedToUpdateMovie)
 
@@ -38,6 +50,7 @@ const MovieContainer = () => {
     return () => {
       closeSignalRConnection()
       dispatch(rawActions.cleanMovieStore())
+      dispatch(rawActions.getSimilarMovies.resetState())
     }
   }, [dispatch, id, user.id, user.userName])
 
@@ -138,7 +151,7 @@ const MovieContainer = () => {
   const joinMoviePage = async (userName, movieId) => {
     try {
       const connection = new HubConnectionBuilder()
-        .withUrl('https://localhost:5001/moviePage')
+        .withUrl(`${process.env.REACT_APP_API_HOST_NAME}moviePage`)
         .configureLogging(LogLevel.Information)
         .build()
 
@@ -205,6 +218,8 @@ const MovieContainer = () => {
       ratingHover={ratingHover}
       setRatingHover={setRatingHover}
       dialogProps={dialogProps}
+      hasActiveSubscription={hasActiveSubscription}
+      similarMovies={similarMovies}
     />
   )
 }

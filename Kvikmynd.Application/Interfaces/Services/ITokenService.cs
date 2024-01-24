@@ -7,7 +7,7 @@ namespace Kvikmynd.Application.Interfaces.Services
 {
     public interface ITokenService
     {
-        JwtToken GetJwtToken(IEnumerable<Claim> claims);
+        JwtResponseModel GetJwtResponseModel(IEnumerable<Claim> claims);
         RefreshToken GenerateRefreshToken();
     }
 }
